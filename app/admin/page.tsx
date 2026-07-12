@@ -1,0 +1,494 @@
+"use client";
+
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "../../lib/supabase";
+
+type Product = {
+  id: number;
+  name: string;
+  category: "item" | "yang" | "account";
+  server: "EPHESUS" | "PERGAMON" | "TEOS";
+  price: number;
+  description: string | null;
+  image_url: string | null;
+  stock: number;
+  is_active: boolean;
+};
+
+const ADMIN_EMAIL = "haswolf666@gmail.com";
+const IMAGE_BUCKET = "product-images";
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+
+function getStoragePathFromPublicUrl(url: string | null) {
+  if (!url) return null;
+  const marker = `/storage/v1/object/public/${IMAGE_BUCKET}/`;
+  const markerIndex = url.indexOf(marker);
+  if (markerIndex === -1) return null;
+  return decodeURIComponent(url.slice(markerIndex + marker.length));
+}
+
+export default function AdminPage() {
+  const router = useRouter();
+  const [authorized, setAuthorized] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [editingId, setEditingId] = useState<number | null>(null);
+
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState<Product["category"]>("item");
+  const [server, setServer] = useState<Product["server"]>("EPHESUS");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState("");
+  const [stock, setStock] = useState("1");
+  const [quickYangPrices, setQuickYangPrices] = useState<Record<number, string>>({});
+  const [quickSavingId, setQuickSavingId] = useState<number | null>(null);
+
+  const yangProducts = useMemo(
+    () => products.filter((product) => product.category === "yang"),
+    [products],
+  );
+
+  useEffect(() => {
+    async function init() {
+      const { data } = await supabase.auth.getSession();
+      const email = data.session?.user.email;
+
+      if (!data.session) {
+        router.replace("/login");
+        return;
+      }
+
+      if (email !== ADMIN_EMAIL) {
+        setMessage("Bu sayfaya yalnızca yönetici hesabı erişebilir.");
+        setLoading(false);
+        return;
+      }
+
+      setAuthorized(true);
+      await loadProducts();
+      setLoading(false);
+    }
+
+    init();
+  }, [router]);
+
+  async function loadProducts() {
+    const { data, error } = await supabase
+      .from("products")
+      .select("id,name,category,server,price,description,image_url,stock,is_active")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    const loadedProducts = (data ?? []) as Product[];
+    setProducts(loadedProducts);
+    setQuickYangPrices(
+      Object.fromEntries(
+        loadedProducts
+          .filter((product) => product.category === "yang")
+          .map((product) => [product.id, String(product.price)]),
+      ),
+    );
+  }
+
+  function resetForm() {
+    setEditingId(null);
+    setName("");
+    setCategory("item");
+    setServer("EPHESUS");
+    setPrice("");
+    setDescription("");
+    setImageUrl("");
+    setImageFile(null);
+    setImagePreview("");
+    setStock("1");
+  }
+
+  function startEditing(product: Product) {
+    setEditingId(product.id);
+    setName(product.name);
+    setCategory(product.category);
+    setServer(product.server);
+    setPrice(String(product.price));
+    setDescription(product.description ?? "");
+    setImageUrl(product.image_url ?? "");
+    setImageFile(null);
+    setImagePreview(product.image_url ?? "");
+    setStock(String(product.stock));
+    setMessage("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function handleImageSelect(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null;
+    setMessage("");
+
+    if (!file) {
+      setImageFile(null);
+      setImagePreview(imageUrl);
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      setMessage("Yalnızca görsel dosyası seçebilirsin.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > MAX_IMAGE_SIZE) {
+      setMessage("Görsel en fazla 5 MB olabilir.");
+      event.target.value = "";
+      return;
+    }
+
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  }
+
+  async function uploadSelectedImage() {
+    if (!imageFile) return imageUrl.trim() || null;
+
+    const extension = imageFile.name.split(".").pop()?.toLowerCase() || "jpg";
+    const safeExtension = extension.replace(/[^a-z0-9]/g, "") || "jpg";
+    const filePath = `${Date.now()}-${crypto.randomUUID()}.${safeExtension}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from(IMAGE_BUCKET)
+      .upload(filePath, imageFile, {
+        cacheControl: "3600",
+        contentType: imageFile.type,
+        upsert: false,
+      });
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage.from(IMAGE_BUCKET).getPublicUrl(filePath);
+    return data.publicUrl;
+  }
+
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+    setSaving(true);
+    setMessage("");
+
+    try {
+      const uploadedImageUrl = await uploadSelectedImage();
+      const payload = {
+        name: name.trim(),
+        category,
+        server,
+        price: Number(price),
+        description: description.trim() || null,
+        image_url: uploadedImageUrl,
+        stock: Number(stock),
+      };
+
+      if (!payload.name || Number.isNaN(payload.price) || payload.price < 0) {
+        throw new Error("Ürün adı ve geçerli bir fiyat gir.");
+      }
+
+      if (Number.isNaN(payload.stock) || payload.stock < 0) {
+        throw new Error("Geçerli bir stok değeri gir.");
+      }
+
+      if (editingId !== null) {
+        const oldProduct = products.find((product) => product.id === editingId);
+        const { error } = await supabase
+          .from("products")
+          .update(payload)
+          .eq("id", editingId);
+
+        if (error) throw error;
+
+        if (imageFile && oldProduct?.image_url) {
+          const oldPath = getStoragePathFromPublicUrl(oldProduct.image_url);
+          if (oldPath) await supabase.storage.from(IMAGE_BUCKET).remove([oldPath]);
+        }
+
+        setMessage("Ürün başarıyla güncellendi.");
+      } else {
+        const { data: sessionData } = await supabase.auth.getSession();
+        const userId = sessionData.session?.user.id;
+
+        const { error } = await supabase.from("products").insert({
+          ...payload,
+          is_active: true,
+          created_by: userId,
+        });
+
+        if (error) throw error;
+        setMessage("Ürün başarıyla eklendi.");
+      }
+
+      resetForm();
+      await loadProducts();
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "İşlem sırasında hata oluştu.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function updateYangPrice(product: Product) {
+    const newPrice = Number(quickYangPrices[product.id]);
+    if (Number.isNaN(newPrice) || newPrice < 0) {
+      setMessage("Geçerli bir Yang fiyatı gir.");
+      return;
+    }
+
+    setQuickSavingId(product.id);
+    setMessage("");
+
+    const previousProducts = products;
+    setProducts((current) =>
+      current.map((item) =>
+        item.id === product.id ? { ...item, price: newPrice } : item,
+      ),
+    );
+
+    const { error } = await supabase
+      .from("products")
+      .update({ price: newPrice })
+      .eq("id", product.id);
+
+    if (error) {
+      setProducts(previousProducts);
+      setMessage(error.message);
+    } else {
+      setMessage(`${product.name} fiyatı anında güncellendi.`);
+    }
+
+    setQuickSavingId(null);
+  }
+
+  async function toggleProduct(product: Product) {
+    const { error } = await supabase
+      .from("products")
+      .update({ is_active: !product.is_active })
+      .eq("id", product.id);
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    await loadProducts();
+  }
+
+  async function deleteProduct(product: Product) {
+    const confirmed = window.confirm("Bu ürünü silmek istediğine emin misin?");
+    if (!confirmed) return;
+
+    const { error } = await supabase.from("products").delete().eq("id", product.id);
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    const imagePath = getStoragePathFromPublicUrl(product.image_url);
+    if (imagePath) await supabase.storage.from(IMAGE_BUCKET).remove([imagePath]);
+
+    if (editingId === product.id) resetForm();
+    await loadProducts();
+  }
+
+  if (loading) {
+    return <main className="min-h-screen bg-[#050707] p-8 text-white">Kontrol ediliyor...</main>;
+  }
+
+  if (!authorized) {
+    return (
+      <main className="min-h-screen bg-[#050707] p-8 text-white">
+        <div className="mx-auto max-w-xl rounded-xl border border-red-500/40 bg-red-950/20 p-6">
+          {message}
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-[#050707] px-4 py-8 text-white sm:px-6">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          <div>
+            <h1 className="text-3xl font-black text-[#d9aa4a]">HASWOLF Admin Paneli</h1>
+            <p className="mt-2 text-sm text-zinc-400">
+              Ürün, görsel ve Yang fiyatlarını tek panelden yönet
+            </p>
+          </div>
+          <button
+            onClick={() => router.push("/")}
+            className="rounded-lg border border-[#8c641e] px-4 py-3 text-[#e5b64e]"
+          >
+            Siteye Dön
+          </button>
+        </div>
+
+        <section className="mb-8 rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-5">
+          <div className="mb-4">
+            <h2 className="text-xl font-black text-[#e3b653]">Hızlı Yang Fiyat Yönetimi</h2>
+            <p className="mt-1 text-sm text-zinc-400">
+              Kaydet dediğinde ana sayfadaki fiyat Supabase Realtime üzerinden hemen yenilenir.
+            </p>
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {yangProducts.map((product) => (
+              <div key={product.id} className="rounded-lg border border-white/10 bg-black/50 p-4">
+                <div className="mb-3 flex items-start justify-between gap-3">
+                  <div>
+                    <p className="font-bold">{product.name}</p>
+                    <p className="text-xs text-zinc-500">{product.server}</p>
+                  </div>
+                  <span className={product.is_active ? "text-xs text-emerald-400" : "text-xs text-red-400"}>
+                    {product.is_active ? "Yayında" : "Pasif"}
+                  </span>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={quickYangPrices[product.id] ?? ""}
+                    onChange={(event) =>
+                      setQuickYangPrices((current) => ({
+                        ...current,
+                        [product.id]: event.target.value,
+                      }))
+                    }
+                    className="min-w-0 flex-1 rounded-lg border border-white/10 bg-black px-3 py-2"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => updateYangPrice(product)}
+                    disabled={quickSavingId === product.id}
+                    className="rounded-lg bg-[#d1a13d] px-4 py-2 font-bold text-black disabled:opacity-60"
+                  >
+                    {quickSavingId === product.id ? "..." : "Kaydet"}
+                  </button>
+                </div>
+              </div>
+            ))}
+            {yangProducts.length === 0 && (
+              <p className="text-sm text-zinc-500">Henüz Yang ilanı eklenmemiş.</p>
+            )}
+          </div>
+        </section>
+
+        <form
+          onSubmit={handleSubmit}
+          className="grid gap-4 rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-6 md:grid-cols-2"
+        >
+          <input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Ürün adı (ör. 250M Yang)" className="rounded-lg border border-white/10 bg-black px-4 py-3" />
+          <input required type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Fiyat" className="rounded-lg border border-white/10 bg-black px-4 py-3" />
+
+          <select value={category} onChange={(e) => setCategory(e.target.value as Product["category"])} className="rounded-lg border border-white/10 bg-black px-4 py-3">
+            <option value="item">Item Market</option>
+            <option value="yang">Yang Market</option>
+            <option value="account">Hesap Market</option>
+          </select>
+
+          <select value={server} onChange={(e) => setServer(e.target.value as Product["server"])} className="rounded-lg border border-white/10 bg-black px-4 py-3">
+            <option value="EPHESUS">EPHESUS</option>
+            <option value="PERGAMON">PERGAMON</option>
+            <option value="TEOS">TEOS</option>
+          </select>
+
+          <input type="number" min="0" value={stock} onChange={(e) => setStock(e.target.value)} placeholder="Stok" className="rounded-lg border border-white/10 bg-black px-4 py-3" />
+
+          <label className="rounded-lg border border-dashed border-[#8c641e] bg-black px-4 py-3">
+            <span className="mb-2 block text-sm font-semibold text-[#e3b653]">Bilgisayardan görsel seç</span>
+            <input type="file" accept="image/*" onChange={handleImageSelect} className="block w-full text-sm text-zinc-300" />
+            <span className="mt-2 block text-xs text-zinc-500">JPG, PNG veya WEBP — en fazla 5 MB</span>
+          </label>
+
+          {imagePreview && (
+            <div className="overflow-hidden rounded-lg border border-white/10 bg-black md:col-span-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={imagePreview} alt="Ürün önizleme" className="max-h-72 w-full object-contain" />
+            </div>
+          )}
+
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Açıklama" className="min-h-28 rounded-lg border border-white/10 bg-black px-4 py-3 md:col-span-2" />
+
+          <button disabled={saving} className="rounded-lg bg-gradient-to-r from-[#8b5d18] to-[#d1a13d] px-5 py-4 font-black text-black md:col-span-2">
+            {saving ? "Kaydediliyor..." : editingId !== null ? "Değişiklikleri Kaydet" : "Ürünü Ekle"}
+          </button>
+
+          {editingId !== null && (
+            <button
+              type="button"
+              onClick={resetForm}
+              className="rounded-lg border border-zinc-600 px-5 py-3 text-zinc-300 md:col-span-2"
+            >
+              Düzenlemeyi İptal Et
+            </button>
+          )}
+        </form>
+
+        {message && <p className="mt-4 rounded-lg border border-[#765625]/40 bg-black/40 p-4 text-sm">{message}</p>}
+
+        <div className="mt-8 overflow-x-auto rounded-xl border border-[#765625]/50 bg-[#0b0d0d]">
+          <table className="w-full min-w-[980px] text-left text-sm">
+            <thead className="border-b border-[#765625]/50 text-[#ddb45b]">
+              <tr>
+                <th className="p-4">Görsel</th>
+                <th className="p-4">Ürün</th>
+                <th className="p-4">Market</th>
+                <th className="p-4">Sunucu</th>
+                <th className="p-4">Fiyat</th>
+                <th className="p-4">Stok</th>
+                <th className="p-4">Durum</th>
+                <th className="p-4">İşlem</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((product) => (
+                <tr key={product.id} className="border-b border-white/5">
+                  <td className="p-4">
+                    {product.image_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={product.image_url} alt="" className="h-12 w-12 rounded object-cover" />
+                    ) : (
+                      <span className="text-zinc-600">Yok</span>
+                    )}
+                  </td>
+                  <td className="p-4 font-semibold">{product.name}</td>
+                  <td className="p-4">{product.category}</td>
+                  <td className="p-4">{product.server}</td>
+                  <td className="p-4">{Number(product.price).toLocaleString("tr-TR")} TL</td>
+                  <td className="p-4">{product.stock}</td>
+                  <td className="p-4">{product.is_active ? "Yayında" : "Pasif"}</td>
+                  <td className="flex flex-wrap gap-2 p-4">
+                    <button onClick={() => startEditing(product)} className="rounded border border-blue-500/40 px-3 py-2 text-blue-300">
+                      Düzenle
+                    </button>
+                    <button onClick={() => toggleProduct(product)} className="rounded border border-amber-500/40 px-3 py-2 text-amber-300">
+                      {product.is_active ? "Pasife Al" : "Yayınla"}
+                    </button>
+                    <button onClick={() => deleteProduct(product)} className="rounded border border-red-500/40 px-3 py-2 text-red-300">
+                      Sil
+                    </button>
+                  </td>
+                </tr>
+              ))}
+              {products.length === 0 && (
+                <tr><td colSpan={8} className="p-8 text-center text-zinc-500">Henüz ürün eklenmemiş.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  );
+}

@@ -1,8 +1,13 @@
 "use client";
-
-import { useState } from "react";
+import AuthButton from "../components/AuthButton";
+import { useMemo, useState } from "react";
 
 type MarketType = "item" | "yang" | "account";
+type SortOption = "recommended" | "price-asc" | "price-desc" | "newest";
+
+function priceToNumber(price: string) {
+  return Number(price.replace(/[^0-9]/g, ""));
+}
 
 const servers = [
   { name: "EPHESUS", color: "#45d66b" },
@@ -25,6 +30,7 @@ const categories = [
 
 const itemProducts = [
   {
+    category: "Kolyeler",
     name: "Anka Kolye +9",
     icon: "🔥",
     rarity: "EFSANE",
@@ -39,6 +45,7 @@ const itemProducts = [
     ],
   },
   {
+    category: "Kolyeler",
     name: "Ejderha Kolye +9",
     icon: "🐉",
     rarity: "MİTOLOJİK",
@@ -53,6 +60,7 @@ const itemProducts = [
     ],
   },
   {
+    category: "Kolyeler",
     name: "Zodyak Kolye +9",
     icon: "💎",
     rarity: "NADİR",
@@ -67,6 +75,7 @@ const itemProducts = [
     ],
   },
   {
+    category: "Kolyeler",
     name: "Ayışığı Kolye +9",
     icon: "🌙",
     rarity: "ELİT",
@@ -81,6 +90,7 @@ const itemProducts = [
     ],
   },
   {
+    category: "Kolyeler",
     name: "Mavi İnci Kolye +8",
     icon: "🔵",
     rarity: "ELİT",
@@ -95,6 +105,7 @@ const itemProducts = [
     ],
   },
   {
+    category: "Kolyeler",
     name: "Gümüş Kolye +8",
     icon: "⚪",
     rarity: "NORMAL",
@@ -109,6 +120,7 @@ const itemProducts = [
     ],
   },
   {
+    category: "Kolyeler",
     name: "Yakut Kolye +7",
     icon: "🔴",
     rarity: "NORMAL",
@@ -123,6 +135,7 @@ const itemProducts = [
     ],
   },
   {
+    category: "Kolyeler",
     name: "Cennet Kolye +7",
     icon: "🔷",
     rarity: "NORMAL",
@@ -135,8 +148,7 @@ const itemProducts = [
       "Zehirleme Şansı +%5",
       "Şimşek Direnci %10",
     ],
-  },
-];
+  },];
 
 const yangPackages = [
   { amount: "100 Yang", price: "250 TL", bonus: "Başlangıç Paketi" },
@@ -254,54 +266,122 @@ function WolfLogo() {
 export default function Home() {
   const [market, setMarket] = useState<MarketType>("item");
   const [selectedServer, setSelectedServer] = useState("EPHESUS");
+  const [selectedCategory, setSelectedCategory] = useState("Tüm Ürünler");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sortOption, setSortOption] = useState<SortOption>("recommended");
+
+  const displayedItemProducts = useMemo(() => {
+    const filtered = itemProducts.filter((product) =>
+      selectedCategory === "Tüm Ürünler"
+        ? true
+        : product.category === selectedCategory
+    );
+
+    const products = [...filtered];
+    if (sortOption === "price-asc") {
+      return products.sort((a, b) => priceToNumber(a.price) - priceToNumber(b.price));
+    }
+    if (sortOption === "price-desc") {
+      return products.sort((a, b) => priceToNumber(b.price) - priceToNumber(a.price));
+    }
+    if (sortOption === "newest") {
+      return products.reverse();
+    }
+    return products;
+  }, [selectedCategory, sortOption]);
+
+  const displayedYangPackages = useMemo(() => {
+    const packages = [...yangPackages];
+    if (sortOption === "price-asc") {
+      return packages.sort((a, b) => priceToNumber(a.price) - priceToNumber(b.price));
+    }
+    if (sortOption === "price-desc") {
+      return packages.sort((a, b) => priceToNumber(b.price) - priceToNumber(a.price));
+    }
+    if (sortOption === "newest") {
+      return packages.reverse();
+    }
+    return packages;
+  }, [sortOption]);
+
+  const displayedAccounts = useMemo(() => {
+    const list = [...accounts];
+    if (sortOption === "price-asc") {
+      return list.sort((a, b) => priceToNumber(a.price) - priceToNumber(b.price));
+    }
+    if (sortOption === "price-desc") {
+      return list.sort((a, b) => priceToNumber(b.price) - priceToNumber(a.price));
+    }
+    if (sortOption === "newest") {
+      return list.reverse();
+    }
+    return list;
+  }, [sortOption]);
+
+  function goToMarket(type: MarketType) {
+    setMarket(type);
+    setMobileMenuOpen(false);
+    window.setTimeout(() => {
+      document.getElementById("market")?.scrollIntoView({ behavior: "smooth" });
+    }, 0);
+  }
+
+  function openWhatsApp(message: string) {
+    const url = `https://wa.me/905010942080?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
 
   return (
-    <main className="min-h-screen bg-[#050707] text-white">
+    <main id="top" className="min-h-screen bg-[#050707] text-white">
       <header className="sticky top-0 z-50 border-b border-[#8c641e]/40 bg-black/95 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-[1500px] items-center justify-between px-6 py-4">
-          <WolfLogo />
+        <div className="mx-auto flex max-w-[1500px] items-center justify-between px-3 py-3 sm:px-6 sm:py-4">
+          <div className="origin-left scale-75 sm:scale-100">
+            <WolfLogo />
+          </div>
 
           <nav className="hidden items-center gap-8 text-sm text-zinc-300 lg:flex">
-            <a href="#" className="hover:text-[#d9aa4a]">
-              Ana Sayfa
-            </a>
-
-            <button
-              onClick={() => setMarket("item")}
-              className="hover:text-[#d9aa4a]"
-            >
-              Item Market
-            </button>
-
-            <button
-              onClick={() => setMarket("yang")}
-              className="hover:text-[#d9aa4a]"
-            >
-              Yang Market
-            </button>
-
-            <button
-              onClick={() => setMarket("account")}
-              className="hover:text-[#d9aa4a]"
-            >
-              Hesap Market
-            </button>
-
-            <a href="#footer" className="hover:text-[#d9aa4a]">
-              İletişim
-            </a>
+            <a href="#top" className="hover:text-[#d9aa4a]">Ana Sayfa</a>
+            <button onClick={() => goToMarket("item")} className="hover:text-[#d9aa4a]">Item Market</button>
+            <button onClick={() => goToMarket("yang")} className="hover:text-[#d9aa4a]">Yang Market</button>
+            <button onClick={() => goToMarket("account")} className="hover:text-[#d9aa4a]">Hesap Market</button>
+            <a href="#footer" className="hover:text-[#d9aa4a]">İletişim</a>
+            <a href="/admin" className="hover:text-[#d9aa4a]">Admin</a>
           </nav>
 
-          <div className="flex items-center gap-3">
-            <button className="rounded-lg border border-[#806027] px-4 py-3 text-sm font-semibold text-zinc-200 transition hover:border-[#d9aa4a] hover:text-[#d9aa4a]">
-              Giriş Yap
-            </button>
-
-            <button className="rounded-lg border border-[#b8862c] px-4 py-3 text-sm font-semibold text-[#e8bd67] transition hover:bg-[#d7a947] hover:text-black">
+          <div className="hidden items-center gap-3 lg:flex">
+            <AuthButton />
+            <button
+              onClick={() => openWhatsApp("Merhaba Haswolf, destek almak istiyorum.")}
+              className="rounded-lg border border-[#b8862c] px-4 py-3 text-sm font-semibold text-[#e8bd67] transition hover:bg-[#d7a947] hover:text-black"
+            >
               7/24 Destek
             </button>
           </div>
+
+          <button
+            type="button"
+            aria-label="Menüyü aç"
+            onClick={() => setMobileMenuOpen((value) => !value)}
+            className="rounded-lg border border-[#b8862c] px-3 py-2 text-2xl text-[#e8bd67] lg:hidden"
+          >
+            {mobileMenuOpen ? "✕" : "☰"}
+          </button>
         </div>
+
+        {mobileMenuOpen && (
+          <div className="border-t border-[#8c641e]/30 bg-black px-4 py-4 lg:hidden">
+            <div className="flex flex-col gap-3 text-sm text-zinc-200">
+              <a href="#top" onClick={() => setMobileMenuOpen(false)} className="rounded-lg bg-white/5 px-4 py-3">Ana Sayfa</a>
+              <button onClick={() => goToMarket("item")} className="rounded-lg bg-white/5 px-4 py-3 text-left">Item Market</button>
+              <button onClick={() => goToMarket("yang")} className="rounded-lg bg-white/5 px-4 py-3 text-left">Yang Market</button>
+              <button onClick={() => goToMarket("account")} className="rounded-lg bg-white/5 px-4 py-3 text-left">Hesap Market</button>
+              <a href="#footer" onClick={() => setMobileMenuOpen(false)} className="rounded-lg bg-white/5 px-4 py-3">İletişim</a>
+              <a href="/admin" onClick={() => setMobileMenuOpen(false)} className="rounded-lg bg-white/5 px-4 py-3">Admin Paneli</a>
+              <div className="rounded-lg bg-white/5 px-4 py-3"><AuthButton /></div>
+              <button onClick={() => openWhatsApp("Merhaba Haswolf, destek almak istiyorum.")} className="rounded-lg border border-green-500/50 bg-green-900/40 px-4 py-3 text-left text-green-300">WhatsApp Destek</button>
+            </div>
+          </div>
+        )}
       </header>
 
       <section className="relative overflow-hidden border-b border-[#8c641e]/35">
@@ -328,15 +408,15 @@ export default function Home() {
 
             <div className="mt-9 flex flex-wrap gap-4">
               <button
-                onClick={() => setMarket("item")}
+                onClick={() => goToMarket("item")}
                 className="rounded-lg bg-gradient-to-b from-[#e6ba58] to-[#a97521] px-7 py-4 font-bold text-black"
               >
                 Markete Git
               </button>
 
-              <button className="rounded-lg border border-[#88652b] px-7 py-4 font-semibold text-[#e0bb70]">
+              <a href="#nasil-alisveris" className="rounded-lg border border-[#88652b] px-7 py-4 font-semibold text-[#e0bb70]">
                 Nasıl Alışveriş Yapılır?
-              </button>
+              </a>
             </div>
           </div>
 
@@ -419,10 +499,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1500px] px-6 pb-6">
+      <section id="market" className="mx-auto max-w-[1500px] px-4 pb-6 sm:px-6">
         <div className="grid gap-3 rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-3 md:grid-cols-3">
           <button
-            onClick={() => setMarket("item")}
+            onClick={() => goToMarket("item")}
             className={`rounded-lg px-5 py-4 font-bold transition ${
               market === "item"
                 ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
@@ -433,7 +513,7 @@ export default function Home() {
           </button>
 
           <button
-            onClick={() => setMarket("yang")}
+            onClick={() => goToMarket("yang")}
             className={`rounded-lg px-5 py-4 font-bold transition ${
               market === "yang"
                 ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
@@ -444,7 +524,7 @@ export default function Home() {
           </button>
 
           <button
-            onClick={() => setMarket("account")}
+            onClick={() => goToMarket("account")}
             className={`rounded-lg px-5 py-4 font-bold transition ${
               market === "account"
                 ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
@@ -465,13 +545,16 @@ export default function Home() {
               </h2>
 
               <div className="mt-3 space-y-2">
-                {categories.map(([icon, name], index) => (
+                {categories.map(([icon, name]) => (
                   <button
                     key={name}
-                    className={`flex w-full items-center gap-4 rounded-lg border px-4 py-4 text-left text-sm ${
-                      index === 3
-                        ? "border-[#c7973d] bg-gradient-to-r from-[#795315] to-[#bd8d32]"
-                        : "border-white/10 bg-[#121515] text-zinc-300"
+                    type="button"
+                    onClick={() => setSelectedCategory(name)}
+                    aria-pressed={selectedCategory === name}
+                    className={`flex w-full items-center gap-4 rounded-lg border px-4 py-4 text-left text-sm transition ${
+                      selectedCategory === name
+                        ? "border-[#c7973d] bg-gradient-to-r from-[#795315] to-[#bd8d32] text-black"
+                        : "border-white/10 bg-[#121515] text-zinc-300 hover:border-[#9c7432] hover:text-[#e6bd68]"
                     }`}
                   >
                     <span className="w-6 text-center text-lg">{icon}</span>
@@ -487,12 +570,14 @@ export default function Home() {
           <div className="rounded-xl border border-[#765625]/50 bg-[#090b0b] p-5">
             <MarketTitle
               server={selectedServer}
-              title="KOLYELER"
+              title={selectedCategory === "Tüm Ürünler" ? "TÜM ÜRÜNLER" : selectedCategory.toUpperCase()}
               color="#55d35a"
+              sortOption={sortOption}
+              onSortChange={setSortOption}
             />
 
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {itemProducts.map((product) => (
+              {displayedItemProducts.map((product) => (
                 <article
                   key={product.name}
                   className="overflow-hidden rounded-xl border border-[#765625]/50 bg-gradient-to-b from-[#101313] to-[#070909] transition hover:-translate-y-1 hover:border-[#d0a14b]"
@@ -533,10 +618,22 @@ export default function Home() {
                       ◉ {product.price}
                     </div>
 
-                    <WhatsAppButton />
+                    <WhatsAppButton message={`Merhaba Haswolf, ${selectedServer} sunucusundaki ${product.name} ürünü hakkında bilgi almak istiyorum.`} />
                   </div>
                 </article>
               ))}
+
+              {displayedItemProducts.length === 0 && (
+                <div className="col-span-full rounded-xl border border-dashed border-[#765625]/60 bg-black/20 px-6 py-12 text-center">
+                  <div className="text-4xl">📦</div>
+                  <h3 className="mt-4 text-lg font-bold text-[#ddb45b]">
+                    Bu kategoride henüz ürün yok
+                  </h3>
+                  <p className="mt-2 text-sm text-zinc-500">
+                    Admin panelinden ürün eklediğinde burada otomatik görünecek.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -549,10 +646,12 @@ export default function Home() {
               server={selectedServer}
               title="YANG MARKET"
               color="#e5b64e"
+              sortOption={sortOption}
+              onSortChange={setSortOption}
             />
 
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {yangPackages.map((pack) => (
+              {displayedYangPackages.map((pack) => (
                 <article
                   key={pack.amount}
                   className="rounded-xl border border-[#8b672d]/60 bg-gradient-to-b from-[#15130d] to-[#080909] p-7 text-center transition hover:-translate-y-1 hover:border-[#e2b64e]"
@@ -573,7 +672,7 @@ export default function Home() {
                     Sunucu: {selectedServer}
                   </p>
 
-                  <WhatsAppButton />
+                  <WhatsAppButton message={`Merhaba Haswolf, ${selectedServer} sunucusu için ${pack.amount} paketini satın almak istiyorum.`} />
                 </article>
               ))}
             </div>
@@ -588,10 +687,12 @@ export default function Home() {
               server={selectedServer}
               title="HESAP / KARAKTER MARKET"
               color="#b660ff"
+              sortOption={sortOption}
+              onSortChange={setSortOption}
             />
 
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {accounts.map((account) => (
+              {displayedAccounts.map((account) => (
                 <article
                   key={account.className}
                   className="rounded-xl border border-[#765625]/50 bg-gradient-to-b from-[#131017] to-[#070909] p-6 transition hover:-translate-y-1 hover:border-purple-400"
@@ -622,13 +723,33 @@ export default function Home() {
                     {account.price}
                   </div>
 
-                  <WhatsAppButton />
+                  <WhatsAppButton message={`Merhaba Haswolf, ${selectedServer} sunucusundaki ${account.className} ${account.level} hesabı hakkında bilgi almak istiyorum.`} />
                 </article>
               ))}
             </div>
           </div>
         </section>
       )}
+
+
+      <section id="nasil-alisveris" className="mx-auto max-w-[1500px] px-4 pb-12 sm:px-6">
+        <div className="rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-6 sm:p-8">
+          <h2 className="text-center text-2xl font-black text-[#ddb45b]">Nasıl Alışveriş Yapılır?</h2>
+          <div className="mt-8 grid gap-5 md:grid-cols-3">
+            {[
+              ["1", "Ürünü seç", "Sunucu ve market türünü seçip almak istediğin ürünü belirle."],
+              ["2", "WhatsApp'tan yaz", "Ürün kartındaki WhatsApp düğmesine dokun; hazır mesaj doğrudan açılır."],
+              ["3", "Güvenli teslimat", "Ödeme ve teslimat bilgileri doğrulandıktan sonra işlem tamamlanır."],
+            ].map(([number, title, text]) => (
+              <div key={number} className="rounded-xl border border-[#765625]/40 bg-black/30 p-6">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#d9aa4a] text-lg font-black text-black">{number}</div>
+                <h3 className="mt-4 text-lg font-bold text-white">{title}</h3>
+                <p className="mt-3 text-sm leading-6 text-zinc-400">{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="mx-auto max-w-[1500px] px-6 pb-12">
         <div className="grid gap-5 rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-7 md:grid-cols-4">
@@ -673,41 +794,51 @@ function MarketTitle({
   server,
   title,
   color,
+  sortOption,
+  onSortChange,
 }: {
   server: string;
   title: string;
   color: string;
+  sortOption: SortOption;
+  onSortChange: (value: SortOption) => void;
 }) {
   return (
     <div className="mb-6 flex flex-col justify-between gap-4 border-b border-[#765625]/40 pb-5 md:flex-row md:items-center">
       <div>
-        <span
-          className="text-xl font-bold"
-          style={{ color }}
-        >
+        <span className="text-xl font-bold" style={{ color }}>
           {server}
         </span>
-
         <span className="mx-3 text-zinc-600">›</span>
-
         <span className="text-lg font-semibold">{title}</span>
       </div>
 
-      <select className="rounded-lg border border-[#765625]/50 bg-[#151717] px-4 py-3 text-sm text-zinc-300">
-        <option>Önerilen Sıralama</option>
-        <option>Fiyat: Düşükten Yükseğe</option>
-        <option>Fiyat: Yüksekten Düşüğe</option>
-        <option>Yeni Eklenenler</option>
+      <select
+        value={sortOption}
+        onChange={(event) => onSortChange(event.target.value as SortOption)}
+        className="rounded-lg border border-[#765625]/50 bg-[#151717] px-4 py-3 text-sm text-zinc-300"
+      >
+        <option value="recommended">Önerilen Sıralama</option>
+        <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
+        <option value="price-desc">Fiyat: Yüksekten Düşüğe</option>
+        <option value="newest">Yeni Eklenenler</option>
       </select>
     </div>
   );
 }
 
-function WhatsAppButton() {
+function WhatsAppButton({ message }: { message: string }) {
+  const href = `https://wa.me/905010942080?text=${encodeURIComponent(message)}`;
+
   return (
-    <button className="mt-5 w-full rounded-lg border border-green-400/50 bg-gradient-to-b from-green-700 to-green-900 px-3 py-3 text-sm font-semibold text-white transition hover:brightness-125">
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="mt-5 block w-full rounded-lg border border-green-400/50 bg-gradient-to-b from-green-700 to-green-900 px-3 py-3 text-center text-sm font-semibold text-white transition hover:brightness-125"
+    >
       ☎ WhatsApp ile Satın Al
-    </button>
+    </a>
   );
 }
 
