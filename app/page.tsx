@@ -345,6 +345,7 @@ export default function Home() {
             <button onClick={() => goToMarket("yang")} className="hover:text-[#d9aa4a]">Yang Market</button>
             <button onClick={() => goToMarket("account")} className="hover:text-[#d9aa4a]">Hesap Market</button>
             <a href="#footer" className="hover:text-[#d9aa4a]">İletişim</a>
+            <a href="/topluluk" className="hover:text-[#d9aa4a]">Topluluk</a>
             <a href="/admin" className="hover:text-[#d9aa4a]">Admin</a>
           </nav>
 
@@ -376,6 +377,7 @@ export default function Home() {
               <button onClick={() => goToMarket("yang")} className="rounded-lg bg-white/5 px-4 py-3 text-left">Yang Market</button>
               <button onClick={() => goToMarket("account")} className="rounded-lg bg-white/5 px-4 py-3 text-left">Hesap Market</button>
               <a href="#footer" onClick={() => setMobileMenuOpen(false)} className="rounded-lg bg-white/5 px-4 py-3">İletişim</a>
+              <a href="/topluluk" onClick={() => setMobileMenuOpen(false)} className="rounded-lg bg-white/5 px-4 py-3">Topluluk</a>
               <a href="/admin" onClick={() => setMobileMenuOpen(false)} className="rounded-lg bg-white/5 px-4 py-3">Admin Paneli</a>
               <div className="rounded-lg bg-white/5 px-4 py-3"><AuthButton /></div>
               <button onClick={() => openWhatsApp("Merhaba Haswolf, destek almak istiyorum.")} className="rounded-lg border border-green-500/50 bg-green-900/40 px-4 py-3 text-left text-green-300">WhatsApp Destek</button>
