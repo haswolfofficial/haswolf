@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MemberSidebar from "./MemberSidebar";
 import ChannelSidebar from "./ChannelSidebar";
 import MessageBubble from "./MessageBubble";
@@ -44,6 +44,8 @@ export default function CommunityLayout({
     useState(false);
 
   const isVoiceRoom = selectedRoom.slug.startsWith("voice");
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   function selectRoom(room: ChatRoom) {
     setSelectedRoom(room);
@@ -278,6 +280,10 @@ export default function CommunityLayout({
     };
   }, [mobileChannelsOpen, mobileMembersOpen]);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   async function sendMessage() {
     const text = newMessage.trim();
 
@@ -450,6 +456,7 @@ export default function CommunityLayout({
                       message={message}
                     />
                   ))}
+                  <div ref={messagesEndRef} />
                 </div>
               ) : (
                 <div className="flex h-full items-center justify-center px-4">
