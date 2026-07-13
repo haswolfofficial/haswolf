@@ -459,6 +459,76 @@ export default function Home() {
         )}
       </header>
 
+      {/* Mobil hızlı menü: header ile ana alan arasındaki şerit */}
+      <nav
+        aria-label="Mobil hızlı menü"
+        className="sticky top-[68px] z-40 border-b border-[#8c641e]/35 bg-[#070909]/95 backdrop-blur-xl lg:hidden"
+      >
+        <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <a
+            href="#top"
+            className="min-w-max snap-start rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-[#b8862c] hover:text-[#e8bd67]"
+          >
+            ⌂ Ana Sayfa
+          </a>
+
+          <button
+            type="button"
+            onClick={() => goToMarket("item")}
+            className="min-w-max snap-start rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-[#b8862c] hover:text-[#e8bd67]"
+          >
+            ⚔ Item Market
+          </button>
+
+          <button
+            type="button"
+            onClick={() => goToMarket("yang")}
+            className="min-w-max snap-start rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-[#b8862c] hover:text-[#e8bd67]"
+          >
+            ◉ Yang Market
+          </button>
+
+          <button
+            type="button"
+            onClick={() => goToMarket("account")}
+            className="min-w-max snap-start rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-[#b8862c] hover:text-[#e8bd67]"
+          >
+            👤 Hesap Market
+          </button>
+
+          <a
+            href="#footer"
+            className="min-w-max snap-start rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-[#b8862c] hover:text-[#e8bd67]"
+          >
+            ☎ İletişim
+          </a>
+
+          <a
+            href="/topluluk"
+            className="min-w-max snap-start rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-[#b8862c] hover:text-[#e8bd67]"
+          >
+            👥 Topluluk
+          </a>
+
+          <a
+            href="/admin"
+            className="min-w-max snap-start rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-[#b8862c] hover:text-[#e8bd67]"
+          >
+            🛡 Admin
+          </a>
+
+          <button
+            type="button"
+            onClick={() =>
+              openWhatsApp("Merhaba Haswolf, destek almak istiyorum.")
+            }
+            className="min-w-max snap-start rounded-lg border border-green-500/40 bg-green-900/30 px-4 py-2.5 text-sm font-medium text-green-300 transition hover:bg-green-800/40"
+          >
+            WhatsApp Destek
+          </button>
+        </div>
+      </nav>
+
       <section className="relative overflow-hidden border-b border-[#8c641e]/35">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_40%,rgba(190,120,25,0.22),transparent_35%),linear-gradient(110deg,#050707_20%,#10100d_55%,#070707)]" />
 
