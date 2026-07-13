@@ -1,4 +1,5 @@
 "use client";
+
 import AuthButton from "../components/AuthButton";
 import { useMemo, useState } from "react";
 
@@ -148,7 +149,8 @@ const itemProducts = [
       "Zehirleme Şansı +%5",
       "Şimşek Direnci %10",
     ],
-  },];
+  },
+];
 
 const yangPackages = [
   { amount: "100 Yang", price: "250 TL", bonus: "Başlangıç Paketi" },
@@ -196,11 +198,11 @@ const accounts = [
 
 function WolfLogo() {
   return (
-    <div className="flex items-center gap-4">
-      <div className="relative flex h-16 w-16 items-center justify-center">
+    <div className="flex items-center gap-3 sm:gap-4">
+      <div className="relative flex h-12 w-12 items-center justify-center sm:h-16 sm:w-16">
         <svg
           viewBox="0 0 120 120"
-          className="h-16 w-16 drop-shadow-[0_0_15px_rgba(217,170,74,0.35)]"
+          className="h-12 w-12 drop-shadow-[0_0_15px_rgba(217,170,74,0.35)] sm:h-16 sm:w-16"
           aria-label="HASWOLF logosu"
         >
           <defs>
@@ -217,45 +219,23 @@ function WolfLogo() {
             stroke="url(#gold)"
             strokeWidth="5"
           />
-
-          <path
-            d="M29 31 L46 43 L37 60 Z"
-            fill="url(#gold)"
-          />
-
-          <path
-            d="M91 31 L74 43 L83 60 Z"
-            fill="url(#gold)"
-          />
-
-          <path
-            d="M37 62 L53 57 L47 72 Z"
-            fill="#f5c451"
-          />
-
-          <path
-            d="M83 62 L67 57 L73 72 Z"
-            fill="#f5c451"
-          />
-
+          <path d="M29 31 L46 43 L37 60 Z" fill="url(#gold)" />
+          <path d="M91 31 L74 43 L83 60 Z" fill="url(#gold)" />
+          <path d="M37 62 L53 57 L47 72 Z" fill="#f5c451" />
+          <path d="M83 62 L67 57 L73 72 Z" fill="#f5c451" />
           <path
             d="M47 79 L60 86 L73 79 L67 94 L60 98 L53 94 Z"
             fill="url(#gold)"
           />
-
-          <path
-            d="M52 74 L60 68 L68 74 L60 82 Z"
-            fill="#d6a33d"
-          />
+          <path d="M52 74 L60 68 L68 74 L60 82 Z" fill="#d6a33d" />
         </svg>
       </div>
 
       <div>
-        <div className="text-3xl font-black tracking-[0.18em] text-[#d9aa4a]">
+        <div className="text-xl font-black tracking-[0.14em] text-[#d9aa4a] sm:text-3xl sm:tracking-[0.18em]">
           HASWOLF
         </div>
-
-        <div className="text-[10px] tracking-[0.34em] text-zinc-500">
+        <div className="text-[8px] tracking-[0.28em] text-zinc-500 sm:text-[10px] sm:tracking-[0.34em]">
           MARKET
         </div>
       </div>
@@ -278,51 +258,79 @@ export default function Home() {
     );
 
     const products = [...filtered];
+
     if (sortOption === "price-asc") {
-      return products.sort((a, b) => priceToNumber(a.price) - priceToNumber(b.price));
+      return products.sort(
+        (a, b) => priceToNumber(a.price) - priceToNumber(b.price)
+      );
     }
+
     if (sortOption === "price-desc") {
-      return products.sort((a, b) => priceToNumber(b.price) - priceToNumber(a.price));
+      return products.sort(
+        (a, b) => priceToNumber(b.price) - priceToNumber(a.price)
+      );
     }
+
     if (sortOption === "newest") {
       return products.reverse();
     }
+
     return products;
   }, [selectedCategory, sortOption]);
 
   const displayedYangPackages = useMemo(() => {
     const packages = [...yangPackages];
+
     if (sortOption === "price-asc") {
-      return packages.sort((a, b) => priceToNumber(a.price) - priceToNumber(b.price));
+      return packages.sort(
+        (a, b) => priceToNumber(a.price) - priceToNumber(b.price)
+      );
     }
+
     if (sortOption === "price-desc") {
-      return packages.sort((a, b) => priceToNumber(b.price) - priceToNumber(a.price));
+      return packages.sort(
+        (a, b) => priceToNumber(b.price) - priceToNumber(a.price)
+      );
     }
+
     if (sortOption === "newest") {
       return packages.reverse();
     }
+
     return packages;
   }, [sortOption]);
 
   const displayedAccounts = useMemo(() => {
     const list = [...accounts];
+
     if (sortOption === "price-asc") {
-      return list.sort((a, b) => priceToNumber(a.price) - priceToNumber(b.price));
+      return list.sort(
+        (a, b) => priceToNumber(a.price) - priceToNumber(b.price)
+      );
     }
+
     if (sortOption === "price-desc") {
-      return list.sort((a, b) => priceToNumber(b.price) - priceToNumber(a.price));
+      return list.sort(
+        (a, b) => priceToNumber(b.price) - priceToNumber(a.price)
+      );
     }
+
     if (sortOption === "newest") {
       return list.reverse();
     }
+
     return list;
   }, [sortOption]);
 
   function goToMarket(type: MarketType) {
     setMarket(type);
     setMobileMenuOpen(false);
+
     window.setTimeout(() => {
-      document.getElementById("market")?.scrollIntoView({ behavior: "smooth" });
+      document.getElementById("market")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }, 0);
   }
 
@@ -332,27 +340,41 @@ export default function Home() {
   }
 
   return (
-    <main id="top" className="min-h-screen bg-[#050707] text-white">
+    <main id="top" className="min-h-screen overflow-x-hidden bg-[#050707] text-white">
       <header className="sticky top-0 z-50 border-b border-[#8c641e]/40 bg-black/95 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-[1500px] items-center justify-between px-3 py-3 sm:px-6 sm:py-4">
-          <div className="origin-left scale-75 sm:scale-100">
-            <WolfLogo />
-          </div>
+        <div className="mx-auto flex h-[68px] max-w-[1500px] items-center justify-between px-3 sm:h-auto sm:px-6 sm:py-4">
+          <WolfLogo />
 
           <nav className="hidden items-center gap-8 text-sm text-zinc-300 lg:flex">
-            <a href="#top" className="hover:text-[#d9aa4a]">Ana Sayfa</a>
-            <button onClick={() => goToMarket("item")} className="hover:text-[#d9aa4a]">Item Market</button>
-            <button onClick={() => goToMarket("yang")} className="hover:text-[#d9aa4a]">Yang Market</button>
-            <button onClick={() => goToMarket("account")} className="hover:text-[#d9aa4a]">Hesap Market</button>
-            <a href="#footer" className="hover:text-[#d9aa4a]">İletişim</a>
-            <a href="/topluluk" className="hover:text-[#d9aa4a]">Topluluk</a>
-            <a href="/admin" className="hover:text-[#d9aa4a]">Admin</a>
+            <a href="#top" className="hover:text-[#d9aa4a]">
+              Ana Sayfa
+            </a>
+            <button onClick={() => goToMarket("item")} className="hover:text-[#d9aa4a]">
+              Item Market
+            </button>
+            <button onClick={() => goToMarket("yang")} className="hover:text-[#d9aa4a]">
+              Yang Market
+            </button>
+            <button onClick={() => goToMarket("account")} className="hover:text-[#d9aa4a]">
+              Hesap Market
+            </button>
+            <a href="#footer" className="hover:text-[#d9aa4a]">
+              İletişim
+            </a>
+            <a href="/topluluk" className="hover:text-[#d9aa4a]">
+              Topluluk
+            </a>
+            <a href="/admin" className="hover:text-[#d9aa4a]">
+              Admin
+            </a>
           </nav>
 
           <div className="hidden items-center gap-3 lg:flex">
             <AuthButton />
             <button
-              onClick={() => openWhatsApp("Merhaba Haswolf, destek almak istiyorum.")}
+              onClick={() =>
+                openWhatsApp("Merhaba Haswolf, destek almak istiyorum.")
+              }
               className="rounded-lg border border-[#b8862c] px-4 py-3 text-sm font-semibold text-[#e8bd67] transition hover:bg-[#d7a947] hover:text-black"
             >
               7/24 Destek
@@ -361,26 +383,77 @@ export default function Home() {
 
           <button
             type="button"
-            aria-label="Menüyü aç"
+            aria-label={mobileMenuOpen ? "Menüyü kapat" : "Menüyü aç"}
+            aria-expanded={mobileMenuOpen}
             onClick={() => setMobileMenuOpen((value) => !value)}
-            className="rounded-lg border border-[#b8862c] px-3 py-2 text-2xl text-[#e8bd67] lg:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-lg border border-[#b8862c] text-2xl text-[#e8bd67] lg:hidden"
           >
             {mobileMenuOpen ? "✕" : "☰"}
           </button>
         </div>
 
         {mobileMenuOpen && (
-          <div className="border-t border-[#8c641e]/30 bg-black px-4 py-4 lg:hidden">
+          <div className="max-h-[calc(100vh-68px)] overflow-y-auto border-t border-[#8c641e]/30 bg-black/98 px-4 py-4 lg:hidden">
             <div className="flex flex-col gap-3 text-sm text-zinc-200">
-              <a href="#top" onClick={() => setMobileMenuOpen(false)} className="rounded-lg bg-white/5 px-4 py-3">Ana Sayfa</a>
-              <button onClick={() => goToMarket("item")} className="rounded-lg bg-white/5 px-4 py-3 text-left">Item Market</button>
-              <button onClick={() => goToMarket("yang")} className="rounded-lg bg-white/5 px-4 py-3 text-left">Yang Market</button>
-              <button onClick={() => goToMarket("account")} className="rounded-lg bg-white/5 px-4 py-3 text-left">Hesap Market</button>
-              <a href="#footer" onClick={() => setMobileMenuOpen(false)} className="rounded-lg bg-white/5 px-4 py-3">İletişim</a>
-              <a href="/topluluk" onClick={() => setMobileMenuOpen(false)} className="rounded-lg bg-white/5 px-4 py-3">Topluluk</a>
-              <a href="/admin" onClick={() => setMobileMenuOpen(false)} className="rounded-lg bg-white/5 px-4 py-3">Admin Paneli</a>
-              <div className="rounded-lg bg-white/5 px-4 py-3"><AuthButton /></div>
-              <button onClick={() => openWhatsApp("Merhaba Haswolf, destek almak istiyorum.")} className="rounded-lg border border-green-500/50 bg-green-900/40 px-4 py-3 text-left text-green-300">WhatsApp Destek</button>
+              <a
+                href="#top"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-lg bg-white/5 px-4 py-3"
+              >
+                Ana Sayfa
+              </a>
+              <button
+                onClick={() => goToMarket("item")}
+                className="rounded-lg bg-white/5 px-4 py-3 text-left"
+              >
+                Item Market
+              </button>
+              <button
+                onClick={() => goToMarket("yang")}
+                className="rounded-lg bg-white/5 px-4 py-3 text-left"
+              >
+                Yang Market
+              </button>
+              <button
+                onClick={() => goToMarket("account")}
+                className="rounded-lg bg-white/5 px-4 py-3 text-left"
+              >
+                Hesap Market
+              </button>
+              <a
+                href="#footer"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-lg bg-white/5 px-4 py-3"
+              >
+                İletişim
+              </a>
+              <a
+                href="/topluluk"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-lg bg-white/5 px-4 py-3"
+              >
+                Topluluk
+              </a>
+              <a
+                href="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-lg bg-white/5 px-4 py-3"
+              >
+                Admin Paneli
+              </a>
+
+              <div className="rounded-lg bg-white/5 px-4 py-3">
+                <AuthButton />
+              </div>
+
+              <button
+                onClick={() =>
+                  openWhatsApp("Merhaba Haswolf, destek almak istiyorum.")
+                }
+                className="rounded-lg border border-green-500/50 bg-green-900/40 px-4 py-3 text-left text-green-300"
+              >
+                WhatsApp Destek
+              </button>
             </div>
           </div>
         )}
@@ -389,42 +462,45 @@ export default function Home() {
       <section className="relative overflow-hidden border-b border-[#8c641e]/35">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_40%,rgba(190,120,25,0.22),transparent_35%),linear-gradient(110deg,#050707_20%,#10100d_55%,#070707)]" />
 
-        <div className="relative mx-auto grid min-h-[500px] max-w-[1500px] items-center gap-12 px-6 py-20 lg:grid-cols-[1fr_0.8fr]">
+        <div className="relative mx-auto grid min-h-[420px] max-w-[1500px] items-center gap-8 px-4 py-12 sm:px-6 sm:py-16 lg:min-h-[500px] lg:grid-cols-[1fr_0.8fr] lg:gap-12 lg:py-20">
           <div>
-            <p className="text-sm font-semibold tracking-[0.32em] text-[#d5a23e]">
+            <p className="text-[11px] font-semibold tracking-[0.22em] text-[#d5a23e] sm:text-sm sm:tracking-[0.32em]">
               GÜVENİLİR • HIZLI • PROFESYONEL
             </p>
 
-            <h1 className="mt-5 text-6xl font-black tracking-wide text-[#d9aa4a] md:text-8xl">
+            <h1 className="mt-4 text-[42px] font-black leading-none tracking-[0.08em] text-[#d9aa4a] sm:text-6xl md:text-8xl">
               HASWOLF
             </h1>
 
-            <h2 className="mt-3 text-xl tracking-[0.28em] text-zinc-300">
+            <h2 className="mt-3 text-sm tracking-[0.38em] text-zinc-300 sm:text-xl">
               MARKET
             </h2>
 
-            <p className="mt-8 max-w-xl text-lg leading-8 text-zinc-400">
+            <p className="mt-6 max-w-xl text-[15px] leading-7 text-zinc-400 sm:mt-8 sm:text-lg sm:leading-8">
               Item, Yang ve karakter alışverişinde güvenli, hızlı ve seçkin
               pazar deneyimi.
             </p>
 
-            <div className="mt-9 flex flex-wrap gap-4">
+            <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap sm:gap-4">
               <button
                 onClick={() => goToMarket("item")}
-                className="rounded-lg bg-gradient-to-b from-[#e6ba58] to-[#a97521] px-7 py-4 font-bold text-black"
+                className="min-h-12 w-full rounded-lg bg-gradient-to-b from-[#e6ba58] to-[#a97521] px-7 py-3.5 text-center font-bold text-black sm:w-auto sm:py-4"
               >
                 Markete Git
               </button>
 
-              <a href="#nasil-alisveris" className="rounded-lg border border-[#88652b] px-7 py-4 font-semibold text-[#e0bb70]">
+              <a
+                href="#nasil-alisveris"
+                className="min-h-12 w-full rounded-lg border border-[#88652b] px-7 py-3.5 text-center font-semibold text-[#e0bb70] sm:w-auto sm:py-4"
+              >
                 Nasıl Alışveriş Yapılır?
               </a>
             </div>
           </div>
 
-          <div className="flex justify-center">
-            <div className="relative flex h-80 w-80 items-center justify-center rounded-full border border-[#b18131]/30 bg-[radial-gradient(circle,#33220c,#090909_65%)] shadow-2xl shadow-amber-600/10">
-              <svg viewBox="0 0 120 120" className="h-56 w-56">
+          <div className="hidden justify-center sm:flex">
+            <div className="relative flex h-64 w-64 items-center justify-center rounded-full border border-[#b18131]/30 bg-[radial-gradient(circle,#33220c,#090909_65%)] shadow-2xl shadow-amber-600/10 lg:h-80 lg:w-80">
+              <svg viewBox="0 0 120 120" className="h-44 w-44 lg:h-56 lg:w-56">
                 <path
                   d="M18 20 L45 34 L60 22 L75 34 L102 20 L92 59 L103 82 L78 105 L60 94 L42 105 L17 82 L28 59 Z"
                   fill="#080808"
@@ -445,13 +521,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1500px] px-6 py-8">
-        <div className="rounded-xl border border-[#8c641e]/40 bg-[#0d0f0f]/95 p-6">
-          <h2 className="mb-6 text-center text-xl font-bold text-[#ddb45b]">
+      <section className="mx-auto max-w-[1500px] px-4 py-5 sm:px-6 sm:py-8">
+        <div className="rounded-xl border border-[#8c641e]/40 bg-[#0d0f0f]/95 p-4 sm:p-6">
+          <h2 className="mb-5 text-center text-base font-bold text-[#ddb45b] sm:mb-6 sm:text-xl">
             ─── SUNUCU SEÇİNİZ ───
           </h2>
 
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="-mx-2 flex snap-x snap-mandatory gap-3 overflow-x-auto px-2 pb-2 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 md:pb-0">
             {servers.map((server) => {
               const active = selectedServer === server.name;
 
@@ -459,19 +535,17 @@ export default function Home() {
                 <button
                   key={server.name}
                   onClick={() => setSelectedServer(server.name)}
-                  className={`rounded-xl border bg-black/70 p-6 text-left transition hover:-translate-y-1 ${
-                    active ? "scale-[1.02]" : ""
+                  className={`min-w-[82vw] snap-center rounded-xl border bg-black/70 p-5 text-left transition sm:min-w-[360px] md:min-w-0 md:p-6 md:hover:-translate-y-1 ${
+                    active ? "scale-[1.01]" : ""
                   }`}
                   style={{
                     borderColor: server.color,
-                    boxShadow: active
-                      ? `0 0 35px ${server.color}44`
-                      : "none",
+                    boxShadow: active ? `0 0 35px ${server.color}44` : "none",
                   }}
                 >
                   <div className="flex items-center gap-4">
                     <div
-                      className="flex h-16 w-16 items-center justify-center rounded-full border text-3xl"
+                      className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border text-2xl sm:h-16 sm:w-16 sm:text-3xl"
                       style={{
                         borderColor: server.color,
                         color: server.color,
@@ -483,7 +557,7 @@ export default function Home() {
 
                     <div>
                       <h3
-                        className="text-2xl font-black"
+                        className="text-xl font-black sm:text-2xl"
                         style={{ color: server.color }}
                       >
                         {server.name}
@@ -501,11 +575,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="market" className="mx-auto max-w-[1500px] px-4 pb-6 sm:px-6">
-        <div className="grid gap-3 rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-3 md:grid-cols-3">
+      <section id="market" className="scroll-mt-20 mx-auto max-w-[1500px] px-4 pb-6 sm:px-6">
+        <div className="flex snap-x gap-2 overflow-x-auto rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-2 md:grid md:grid-cols-3 md:gap-3 md:p-3">
           <button
             onClick={() => goToMarket("item")}
-            className={`rounded-lg px-5 py-4 font-bold transition ${
+            className={`min-w-[180px] snap-start whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
               market === "item"
                 ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
                 : "bg-[#141616] text-zinc-400"
@@ -516,7 +590,7 @@ export default function Home() {
 
           <button
             onClick={() => goToMarket("yang")}
-            className={`rounded-lg px-5 py-4 font-bold transition ${
+            className={`min-w-[180px] snap-start whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
               market === "yang"
                 ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
                 : "bg-[#141616] text-zinc-400"
@@ -527,7 +601,7 @@ export default function Home() {
 
           <button
             onClick={() => goToMarket("account")}
-            className={`rounded-lg px-5 py-4 font-bold transition ${
+            className={`min-w-[180px] snap-start whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
               market === "account"
                 ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
                 : "bg-[#141616] text-zinc-400"
@@ -539,21 +613,21 @@ export default function Home() {
       </section>
 
       {market === "item" && (
-        <section className="mx-auto grid max-w-[1500px] gap-6 px-6 pb-12 lg:grid-cols-[270px_1fr]">
+        <section className="mx-auto grid max-w-[1500px] gap-5 px-4 pb-12 sm:px-6 lg:grid-cols-[270px_1fr]">
           <aside>
             <div className="rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-3">
-              <h2 className="border-b border-[#765625]/40 px-4 py-5 font-bold text-[#ddb45b]">
+              <h2 className="border-b border-[#765625]/40 px-3 py-4 font-bold text-[#ddb45b] sm:px-4 sm:py-5">
                 ✣ KATEGORİLER
               </h2>
 
-              <div className="mt-3 space-y-2">
+              <div className="mt-3 flex gap-2 overflow-x-auto pb-1 lg:block lg:space-y-2 lg:overflow-visible">
                 {categories.map(([icon, name]) => (
                   <button
                     key={name}
                     type="button"
                     onClick={() => setSelectedCategory(name)}
                     aria-pressed={selectedCategory === name}
-                    className={`flex w-full items-center gap-4 rounded-lg border px-4 py-4 text-left text-sm transition ${
+                    className={`flex min-w-max items-center gap-2 rounded-lg border px-4 py-3 text-left text-sm transition lg:w-full lg:gap-4 lg:py-4 ${
                       selectedCategory === name
                         ? "border-[#c7973d] bg-gradient-to-r from-[#795315] to-[#bd8d32] text-black"
                         : "border-white/10 bg-[#121515] text-zinc-300 hover:border-[#9c7432] hover:text-[#e6bd68]"
@@ -566,13 +640,19 @@ export default function Home() {
               </div>
             </div>
 
-            <SecurityBox />
+            <div className="hidden lg:block">
+              <SecurityBox />
+            </div>
           </aside>
 
-          <div className="rounded-xl border border-[#765625]/50 bg-[#090b0b] p-5">
+          <div className="rounded-xl border border-[#765625]/50 bg-[#090b0b] p-3 sm:p-5">
             <MarketTitle
               server={selectedServer}
-              title={selectedCategory === "Tüm Ürünler" ? "TÜM ÜRÜNLER" : selectedCategory.toUpperCase()}
+              title={
+                selectedCategory === "Tüm Ürünler"
+                  ? "TÜM ÜRÜNLER"
+                  : selectedCategory.toUpperCase()
+              }
               color="#55d35a"
               sortOption={sortOption}
               onSortChange={setSortOption}
@@ -586,18 +666,18 @@ export default function Home() {
                 >
                   <div className="p-4">
                     <h3
-                      className="text-center font-bold"
+                      className="text-center text-base font-bold sm:text-lg"
                       style={{ color: product.rarityColor }}
                     >
                       {product.name}
                     </h3>
 
-                    <div className="flex h-44 items-center justify-center text-8xl">
+                    <div className="flex h-36 items-center justify-center text-7xl sm:h-44 sm:text-8xl">
                       {product.icon}
                     </div>
 
                     <div
-                      className="text-center text-lg tracking-widest"
+                      className="text-center text-base tracking-widest sm:text-lg"
                       style={{ color: product.rarityColor }}
                     >
                       {product.stars}
@@ -610,7 +690,7 @@ export default function Home() {
                       {product.rarity}
                     </div>
 
-                    <ul className="mt-4 min-h-32 space-y-2 text-xs leading-5 text-zinc-400">
+                    <ul className="mt-4 min-h-0 space-y-2 text-xs leading-5 text-zinc-400 sm:min-h-32">
                       {product.stats.map((stat) => (
                         <li key={stat}>◆ {stat}</li>
                       ))}
@@ -620,7 +700,9 @@ export default function Home() {
                       ◉ {product.price}
                     </div>
 
-                    <WhatsAppButton message={`Merhaba Haswolf, ${selectedServer} sunucusundaki ${product.name} ürünü hakkında bilgi almak istiyorum.`} />
+                    <WhatsAppButton
+                      message={`Merhaba Haswolf, ${selectedServer} sunucusundaki ${product.name} ürünü hakkında bilgi almak istiyorum.`}
+                    />
                   </div>
                 </article>
               ))}
@@ -642,8 +724,8 @@ export default function Home() {
       )}
 
       {market === "yang" && (
-        <section className="mx-auto max-w-[1500px] px-6 pb-12">
-          <div className="rounded-xl border border-[#765625]/50 bg-[#090b0b] p-6">
+        <section className="mx-auto max-w-[1500px] px-4 pb-12 sm:px-6">
+          <div className="rounded-xl border border-[#765625]/50 bg-[#090b0b] p-3 sm:p-6">
             <MarketTitle
               server={selectedServer}
               title="YANG MARKET"
@@ -652,29 +734,25 @@ export default function Home() {
               onSortChange={setSortOption}
             />
 
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {displayedYangPackages.map((pack) => (
                 <article
                   key={pack.amount}
-                  className="rounded-xl border border-[#8b672d]/60 bg-gradient-to-b from-[#15130d] to-[#080909] p-7 text-center transition hover:-translate-y-1 hover:border-[#e2b64e]"
+                  className="rounded-xl border border-[#8b672d]/60 bg-gradient-to-b from-[#15130d] to-[#080909] p-5 text-center transition hover:-translate-y-1 hover:border-[#e2b64e] sm:p-7"
                 >
-                  <div className="text-6xl">🪙</div>
-
-                  <h3 className="mt-5 text-3xl font-black text-[#e5b64e]">
+                  <div className="text-5xl sm:text-6xl">🪙</div>
+                  <h3 className="mt-5 text-2xl font-black text-[#e5b64e] sm:text-3xl">
                     {pack.amount}
                   </h3>
-
-                  <p className="mt-3 text-sm text-emerald-400">
-                    {pack.bonus}
-                  </p>
-
+                  <p className="mt-3 text-sm text-emerald-400">{pack.bonus}</p>
                   <div className="mt-7 text-2xl font-black">{pack.price}</div>
-
                   <p className="mt-3 text-sm text-zinc-500">
                     Sunucu: {selectedServer}
                   </p>
 
-                  <WhatsAppButton message={`Merhaba Haswolf, ${selectedServer} sunucusu için ${pack.amount} paketini satın almak istiyorum.`} />
+                  <WhatsAppButton
+                    message={`Merhaba Haswolf, ${selectedServer} sunucusu için ${pack.amount} paketini satın almak istiyorum.`}
+                  />
                 </article>
               ))}
             </div>
@@ -683,8 +761,8 @@ export default function Home() {
       )}
 
       {market === "account" && (
-        <section className="mx-auto max-w-[1500px] px-6 pb-12">
-          <div className="rounded-xl border border-[#765625]/50 bg-[#090b0b] p-6">
+        <section className="mx-auto max-w-[1500px] px-4 pb-12 sm:px-6">
+          <div className="rounded-xl border border-[#765625]/50 bg-[#090b0b] p-3 sm:p-6">
             <MarketTitle
               server={selectedServer}
               title="HESAP / KARAKTER MARKET"
@@ -693,13 +771,13 @@ export default function Home() {
               onSortChange={setSortOption}
             />
 
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {displayedAccounts.map((account) => (
                 <article
                   key={account.className}
-                  className="rounded-xl border border-[#765625]/50 bg-gradient-to-b from-[#131017] to-[#070909] p-6 transition hover:-translate-y-1 hover:border-purple-400"
+                  className="rounded-xl border border-[#765625]/50 bg-gradient-to-b from-[#131017] to-[#070909] p-5 transition hover:-translate-y-1 hover:border-purple-400 sm:p-6"
                 >
-                  <div className="flex h-40 items-center justify-center text-8xl">
+                  <div className="flex h-32 items-center justify-center text-7xl sm:h-40 sm:text-8xl">
                     {account.icon}
                   </div>
 
@@ -707,9 +785,7 @@ export default function Home() {
                     {account.className}
                   </h3>
 
-                  <p className="mt-2 text-center font-semibold">
-                    {account.level}
-                  </p>
+                  <p className="mt-2 text-center font-semibold">{account.level}</p>
 
                   <p className="mt-1 text-center text-sm text-zinc-500">
                     {account.type}
@@ -725,7 +801,9 @@ export default function Home() {
                     {account.price}
                   </div>
 
-                  <WhatsAppButton message={`Merhaba Haswolf, ${selectedServer} sunucusundaki ${account.className} ${account.level} hesabı hakkında bilgi almak istiyorum.`} />
+                  <WhatsAppButton
+                    message={`Merhaba Haswolf, ${selectedServer} sunucusundaki ${account.className} ${account.level} hesabı hakkında bilgi almak istiyorum.`}
+                  />
                 </article>
               ))}
             </div>
@@ -733,18 +811,37 @@ export default function Home() {
         </section>
       )}
 
+      <section id="nasil-alisveris" className="scroll-mt-20 mx-auto max-w-[1500px] px-4 pb-12 sm:px-6">
+        <div className="rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-5 sm:p-8">
+          <h2 className="text-center text-xl font-black text-[#ddb45b] sm:text-2xl">
+            Nasıl Alışveriş Yapılır?
+          </h2>
 
-      <section id="nasil-alisveris" className="mx-auto max-w-[1500px] px-4 pb-12 sm:px-6">
-        <div className="rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-6 sm:p-8">
-          <h2 className="text-center text-2xl font-black text-[#ddb45b]">Nasıl Alışveriş Yapılır?</h2>
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
+          <div className="mt-7 grid gap-4 md:grid-cols-3">
             {[
-              ["1", "Ürünü seç", "Sunucu ve market türünü seçip almak istediğin ürünü belirle."],
-              ["2", "WhatsApp'tan yaz", "Ürün kartındaki WhatsApp düğmesine dokun; hazır mesaj doğrudan açılır."],
-              ["3", "Güvenli teslimat", "Ödeme ve teslimat bilgileri doğrulandıktan sonra işlem tamamlanır."],
+              [
+                "1",
+                "Ürünü seç",
+                "Sunucu ve market türünü seçip almak istediğin ürünü belirle.",
+              ],
+              [
+                "2",
+                "WhatsApp'tan yaz",
+                "Ürün kartındaki WhatsApp düğmesine dokun; hazır mesaj doğrudan açılır.",
+              ],
+              [
+                "3",
+                "Güvenli teslimat",
+                "Ödeme ve teslimat bilgileri doğrulandıktan sonra işlem tamamlanır.",
+              ],
             ].map(([number, title, text]) => (
-              <div key={number} className="rounded-xl border border-[#765625]/40 bg-black/30 p-6">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#d9aa4a] text-lg font-black text-black">{number}</div>
+              <div
+                key={number}
+                className="rounded-xl border border-[#765625]/40 bg-black/30 p-5 sm:p-6"
+              >
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#d9aa4a] text-lg font-black text-black">
+                  {number}
+                </div>
                 <h3 className="mt-4 text-lg font-bold text-white">{title}</h3>
                 <p className="mt-3 text-sm leading-6 text-zinc-400">{text}</p>
               </div>
@@ -753,8 +850,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1500px] px-6 pb-12">
-        <div className="grid gap-5 rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-7 md:grid-cols-4">
+      <section className="mx-auto max-w-[1500px] px-4 pb-12 sm:px-6">
+        <div className="grid gap-4 rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-5 sm:p-7 md:grid-cols-4">
           {[
             ["⚡", "HIZLI TESLİMAT", "Siparişin en kısa sürede teslim edilir."],
             ["🎧", "7/24 DESTEK", "Her an bizimle iletişime geçebilirsin."],
@@ -770,14 +867,11 @@ export default function Home() {
         </div>
       </section>
 
-      <footer
-        id="footer"
-        className="border-t border-[#765625]/40 bg-black"
-      >
-        <div className="mx-auto flex max-w-[1500px] flex-col items-center justify-between gap-6 px-6 py-10 md:flex-row">
+      <footer id="footer" className="border-t border-[#765625]/40 bg-black">
+        <div className="mx-auto flex max-w-[1500px] flex-col items-center justify-between gap-6 px-4 py-8 sm:px-6 sm:py-10 md:flex-row">
           <WolfLogo />
 
-          <p className="text-sm text-zinc-600">
+          <p className="text-center text-sm text-zinc-600">
             © 2026 HASWOLF MARKET — Tüm hakları saklıdır.
           </p>
 
@@ -806,19 +900,23 @@ function MarketTitle({
   onSortChange: (value: SortOption) => void;
 }) {
   return (
-    <div className="mb-6 flex flex-col justify-between gap-4 border-b border-[#765625]/40 pb-5 md:flex-row md:items-center">
-      <div>
-        <span className="text-xl font-bold" style={{ color }}>
+    <div className="mb-5 flex flex-col justify-between gap-4 border-b border-[#765625]/40 pb-5 md:flex-row md:items-center">
+      <div className="min-w-0">
+        <span className="text-lg font-bold sm:text-xl" style={{ color }}>
           {server}
         </span>
-        <span className="mx-3 text-zinc-600">›</span>
-        <span className="text-lg font-semibold">{title}</span>
+        <span className="mx-2 text-zinc-600 sm:mx-3">›</span>
+        <span className="break-words text-sm font-semibold sm:text-lg">
+          {title}
+        </span>
       </div>
 
       <select
         value={sortOption}
-        onChange={(event) => onSortChange(event.target.value as SortOption)}
-        className="rounded-lg border border-[#765625]/50 bg-[#151717] px-4 py-3 text-sm text-zinc-300"
+        onChange={(event) =>
+          onSortChange(event.target.value as SortOption)
+        }
+        className="w-full rounded-lg border border-[#765625]/50 bg-[#151717] px-4 py-3 text-sm text-zinc-300 outline-none md:w-auto"
       >
         <option value="recommended">Önerilen Sıralama</option>
         <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
@@ -837,7 +935,7 @@ function WhatsAppButton({ message }: { message: string }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="mt-5 block w-full rounded-lg border border-green-400/50 bg-gradient-to-b from-green-700 to-green-900 px-3 py-3 text-center text-sm font-semibold text-white transition hover:brightness-125"
+      className="mt-5 block min-h-12 w-full rounded-lg border border-green-400/50 bg-gradient-to-b from-green-700 to-green-900 px-3 py-3 text-center text-sm font-semibold text-white transition hover:brightness-125"
     >
       ☎ WhatsApp ile Satın Al
     </a>
