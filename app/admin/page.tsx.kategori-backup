@@ -8,7 +8,6 @@ type Product = {
   id: number;
   name: string;
   category: "item" | "yang" | "account";
-  item_category: string | null;
   server: "EPHESUS" | "PERGAMON" | "TEOS";
   price: number;
   description: string | null;
@@ -20,18 +19,6 @@ type Product = {
 const ADMIN_EMAIL = "haswolf666@gmail.com";
 const IMAGE_BUCKET = "product-images";
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
-
-const ITEM_CATEGORIES = [
-  "Silahlar",
-  "Kalkanlar",
-  "Kolyeler",
-  "Ayakkabılar",
-  "Bilezikler",
-  "Küpeler",
-  "Zırhlar",
-  "Kasklar",
-  "Diğer",
-] as const;
 
 function getStoragePathFromPublicUrl(url: string | null) {
   if (!url) return null;
@@ -52,7 +39,6 @@ export default function AdminPage() {
 
   const [name, setName] = useState("");
   const [category, setCategory] = useState<Product["category"]>("item");
-  const [itemCategory, setItemCategory] = useState("Diğer");
   const [server, setServer] = useState<Product["server"]>("EPHESUS");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
@@ -95,7 +81,7 @@ export default function AdminPage() {
   async function loadProducts() {
     const { data, error } = await supabase
       .from("products")
-      .select("id,name,category,item_category,server,price,description,image_url,stock,is_active")
+      .select("id,name,category,server,price,description,image_url,stock,is_active")
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -118,7 +104,6 @@ export default function AdminPage() {
     setEditingId(null);
     setName("");
     setCategory("item");
-    setItemCategory("Diğer");
     setServer("EPHESUS");
     setPrice("");
     setDescription("");
@@ -132,7 +117,6 @@ export default function AdminPage() {
     setEditingId(product.id);
     setName(product.name);
     setCategory(product.category);
-    setItemCategory(product.item_category ?? "Diğer");
     setServer(product.server);
     setPrice(String(product.price));
     setDescription(product.description ?? "");
@@ -201,7 +185,6 @@ export default function AdminPage() {
       const payload = {
         name: name.trim(),
         category,
-        item_category: category === "item" ? itemCategory : null,
         server,
         price: Number(price),
         description: description.trim() || null,
@@ -415,20 +398,6 @@ export default function AdminPage() {
             <option value="account">Hesap Market</option>
           </select>
 
-          {category === "item" && (
-            <select
-              value={itemCategory}
-              onChange={(e) => setItemCategory(e.target.value)}
-              className="rounded-lg border border-white/10 bg-black px-4 py-3"
-            >
-              {ITEM_CATEGORIES.map((item) => (
-                <option key={item} value={item}>
-                  {item}
-                </option>
-              ))}
-            </select>
-          )}
-
           <select value={server} onChange={(e) => setServer(e.target.value as Product["server"])} className="rounded-lg border border-white/10 bg-black px-4 py-3">
             <option value="EPHESUS">EPHESUS</option>
             <option value="PERGAMON">PERGAMON</option>
@@ -470,13 +439,12 @@ export default function AdminPage() {
         {message && <p className="mt-4 rounded-lg border border-[#765625]/40 bg-black/40 p-4 text-sm">{message}</p>}
 
         <div className="mt-8 overflow-x-auto rounded-xl border border-[#765625]/50 bg-[#0b0d0d]">
-          <table className="w-full min-w-[1080px] text-left text-sm">
+          <table className="w-full min-w-[980px] text-left text-sm">
             <thead className="border-b border-[#765625]/50 text-[#ddb45b]">
               <tr>
                 <th className="p-4">Görsel</th>
                 <th className="p-4">Ürün</th>
                 <th className="p-4">Market</th>
-                <th className="p-4">Alt Kategori</th>
                 <th className="p-4">Sunucu</th>
                 <th className="p-4">Fiyat</th>
                 <th className="p-4">Stok</th>
@@ -497,7 +465,6 @@ export default function AdminPage() {
                   </td>
                   <td className="p-4 font-semibold">{product.name}</td>
                   <td className="p-4">{product.category}</td>
-                  <td className="p-4">{product.category === "item" ? product.item_category ?? "Diğer" : "—"}</td>
                   <td className="p-4">{product.server}</td>
                   <td className="p-4">{Number(product.price).toLocaleString("tr-TR")} TL</td>
                   <td className="p-4">{product.stock}</td>
@@ -516,7 +483,7 @@ export default function AdminPage() {
                 </tr>
               ))}
               {products.length === 0 && (
-                <tr><td colSpan={9} className="p-8 text-center text-zinc-500">Henüz ürün eklenmemiş.</td></tr>
+                <tr><td colSpan={8} className="p-8 text-center text-zinc-500">Henüz ürün eklenmemiş.</td></tr>
               )}
             </tbody>
           </table>
