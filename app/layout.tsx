@@ -19,6 +19,11 @@ export const metadata: Metadata = {
   },
   description: "HASWOLF Market ve sohbet platformu",
   applicationName: "HASWOLF",
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: "/icons/haswolf-192.png",
+    apple: "/icons/haswolf-192.png",
+  },
 };
 
 export default function RootLayout({

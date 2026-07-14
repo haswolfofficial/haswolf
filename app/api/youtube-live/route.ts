@@ -16,32 +16,32 @@ function extractChannelId(html: string) {
   );
 }
 
-function extractLiveVideoId(html: string) {
-  const directPatterns = [
-    /"videoId":"([a-zA-Z0-9_-]{11})"[^]{0,12000}?"isLiveNow":true/,
-    /"isLiveNow":true[^]{0,12000}?"videoId":"([a-zA-Z0-9_-]{11})"/,
-    /"videoId":"([a-zA-Z0-9_-]{11})"[^]{0,12000}?"isLive":true/,
-    /"isLive":true[^]{0,12000}?"videoId":"([a-zA-Z0-9_-]{11})"/,
-  ];
+function candidateVideoIds(html: string) {
+  const ids = new Set<string>();
+  for (const match of html.matchAll(/"videoId":"([a-zA-Z0-9_-]{11})"/g)) {
+    ids.add(match[1]);
+  }
+  return [...ids];
+}
 
-  for (const pattern of directPatterns) {
-    const match = html.match(pattern);
-    if (match?.[1]) return match[1];
+function looksLive(html: string, videoId: string) {
+  const indexes: number[] = [];
+  let index = html.indexOf(`"videoId":"${videoId}"`);
+  while (index >= 0) {
+    indexes.push(index);
+    index = html.indexOf(`"videoId":"${videoId}"`, index + 1);
   }
 
-  const liveIndexCandidates = [
-    html.indexOf('"isLiveNow":true'),
-    html.indexOf('"isLive":true'),
-    html.indexOf('"LIVE_STREAM_OFFLINE"'),
-  ].filter((index) => index >= 0);
-
-  for (const liveIndex of liveIndexCandidates) {
-    const nearby = html.slice(Math.max(0, liveIndex - 30000), liveIndex + 30000);
-    const ids = [...nearby.matchAll(/"videoId":"([a-zA-Z0-9_-]{11})"/g)];
-    if (ids.length > 0) return ids.at(-1)?.[1] ?? null;
-  }
-
-  return null;
+  return indexes.some((position) => {
+    const nearby = html.slice(Math.max(0, position - 7000), position + 14000);
+    return (
+      nearby.includes('"isLiveNow":true') ||
+      nearby.includes('"isLive":true') ||
+      nearby.includes('"style":"LIVE"') ||
+      nearby.includes('"label":"LIVE"') ||
+      nearby.includes('"text":"CANLI"')
+    );
+  });
 }
 
 async function fetchYouTube(url: string) {
@@ -57,10 +57,46 @@ async function fetchYouTube(url: string) {
   });
 }
 
+async function videoBelongsToChannel(videoId: string, expectedChannelId: string) {
+  const response = await fetchYouTube(`https://www.youtube.com/watch?v=${videoId}`);
+  const html = await response.text();
+  const ownerChannelId =
+    html.match(/"ownerChannelName":"[^"]*","externalChannelId":"(UC[a-zA-Z0-9_-]+)"/)?.[1] ??
+    html.match(/"externalChannelId":"(UC[a-zA-Z0-9_-]+)"/)?.[1] ??
+    html.match(/"channelId":"(UC[a-zA-Z0-9_-]+)"/)?.[1] ??
+    null;
+
+  const live =
+    html.includes('"isLiveContent":true') ||
+    html.includes('"isLiveNow":true') ||
+    html.includes('"isLive":true');
+
+  return ownerChannelId === expectedChannelId && live;
+}
+
 export async function GET() {
   try {
+    const channelResponse = await fetchYouTube(CHANNEL_URL);
+    const channelHtml = await channelResponse.text();
+    const expectedChannelId = extractChannelId(channelHtml);
+
+    if (!expectedChannelId) {
+      return NextResponse.json(
+        { live: false, videoId: null, reason: "channel-id-not-found" },
+        { headers: { "Cache-Control": "no-store" } }
+      );
+    }
+
     const liveResponse = await fetchYouTube(LIVE_URL);
     const liveHtml = await liveResponse.text();
+    const resolvedLiveChannelId = extractChannelId(liveHtml);
+
+    if (resolvedLiveChannelId && resolvedLiveChannelId !== expectedChannelId) {
+      return NextResponse.json(
+        { live: false, videoId: null, reason: "channel-mismatch" },
+        { headers: { "Cache-Control": "no-store" } }
+      );
+    }
 
     const redirectedVideoId = (() => {
       try {
@@ -71,36 +107,30 @@ export async function GET() {
       }
     })();
 
-    let channelId = extractChannelId(liveHtml);
-    let videoId = redirectedVideoId ?? extractLiveVideoId(liveHtml);
+    const candidates = [
+      redirectedVideoId,
+      ...candidateVideoIds(liveHtml).filter((id) => looksLive(liveHtml, id)),
+      ...candidateVideoIds(channelHtml).filter((id) => looksLive(channelHtml, id)),
+    ].filter((id): id is string => Boolean(id));
 
-    if (!channelId) {
-      const channelResponse = await fetchYouTube(CHANNEL_URL);
-      const channelHtml = await channelResponse.text();
-      channelId = extractChannelId(channelHtml);
-      videoId = videoId ?? extractLiveVideoId(channelHtml);
+    for (const videoId of [...new Set(candidates)].slice(0, 8)) {
+      if (await videoBelongsToChannel(videoId, expectedChannelId)) {
+        return NextResponse.json(
+          { live: true, videoId, channelId: expectedChannelId },
+          { headers: { "Cache-Control": "no-store, no-cache, must-revalidate" } }
+        );
+      }
     }
 
     return NextResponse.json(
-      {
-        live: Boolean(videoId),
-        videoId,
-        channelId,
-      },
-      {
-        headers: {
-          "Cache-Control": "no-store, no-cache, must-revalidate",
-        },
-      }
+      { live: false, videoId: null, channelId: expectedChannelId },
+      { headers: { "Cache-Control": "no-store, no-cache, must-revalidate" } }
     );
-  } catch {
+  } catch (error) {
+    console.error("YouTube live check failed:", error);
     return NextResponse.json(
-      { live: false, videoId: null, channelId: null },
-      {
-        headers: {
-          "Cache-Control": "no-store, no-cache, must-revalidate",
-        },
-      }
+      { live: false, videoId: null },
+      { headers: { "Cache-Control": "no-store, no-cache, must-revalidate" } }
     );
   }
 }

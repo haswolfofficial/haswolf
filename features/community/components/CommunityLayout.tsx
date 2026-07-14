@@ -13,6 +13,7 @@ type CommunityLayoutProps = {
   nickname: string;
   currentUserId: string;
   canManageMembers: boolean;
+  canChangeNicknames: boolean;
 };
 
 type DatabaseMessage = {
@@ -85,6 +86,7 @@ export default function CommunityLayout({
   nickname,
   currentUserId,
   canManageMembers,
+  canChangeNicknames,
 }: CommunityLayoutProps) {
   const [selectedRoom, setSelectedRoom] = useState(rooms[0]);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -99,6 +101,7 @@ export default function CommunityLayout({
   const [roomMenuOpen, setRoomMenuOpen] = useState(false);
   const [mobileChannelsOpen, setMobileChannelsOpen] = useState(false);
   const [mobileMembersOpen, setMobileMembersOpen] = useState(false);
+  const [onlineUserIds, setOnlineUserIds] = useState<string[]>([]);
   const [wolfVisible, setWolfVisible] = useState(false);
 
   const isVoiceRoom = selectedRoom.slug.startsWith("voice");
@@ -116,6 +119,53 @@ export default function CommunityLayout({
     setMessageError("");
   }
 
+
+  useEffect(() => {
+    let active = true;
+
+    const channel = supabase.channel("haswolf-online-users", {
+      config: {
+        presence: { key: currentUserId },
+      },
+    });
+
+    function syncPresence() {
+      const state = channel.presenceState<{ userId?: string }>();
+      const ids = new Set<string>();
+
+      Object.entries(state).forEach(([key, entries]) => {
+        ids.add(key);
+
+        entries.forEach((entry) => {
+          if (entry.userId) ids.add(entry.userId);
+        });
+      });
+
+      if (active) {
+        setOnlineUserIds([...ids]);
+      }
+    }
+
+    channel
+      .on("presence", { event: "sync" }, syncPresence)
+      .on("presence", { event: "join" }, syncPresence)
+      .on("presence", { event: "leave" }, syncPresence)
+      .subscribe(async (status) => {
+        if (status !== "SUBSCRIBED") return;
+
+        await channel.track({
+          userId: currentUserId,
+          nickname,
+          onlineAt: new Date().toISOString(),
+        });
+      });
+
+    return () => {
+      active = false;
+      void channel.untrack();
+      void supabase.removeChannel(channel);
+    };
+  }, [currentUserId, nickname]);
 
   useEffect(() => {
     const unlock = () => {
@@ -741,7 +791,7 @@ export default function CommunityLayout({
       </section>
 
       <div className="hidden shrink-0 xl:block">
-        <MemberSidebar currentUserId={currentUserId} canManageMembers={canManageMembers} />
+        <MemberSidebar currentUserId={currentUserId} canManageMembers={canManageMembers} canChangeNicknames={canChangeNicknames} onlineUserIds={onlineUserIds} />
       </div>
 
       <div
@@ -757,7 +807,7 @@ export default function CommunityLayout({
           >
             ✕
           </button>
-          <MemberSidebar currentUserId={currentUserId} canManageMembers={canManageMembers} />
+          <MemberSidebar currentUserId={currentUserId} canManageMembers={canManageMembers} canChangeNicknames={canChangeNicknames} onlineUserIds={onlineUserIds} />
         </div>
       </div>
 

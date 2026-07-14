@@ -18,14 +18,25 @@ export default function ToplulukPage() {
   const [nickname, setNickname] = useState("");
   const [currentUserId, setCurrentUserId] = useState("");
   const [canManageMembers, setCanManageMembers] = useState(false);
+  const [canChangeNicknames, setCanChangeNicknames] = useState(false);
   const [banned, setBanned] = useState(false);
   const [ready, setReady] = useState(false);
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
     async function checkProfile() {
+      setLoadError("");
+
       const {
         data: { user },
+        error: authError,
       } = await supabase.auth.getUser();
+
+      if (authError) {
+        setLoadError(authError.message);
+        setReady(true);
+        return;
+      }
 
       if (!user) {
         router.replace("/login");
@@ -40,6 +51,8 @@ export default function ToplulukPage() {
 
       if (error) {
         console.error("Profil alınamadı:", error);
+        setLoadError(error.message);
+        setReady(true);
         return;
       }
 
@@ -56,11 +69,18 @@ export default function ToplulukPage() {
       }
 
       let managerByRole = false;
+      let founderByRole = false;
 
-      const { data: userRoleRows } = await supabase
+      const { data: userRoleRows, error: userRolesError } = await supabase
         .from("user_roles")
         .select("role_id,expires_at")
         .eq("user_id", user.id);
+
+      if (userRolesError) {
+        setLoadError(userRolesError.message);
+        setReady(true);
+        return;
+      }
 
       const validRoleIds = (userRoleRows || [])
         .filter((row) => {
@@ -70,19 +90,26 @@ export default function ToplulukPage() {
         .map((row) => row.role_id);
 
       if (validRoleIds.length > 0) {
-        const { data: roleRows } = await supabase
+        const { data: roleRows, error: rolesError } = await supabase
           .from("roles")
           .select("id,name")
           .in("id", validRoleIds);
 
-        managerByRole = ((roleRows || []) as RoleRow[]).some((role) =>
-          MANAGER_ROLES.has(role.name)
-        );
+        if (rolesError) {
+          setLoadError(rolesError.message);
+          setReady(true);
+          return;
+        }
+
+        const activeRoles = (roleRows || []) as RoleRow[];
+        managerByRole = activeRoles.some((role) => MANAGER_ROLES.has(role.name));
+        founderByRole = activeRoles.some((role) => role.name === "Kurucu");
       }
 
       setCurrentUserId(user.id);
       setNickname(userNickname);
       setCanManageMembers(user.email === ADMIN_EMAIL || managerByRole);
+      setCanChangeNicknames(user.email === ADMIN_EMAIL || founderByRole);
       setReady(true);
     }
 
@@ -93,6 +120,29 @@ export default function ToplulukPage() {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#050607] text-white">
         <p className="text-zinc-400">Sohbet odaları hazırlanıyor...</p>
+      </main>
+    );
+  }
+
+
+  if (loadError) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#050607] px-4 text-white">
+        <div className="w-full max-w-xl rounded-2xl border border-red-500/40 bg-red-950/20 p-7">
+          <h1 className="text-xl font-black text-red-300">
+            Sohbet odaları açılamadı
+          </h1>
+          <p className="mt-3 break-words text-sm leading-6 text-zinc-300">
+            {loadError}
+          </p>
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="mt-6 rounded-lg bg-[#d9aa4a] px-5 py-3 font-bold text-black"
+          >
+            Tekrar dene
+          </button>
+        </div>
       </main>
     );
   }
@@ -124,6 +174,7 @@ export default function ToplulukPage() {
       nickname={nickname}
       currentUserId={currentUserId}
       canManageMembers={canManageMembers}
+      canChangeNicknames={canChangeNicknames}
     />
   );
 }
