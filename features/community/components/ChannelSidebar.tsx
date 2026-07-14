@@ -66,7 +66,9 @@ export default function ChannelSidebar({
             <h1 className="text-xl font-black tracking-widest text-[#d9aa4a]">
               HASWOLF
             </h1>
-            <p className="mt-1 text-xs text-zinc-500">SOHBET ODALARI</p>
+            <p className="mt-1 text-xs font-semibold tracking-[0.28em] text-zinc-500">
+              HASWOLF
+            </p>
           </div>
         </div>
       </a>

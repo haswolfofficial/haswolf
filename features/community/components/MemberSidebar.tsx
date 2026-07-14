@@ -349,7 +349,7 @@ export default function MemberSidebar({
   }
 
   return (
-    <aside className="hidden h-full w-72 shrink-0 border-l border-zinc-800 bg-[#090b0d] xl:flex xl:flex-col">
+    <aside className="hidden h-full w-[31rem] shrink-0 border-l border-zinc-800 bg-[#090b0d] xl:flex xl:flex-col">
       <div className="shrink-0 border-b border-zinc-800 px-5 py-5">
         <h2 className="font-bold text-white">Üyeler</h2>
         <p className="mt-1 text-xs text-zinc-500">
@@ -389,7 +389,7 @@ export default function MemberSidebar({
       <YouTubeLiveCard />
 
       {selectedMember && canManageMembers && selectedMember.id !== currentUserId && (
-        <div className="absolute right-72 top-24 z-50 w-64 overflow-hidden rounded-xl border border-[#765625] bg-[#111315] shadow-2xl">
+        <div className="absolute right-[31rem] top-24 z-50 w-64 overflow-hidden rounded-xl border border-[#765625] bg-[#111315] shadow-2xl">
           <div className="border-b border-zinc-800 p-4">
             <p className="font-bold text-[#e5b64e]">{selectedMember.nickname}</p>
             <p className="mt-1 text-xs text-zinc-500">
@@ -520,56 +520,69 @@ function MemberSection({
 function YouTubeLiveCard() {
   const [live, setLive] = useState(false);
   const [videoId, setVideoId] = useState<string | null>(null);
+  const [channelId, setChannelId] = useState<string | null>(null);
 
   useEffect(() => {
     async function checkLive() {
       try {
-        const response = await fetch("/api/youtube-live", { cache: "no-store" });
+        const response = await fetch(`/api/youtube-live?t=${Date.now()}`, {
+          cache: "no-store",
+        });
         const data = (await response.json()) as {
           live?: boolean;
           videoId?: string | null;
+          channelId?: string | null;
         };
+
         setLive(Boolean(data.live));
         setVideoId(data.videoId ?? null);
+        setChannelId(data.channelId ?? null);
       } catch {
         setLive(false);
       }
     }
 
     checkLive();
-    const timer = window.setInterval(checkLive, 120_000);
+    const timer = window.setInterval(checkLive, 60_000);
     return () => window.clearInterval(timer);
   }, []);
 
   const channelUrl = "https://www.youtube.com/@ROYALEONLINEHASWOLF";
+  const embedUrl = videoId
+    ? `https://www.youtube.com/embed/${videoId}?autoplay=0&rel=0`
+    : channelId
+      ? `https://www.youtube.com/embed/live_stream?channel=${channelId}&autoplay=0&rel=0`
+      : null;
 
   return (
     <div className="shrink-0 border-t border-zinc-800 p-3">
-      <div className="overflow-hidden rounded-xl border border-red-500/30 bg-[#111315]">
-        <div className="flex items-center justify-between px-3 py-2">
+      <div className="overflow-hidden rounded-2xl border border-red-500/40 bg-[#111315] shadow-[0_0_30px_rgba(127,29,29,0.18)]">
+        <div className="flex items-center justify-between px-4 py-3">
           <div>
-            <p className="text-xs font-black text-white">HASWOLF TV</p>
-            <p className="text-[10px] text-zinc-500">Royale Online Haswolf</p>
+            <p className="text-sm font-black text-white">HASWOLF TV</p>
+            <p className="text-xs text-zinc-500">Royale Online Haswolf</p>
           </div>
-          <span className={live ? "text-xs font-bold text-red-400" : "text-xs text-zinc-500"}>
-            {live ? "🔴 CANLI" : "YAYIN YOK"}
+          <span className={live ? "text-sm font-bold text-red-400" : "text-xs text-zinc-500"}>
+            {live ? "🔴 CANLI YAYIN" : "YAYIN KONTROLÜ"}
           </span>
         </div>
 
-        {live && videoId ? (
+        {embedUrl ? (
           <iframe
-            src={`https://www.youtube.com/embed/${videoId}?autoplay=0`}
+            src={embedUrl}
             title="HASWOLF canlı yayın"
-            className="aspect-video w-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            className="aspect-video min-h-[260px] w-full bg-black"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           />
         ) : (
-          <div className="bg-gradient-to-br from-red-950/50 to-black px-4 py-4 text-center">
-            <div className="text-3xl">📺</div>
-            <p className="mt-2 text-xs text-zinc-300">
-              Canlı yayın başladığında burada otomatik görünür.
-            </p>
+          <div className="flex min-h-[260px] items-center justify-center bg-gradient-to-br from-red-950/50 to-black px-6 text-center">
+            <div>
+              <div className="text-5xl">📺</div>
+              <p className="mt-4 text-sm leading-6 text-zinc-300">
+                Canlı yayın algılanıyor. Yayın açıksa kanal düğmesinden doğrudan izleyebilirsin.
+              </p>
+            </div>
           </div>
         )}
 
@@ -577,9 +590,9 @@ function YouTubeLiveCard() {
           href={channelUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="block border-t border-zinc-800 px-3 py-2 text-center text-xs font-bold text-red-400 hover:bg-red-950/30"
+          className="block border-t border-zinc-800 px-4 py-3 text-center text-sm font-bold text-red-400 hover:bg-red-950/30"
         >
-          YouTube kanalına git
+          YouTube canlı yayınına git
         </a>
       </div>
     </div>

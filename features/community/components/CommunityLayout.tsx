@@ -28,40 +28,56 @@ type ProfileRow = {
   nickname: string | null;
 };
 
-function playMessageSound() {
+let sharedAudioContext: AudioContext | null = null;
+
+async function getMessageAudioContext() {
+  const AudioContextClass =
+    window.AudioContext ||
+    (window as typeof window & { webkitAudioContext?: typeof AudioContext })
+      .webkitAudioContext;
+
+  if (!AudioContextClass) return null;
+
+  if (!sharedAudioContext) {
+    sharedAudioContext = new AudioContextClass();
+  }
+
+  if (sharedAudioContext.state === "suspended") {
+    await sharedAudioContext.resume();
+  }
+
+  return sharedAudioContext;
+}
+
+async function playMessageSound() {
   try {
-    const AudioContextClass =
-      window.AudioContext ||
-      (window as typeof window & { webkitAudioContext?: typeof AudioContext })
-        .webkitAudioContext;
+    const context = await getMessageAudioContext();
+    if (!context) return;
 
-    if (!AudioContextClass) return;
-
-    const context = new AudioContextClass();
-    const oscillator = context.createOscillator();
+    const start = context.currentTime;
     const gain = context.createGain();
+    const first = context.createOscillator();
+    const second = context.createOscillator();
 
-    oscillator.type = "sine";
-    oscillator.frequency.setValueAtTime(660, context.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(
-      880,
-      context.currentTime + 0.09
-    );
+    first.type = "sine";
+    second.type = "sine";
+    first.frequency.setValueAtTime(740, start);
+    second.frequency.setValueAtTime(980, start + 0.09);
 
-    gain.gain.setValueAtTime(0.0001, context.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.12, context.currentTime + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.16);
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(0.16, start + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.22);
 
-    oscillator.connect(gain);
+    first.connect(gain);
+    second.connect(gain);
     gain.connect(context.destination);
-    oscillator.start();
-    oscillator.stop(context.currentTime + 0.17);
 
-    window.setTimeout(() => {
-      context.close().catch(() => undefined);
-    }, 250);
+    first.start(start);
+    first.stop(start + 0.11);
+    second.start(start + 0.09);
+    second.stop(start + 0.22);
   } catch {
-    // Tarayıcı sesi engellerse sohbet çalışmaya devam eder.
+    // Tarayıcı sesi engellese bile sohbet çalışmaya devam eder.
   }
 }
 
@@ -83,8 +99,11 @@ export default function CommunityLayout({
   const [roomMenuOpen, setRoomMenuOpen] = useState(false);
   const [mobileChannelsOpen, setMobileChannelsOpen] = useState(false);
   const [mobileMembersOpen, setMobileMembersOpen] = useState(false);
+  const [wolfVisible, setWolfVisible] = useState(false);
 
   const isVoiceRoom = selectedRoom.slug.startsWith("voice");
+  const isAnnouncementRoom = selectedRoom.slug === "news";
+  const announcementLocked = isAnnouncementRoom && !canManageMembers;
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   function selectRoom(room: ChatRoom) {
@@ -97,6 +116,41 @@ export default function CommunityLayout({
     setMessageError("");
   }
 
+
+  useEffect(() => {
+    const unlock = () => {
+      void getMessageAudioContext();
+    };
+
+    window.addEventListener("pointerdown", unlock, { once: true });
+    window.addEventListener("keydown", unlock, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", unlock);
+      window.removeEventListener("keydown", unlock);
+    };
+  }, []);
+
+  useEffect(() => {
+    let hideTimer: number | undefined;
+
+    function scheduleWolf() {
+      const wait = 35_000 + Math.floor(Math.random() * 35_000);
+
+      return window.setTimeout(() => {
+        setWolfVisible(true);
+        hideTimer = window.setTimeout(() => setWolfVisible(false), 4_500);
+        wolfTimer = scheduleWolf();
+      }, wait);
+    }
+
+    let wolfTimer = scheduleWolf();
+
+    return () => {
+      window.clearTimeout(wolfTimer);
+      if (hideTimer) window.clearTimeout(hideTimer);
+    };
+  }, []);
 
   useEffect(() => {
     if (isVoiceRoom) {
@@ -228,8 +282,8 @@ export default function CommunityLayout({
             return [...current, incomingMessage];
           });
 
-          if (soundEnabled && inserted.user_id !== currentUserId) {
-            playMessageSound();
+          if (soundEnabled) {
+            void playMessageSound();
           }
         }
       )
@@ -285,7 +339,8 @@ export default function CommunityLayout({
       isVoiceRoom ||
       !selectedRoomId ||
       !currentUserId ||
-      messageSending
+      messageSending ||
+      announcementLocked
     ) {
       return;
     }
@@ -359,13 +414,16 @@ export default function CommunityLayout({
     setDeleting(true);
     setMessageError("");
 
-    const { error } = await supabase
+    const { data: deletedRows, error } = await supabase
       .from("chat_messages")
       .delete()
-      .eq("id", messageId);
+      .eq("id", messageId)
+      .select("id");
 
     if (error) {
       setMessageError(`Mesaj silinemedi: ${error.message}`);
+    } else if (!deletedRows || deletedRows.length === 0) {
+      setMessageError("Mesaj veritabanından silinemedi. Yönetici silme yetkisini kontrol et.");
     } else {
       setMessages((current) =>
         current.filter((message) => message.id !== messageId)
@@ -389,13 +447,16 @@ export default function CommunityLayout({
     setDeleting(true);
     setMessageError("");
 
-    const { error } = await supabase
+    const { data: deletedRows, error } = await supabase
       .from("chat_messages")
       .delete()
-      .in("id", selectedMessageIds);
+      .in("id", selectedMessageIds)
+      .select("id");
 
     if (error) {
       setMessageError(`Mesajlar silinemedi: ${error.message}`);
+    } else if (!deletedRows || deletedRows.length !== selectedMessageIds.length) {
+      setMessageError("Bazı mesajlar veritabanından silinemedi. Yönetici yetkisini kontrol et.");
     } else {
       setMessages((current) =>
         current.filter((message) => !selectedMessageIds.includes(message.id))
@@ -417,13 +478,16 @@ export default function CommunityLayout({
     setDeleting(true);
     setMessageError("");
 
-    const { error } = await supabase
+    const { data: deletedRows, error } = await supabase
       .from("chat_messages")
       .delete()
-      .eq("room_id", selectedRoomId);
+      .eq("room_id", selectedRoomId)
+      .select("id");
 
     if (error) {
       setMessageError(`Odadaki mesajlar silinemedi: ${error.message}`);
+    } else if (!deletedRows || deletedRows.length === 0) {
+      setMessageError("Mesajlar veritabanından silinemedi. Yönetici silme yetkisini kontrol et.");
     } else {
       setMessages([]);
       setSelectedMessageIds([]);
@@ -520,8 +584,9 @@ export default function CommunityLayout({
               <button
                 type="button"
                 onClick={() => {
-                  setSoundEnabled((value) => !value);
-                  if (!soundEnabled) playMessageSound();
+                  const nextValue = !soundEnabled;
+                  setSoundEnabled(nextValue);
+                  if (nextValue) void playMessageSound();
                 }}
                 title={soundEnabled ? "Mesaj sesini kapat" : "Mesaj sesini aç"}
                 className="rounded-xl border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm transition hover:border-[#d9aa4a]"
@@ -646,7 +711,7 @@ export default function CommunityLayout({
                 <textarea
                   rows={1}
                   value={newMessage}
-                  disabled={!selectedRoomId || messageSending}
+                  disabled={!selectedRoomId || messageSending || announcementLocked}
                   onChange={(event) => setNewMessage(event.target.value)}
                   onKeyDown={(event) => {
                     if (event.key === "Enter" && !event.shiftKey) {
@@ -654,12 +719,16 @@ export default function CommunityLayout({
                       sendMessage();
                     }
                   }}
-                  placeholder={`#${selectedRoom.slug} odasına mesaj gönder`}
+                  placeholder={
+                    announcementLocked
+                      ? "Duyurulara yalnızca Kurucu ve Yönetici mesaj gönderebilir."
+                      : `#${selectedRoom.slug} odasına mesaj gönder`
+                  }
                   className="max-h-32 min-h-10 min-w-0 flex-1 resize-none bg-transparent px-2 py-2 text-sm outline-none placeholder:text-zinc-600 disabled:opacity-50"
                 />
                 <button
                   type="button"
-                  disabled={!newMessage.trim() || !selectedRoomId || messageSending}
+                  disabled={!newMessage.trim() || !selectedRoomId || messageSending || announcementLocked}
                   onClick={sendMessage}
                   className="shrink-0 rounded-lg bg-[#d9aa4a] px-4 py-2.5 text-sm font-bold text-black disabled:opacity-50 sm:px-7"
                 >
@@ -676,7 +745,7 @@ export default function CommunityLayout({
       </div>
 
       <div
-        className={`fixed inset-y-0 right-0 z-50 w-[min(18rem,88vw)] transform shadow-2xl transition-transform duration-300 xl:hidden ${
+        className={`fixed inset-y-0 right-0 z-50 w-[min(31rem,94vw)] transform shadow-2xl transition-transform duration-300 xl:hidden ${
           mobileMembersOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -691,6 +760,15 @@ export default function CommunityLayout({
           <MemberSidebar currentUserId={currentUserId} canManageMembers={canManageMembers} />
         </div>
       </div>
+
+      {wolfVisible && (
+        <div
+          aria-hidden="true"
+          className="haswolf-wolf-cameo pointer-events-none fixed bottom-16 left-0 z-[80] text-6xl drop-shadow-[0_0_18px_rgba(217,170,74,0.75)]"
+        >
+          🐺
+        </div>
+      )}
     </main>
   );
 }
