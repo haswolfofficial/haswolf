@@ -1,8 +1,8 @@
 "use client";
 
 import AuthButton from "../components/AuthButton";
-import InstallAppButton from "../components/InstallAppButton";
 import MobileBottomNav from "../components/MobileBottomNav";
+import InstallAppButton from "../components/InstallAppButton";
 import SiteFooter from "../components/SiteFooter";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../lib/supabase";
@@ -135,6 +135,7 @@ export default function Home() {
   const [selectedServer, setSelectedServer] = useState("EPHESUS");
   const [selectedCategory, setSelectedCategory] = useState("Tüm Ürünler");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [socialMenuOpen, setSocialMenuOpen] = useState(false);
   const [sortOption, setSortOption] = useState<SortOption>("recommended");
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
@@ -277,7 +278,7 @@ export default function Home() {
   }
 
   return (
-    <main id="top" className="min-h-screen w-full overflow-x-hidden bg-[#050707] pb-28 text-white sm:pb-[env(safe-area-inset-bottom)]">
+    <main id="top" className="min-h-screen w-full overflow-x-hidden bg-[#050707] pb-[env(safe-area-inset-bottom)] text-white">
       <header className="haswolf-header sticky top-0 z-50 border-b border-[#8c641e]/40 bg-black/95 backdrop-blur-2xl">
         <div className="haswolf-container">
           <div className="haswolf-topbar">
@@ -285,39 +286,72 @@ export default function Home() {
 
             <div className="haswolf-topbar__actions">
               <div className="haswolf-social-strip">
-              {headerSocials.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.href}
-                  target={social.href.startsWith("http") ? "_blank" : undefined}
-                  rel={social.href.startsWith("http") ? "noreferrer" : undefined}
-                  className="haswolf-header-social"
-                >
-                  <SocialIcon name={social.name} />
-                  <span className="min-w-0">
-                    <strong>{social.label}</strong>
-                    <small>{social.detail}</small>
-                  </span>
-                </a>
-              ))}
+                {headerSocials.map((social) => (
+                  <a
+                    key={social.name}
+                    href={social.href}
+                    target={social.href.startsWith("http") ? "_blank" : undefined}
+                    rel={social.href.startsWith("http") ? "noreferrer" : undefined}
+                    className="haswolf-header-social"
+                  >
+                    <SocialIcon name={social.name} />
+                    <span className="min-w-0">
+                      <strong>{social.label}</strong>
+                      <small>{social.detail}</small>
+                    </span>
+                  </a>
+                ))}
               </div>
 
-            <div className="haswolf-header-auth">
-              <AuthButton />
-            </div>
-            <InstallAppButton />
+              <div className="haswolf-header-auth">
+                <AuthButton />
+              </div>
+              <InstallAppButton />
+              <button
+                type="button"
+                className="haswolf-mobile-menu-toggle"
+                aria-expanded={mobileMenuOpen}
+                aria-label={mobileMenuOpen ? "Menüyü kapat" : "Menüyü aç"}
+                onClick={() => setMobileMenuOpen((value) => !value)}
+              >
+                <span aria-hidden="true">{mobileMenuOpen ? "✕" : "☰"}</span>
+                <span>Menü</span>
+              </button>
             </div>
           </div>
 
-          <nav aria-label="Ana navigasyon" className="haswolf-main-nav">
-            <a href="#top"><span aria-hidden="true">⌂</span><span>Ana Sayfa</span></a>
+          <nav
+            aria-label="Ana navigasyon"
+            className={`haswolf-main-nav ${mobileMenuOpen ? "haswolf-main-nav--open" : ""}`}
+          >
+            <a href="#top" onClick={() => setMobileMenuOpen(false)}><span aria-hidden="true">⌂</span><span>Ana Sayfa</span></a>
             <button type="button" onClick={() => goToMarket("item")}><span aria-hidden="true">⚔</span><span>Item</span></button>
             <button type="button" onClick={() => goToMarket("account")}><span aria-hidden="true">♟</span><span>Karakter</span></button>
             <button type="button" onClick={() => goToMarket("yang")}><YangIcon /><span>Yang</span></button>
-            <a href="/topluluk" className="haswolf-chat-before-admin">
-              <span aria-hidden="true">👥</span>
-              <span>Sohbet Odaları</span>
-            </a>
+            <button
+              type="button"
+              className="haswolf-social-menu-button"
+              aria-expanded={socialMenuOpen}
+              onClick={() => setSocialMenuOpen((value) => !value)}
+            >
+              <span aria-hidden="true">✦</span><span>Sosyal Medya</span><span className="ml-auto">{socialMenuOpen ? "▴" : "▾"}</span>
+            </button>
+            {socialMenuOpen && (
+              <div className="haswolf-mobile-social-panel">
+                {headerSocials.map((social) => (
+                  <a
+                    key={social.name}
+                    href={social.href}
+                    target={social.href.startsWith("http") ? "_blank" : undefined}
+                    rel={social.href.startsWith("http") ? "noreferrer" : undefined}
+                  >
+                    <SocialIcon name={social.name} />
+                    <span><strong>{social.label}</strong><small>{social.detail}</small></span>
+                  </a>
+                ))}
+              </div>
+            )}
+            <a href="/topluluk" className="haswolf-chat-before-admin"><span aria-hidden="true">👥</span><span>Sohbet Odaları</span></a>
             {isAdmin && <a href="/admin"><span aria-hidden="true">🛡</span><span>Admin</span></a>}
             <button
               type="button"
@@ -328,26 +362,13 @@ export default function Home() {
             </button>
           </nav>
         </div>
-
-        {mobileMenuOpen && (
-          <div className="border-t border-[#8c641e]/30 bg-black/98 lg:hidden">
-            <div className="haswolf-container grid gap-2 py-3 text-sm">
-              {headerSocials.map((social) => (
-                <a key={social.name} href={social.href} target={social.href.startsWith("http") ? "_blank" : undefined} rel={social.href.startsWith("http") ? "noreferrer" : undefined} className="flex items-center gap-3 rounded-lg bg-white/5 px-4 py-3">
-                  <SocialIcon name={social.name} /><span>{social.label} · {social.detail}</span>
-                </a>
-              ))}
-              <div className="rounded-lg bg-white/5 px-4 py-3"><AuthButton /></div>
-            </div>
-          </div>
-        )}
       </header>
 
       <section className="haswolf-hero relative overflow-hidden border-b border-[#8c641e]/35">
         <div className="haswolf-hero__background absolute inset-0" />
         <div className="haswolf-hero__particles absolute inset-0" aria-hidden="true" />
 
-        <div className="haswolf-container relative grid min-h-[285px] items-center gap-4 py-7 sm:min-h-[330px] sm:py-9 md:grid-cols-[1fr_0.45fr] lg:min-h-[360px] lg:grid-cols-[1fr_0.62fr] lg:gap-8 lg:py-10">
+        <div className="haswolf-hero__content haswolf-container relative grid min-h-[285px] items-center gap-4 py-7 sm:min-h-[330px] sm:py-9 md:grid-cols-[1fr_0.45fr] lg:min-h-[360px] lg:grid-cols-[1fr_0.62fr] lg:gap-8 lg:py-10">
           <div>
             <p className="text-[11px] font-semibold tracking-[0.22em] text-[#d5a23e] sm:text-sm sm:tracking-[0.32em]">
               GÜVENİLİR • HIZLI • PROFESYONEL
@@ -407,13 +428,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1500px] px-3 py-3 sm:px-5 sm:py-4 lg:px-6">
+      <section className="haswolf-server-section mx-auto max-w-[1500px] px-3 py-3 sm:px-5 sm:py-4 lg:px-6">
         <div className="rounded-xl border border-[#8c641e]/40 bg-[#0d0f0f]/95 p-3 sm:p-4">
           <h2 className="mb-3 text-center text-sm font-bold text-[#ddb45b] sm:text-base">
             ─── SUNUCU SEÇİNİZ ───
           </h2>
 
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          <div className="haswolf-server-grid mobile-swipe-row -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-1 pb-2 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 md:pb-0">
             {servers.map((server) => {
               const active = selectedServer === server.name;
 
@@ -421,7 +442,7 @@ export default function Home() {
                 <button
                   key={server.name}
                   onClick={() => setSelectedServer(server.name)}
-                  className={`w-full min-w-0 rounded-xl border bg-black/70 p-4 text-left transition md:p-5 md:hover:-translate-y-1 ${
+                  className={`haswolf-server-card min-w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] snap-center rounded-xl border bg-black/70 p-4 text-left transition sm:min-w-[min(420px,78vw)] sm:max-w-[min(420px,78vw)] md:min-w-0 md:max-w-none md:p-5 md:hover:-translate-y-1 ${
                     active ? "scale-[1.01]" : ""
                   }`}
                   style={{
@@ -462,10 +483,10 @@ export default function Home() {
       </section>
 
       <section id="market" className="scroll-mt-20 mx-auto max-w-[1500px] px-4 pb-6 sm:px-6">
-        <div className="grid grid-cols-1 gap-2 rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-2 sm:grid-cols-3 md:gap-3 md:p-3">
+        <div className="flex snap-x gap-2 overflow-x-auto rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-2 md:grid md:grid-cols-3 md:gap-3 md:p-3">
           <button
             onClick={() => goToMarket("item")}
-            className={`w-full min-w-0 rounded-lg px-3 py-3 text-sm font-bold transition md:px-5 md:py-4 ${
+            className={`min-w-[180px] snap-start whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
               market === "item"
                 ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
                 : "bg-[#141616] text-zinc-400"
@@ -476,7 +497,7 @@ export default function Home() {
 
           <button
             onClick={() => goToMarket("yang")}
-            className={`w-full min-w-0 rounded-lg px-3 py-3 text-sm font-bold transition md:px-5 md:py-4 ${
+            className={`min-w-[180px] snap-start whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
               market === "yang"
                 ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
                 : "bg-[#141616] text-zinc-400"
@@ -487,7 +508,7 @@ export default function Home() {
 
           <button
             onClick={() => goToMarket("account")}
-            className={`w-full min-w-0 rounded-lg px-3 py-3 text-sm font-bold transition md:px-5 md:py-4 ${
+            className={`min-w-[180px] snap-start whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
               market === "account"
                 ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
                 : "bg-[#141616] text-zinc-400"
@@ -522,14 +543,14 @@ export default function Home() {
                 ✣ KATEGORİLER
               </h2>
 
-              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:block lg:space-y-2">
+              <div className="mobile-swipe-row mt-3 flex snap-x gap-2 overflow-x-auto overscroll-x-contain pb-2 lg:block lg:space-y-2 lg:overflow-visible">
                 {categories.map(([icon, name]) => (
                   <button
                     key={name}
                     type="button"
                     onClick={() => setSelectedCategory(name)}
                     aria-pressed={selectedCategory === name}
-                    className={`flex min-w-0 items-center justify-center gap-2 rounded-lg border px-2 py-3 text-center text-xs transition sm:text-sm lg:w-full lg:justify-start lg:gap-4 lg:px-4 lg:py-4 lg:text-left ${
+                    className={`flex min-w-max items-center gap-2 rounded-lg border px-4 py-3 text-left text-sm transition lg:w-full lg:gap-4 lg:py-4 ${
                       selectedCategory === name
                         ? "border-[#c7973d] bg-gradient-to-r from-[#795315] to-[#bd8d32] text-black"
                         : "border-white/10 bg-[#121515] text-zinc-300 hover:border-[#9c7432] hover:text-[#e6bd68]"

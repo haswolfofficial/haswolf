@@ -131,11 +131,7 @@ export default function AuthButton() {
 
   if (user) {
     return (
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="max-w-[220px] truncate text-sm text-zinc-300">
-          {user.email}
-        </span>
-
+      <div className="haswolf-auth-user grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
         <button
           type="button"
           onClick={handleLogout}
@@ -143,6 +139,9 @@ export default function AuthButton() {
         >
           Çıkış Yap
         </button>
+        <span className="haswolf-auth-email col-span-2 max-w-[220px] truncate text-right text-xs text-zinc-400">
+          {user.email}
+        </span>
       </div>
     );
   }
