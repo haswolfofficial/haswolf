@@ -63,7 +63,7 @@ export default function InstallAppButton() {
     <button
       type="button"
       onClick={handleInstall}
-      className="haswolf-download-button ml-auto xl:ml-3"
+      className="haswolf-download-button"
       aria-label="HASWOLF uygulamasını yükle"
       disabled={installed}
     >

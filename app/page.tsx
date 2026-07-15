@@ -2,8 +2,8 @@
 
 import AuthButton from "../components/AuthButton";
 import MobileBottomNav from "../components/MobileBottomNav";
-import InstallAppButton from "../components/InstallAppButton";
 import SiteFooter from "../components/SiteFooter";
+import InstallAppButton from "./components/InstallAppButton";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../lib/supabase";
 
@@ -135,7 +135,6 @@ export default function Home() {
   const [selectedServer, setSelectedServer] = useState("EPHESUS");
   const [selectedCategory, setSelectedCategory] = useState("Tüm Ürünler");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [socialMenuOpen, setSocialMenuOpen] = useState(false);
   const [sortOption, setSortOption] = useState<SortOption>("recommended");
   const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(true);
@@ -229,9 +228,7 @@ export default function Home() {
   }, [products, selectedServer, selectedCategory, sortOption]);
 
   const displayedYangPackages = useMemo(() => {
-    const filtered = products.filter(
-      (product) => product.category === "yang" && product.server === selectedServer,
-    );
+    const filtered = products.filter((product) => product.category === "yang");
 
     if (sortOption === "price-asc") {
       return [...filtered].sort((a, b) => a.price - b.price);
@@ -241,8 +238,25 @@ export default function Home() {
       return [...filtered].sort((a, b) => b.price - a.price);
     }
 
+    if (sortOption === "newest") {
+      return [...filtered].sort((a, b) =>
+        (b.created_at ?? "").localeCompare(a.created_at ?? ""),
+      );
+    }
+
     return filtered;
-  }, [products, selectedServer, sortOption]);
+  }, [products, sortOption]);
+
+  const yangPackagesByServer = useMemo(
+    () =>
+      servers.map((server) => ({
+        ...server,
+        products: displayedYangPackages.filter(
+          (product) => product.server === server.name,
+        ),
+      })),
+    [displayedYangPackages],
+  );
 
   const displayedAccounts = useMemo(() => {
     const filtered = products.filter(
@@ -286,71 +300,38 @@ export default function Home() {
 
             <div className="haswolf-topbar__actions">
               <div className="haswolf-social-strip">
-                {headerSocials.map((social) => (
-                  <a
-                    key={social.name}
-                    href={social.href}
-                    target={social.href.startsWith("http") ? "_blank" : undefined}
-                    rel={social.href.startsWith("http") ? "noreferrer" : undefined}
-                    className="haswolf-header-social"
-                  >
-                    <SocialIcon name={social.name} />
-                    <span className="min-w-0">
-                      <strong>{social.label}</strong>
-                      <small>{social.detail}</small>
-                    </span>
-                  </a>
-                ))}
+              {headerSocials.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  target={social.href.startsWith("http") ? "_blank" : undefined}
+                  rel={social.href.startsWith("http") ? "noreferrer" : undefined}
+                  className="haswolf-header-social"
+                >
+                  <SocialIcon name={social.name} />
+                  <span className="min-w-0">
+                    <strong>{social.label}</strong>
+                    <small>{social.detail}</small>
+                  </span>
+                </a>
+              ))}
               </div>
 
-              <div className="haswolf-header-auth">
-                <AuthButton />
-              </div>
-              <button
-                type="button"
-                className="haswolf-mobile-menu-toggle"
-                aria-expanded={mobileMenuOpen}
-                aria-label={mobileMenuOpen ? "Menüyü kapat" : "Menüyü aç"}
-                onClick={() => setMobileMenuOpen((value) => !value)}
-              >
-                <span aria-hidden="true">{mobileMenuOpen ? "✕" : "☰"}</span>
-                <span>Menü</span>
-              </button>
+            <div className="haswolf-header-account">
+              <AuthButton />
+            </div>
             </div>
           </div>
 
-          <nav
-            aria-label="Ana navigasyon"
-            className={`haswolf-main-nav ${mobileMenuOpen ? "haswolf-main-nav--open" : ""}`}
-          >
-            <a href="#top" onClick={() => setMobileMenuOpen(false)}><span aria-hidden="true">⌂</span><span>Ana Sayfa</span></a>
+          <nav aria-label="Ana navigasyon" className="haswolf-main-nav">
+            <a href="#top"><span aria-hidden="true">⌂</span><span>Ana Sayfa</span></a>
             <button type="button" onClick={() => goToMarket("item")}><span aria-hidden="true">⚔</span><span>Item</span></button>
             <button type="button" onClick={() => goToMarket("account")}><span aria-hidden="true">♟</span><span>Karakter</span></button>
             <button type="button" onClick={() => goToMarket("yang")}><YangIcon /><span>Yang</span></button>
-            <button
-              type="button"
-              className="haswolf-social-menu-button"
-              aria-expanded={socialMenuOpen}
-              onClick={() => setSocialMenuOpen((value) => !value)}
-            >
-              <span aria-hidden="true">✦</span><span>Sosyal Medya</span><span className="ml-auto">{socialMenuOpen ? "▴" : "▾"}</span>
-            </button>
-            {socialMenuOpen && (
-              <div className="haswolf-mobile-social-panel">
-                {headerSocials.map((social) => (
-                  <a
-                    key={social.name}
-                    href={social.href}
-                    target={social.href.startsWith("http") ? "_blank" : undefined}
-                    rel={social.href.startsWith("http") ? "noreferrer" : undefined}
-                  >
-                    <SocialIcon name={social.name} />
-                    <span><strong>{social.label}</strong><small>{social.detail}</small></span>
-                  </a>
-                ))}
-              </div>
-            )}
-            <a href="/topluluk" className="haswolf-chat-before-admin"><span aria-hidden="true">👥</span><span>Sohbet Odaları</span></a>
+            <a href="/topluluk" className="haswolf-chat-before-admin">
+              <span aria-hidden="true">👥</span>
+              <span>Sohbet Odaları</span>
+            </a>
             {isAdmin && <a href="/admin"><span aria-hidden="true">🛡</span><span>Admin</span></a>}
             <button
               type="button"
@@ -361,13 +342,26 @@ export default function Home() {
             </button>
           </nav>
         </div>
+
+        {mobileMenuOpen && (
+          <div className="border-t border-[#8c641e]/30 bg-black/98 lg:hidden">
+            <div className="haswolf-container grid gap-2 py-3 text-sm">
+              {headerSocials.map((social) => (
+                <a key={social.name} href={social.href} target={social.href.startsWith("http") ? "_blank" : undefined} rel={social.href.startsWith("http") ? "noreferrer" : undefined} className="flex items-center gap-3 rounded-lg bg-white/5 px-4 py-3">
+                  <SocialIcon name={social.name} /><span>{social.label} · {social.detail}</span>
+                </a>
+              ))}
+              <div className="rounded-lg bg-white/5 px-4 py-3"><AuthButton /></div>
+            </div>
+          </div>
+        )}
       </header>
 
       <section className="haswolf-hero relative overflow-hidden border-b border-[#8c641e]/35">
         <div className="haswolf-hero__background absolute inset-0" />
         <div className="haswolf-hero__particles absolute inset-0" aria-hidden="true" />
 
-        <div className="haswolf-hero__content haswolf-container relative grid min-h-[285px] items-center gap-4 py-7 sm:min-h-[330px] sm:py-9 md:grid-cols-[1fr_0.45fr] lg:min-h-[360px] lg:grid-cols-[1fr_0.62fr] lg:gap-8 lg:py-10">
+        <div className="haswolf-container relative grid min-h-[285px] items-center gap-4 py-7 sm:min-h-[330px] sm:py-9 md:grid-cols-[1fr_0.45fr] lg:min-h-[360px] lg:grid-cols-[1fr_0.62fr] lg:gap-8 lg:py-10">
           <div>
             <p className="text-[11px] font-semibold tracking-[0.22em] text-[#d5a23e] sm:text-sm sm:tracking-[0.32em]">
               GÜVENİLİR • HIZLI • PROFESYONEL
@@ -386,23 +380,25 @@ export default function Home() {
               pazar deneyimi.
             </p>
 
-            <div className="haswolf-hero-actions mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
-              <button
-                onClick={() => goToMarket("item")}
-                className="haswolf-primary-cta min-h-11 w-full rounded-lg px-3 py-3 text-center text-sm font-bold text-black sm:w-auto sm:px-6"
-              >
-                Markete Git
-              </button>
+            <div className="mt-5 max-w-xl">
+              <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
+                <button
+                  onClick={() => goToMarket("item")}
+                  className="haswolf-primary-cta min-h-11 w-full rounded-lg px-3 py-3 text-center text-sm font-bold text-black sm:w-auto sm:px-6"
+                >
+                  Markete Git
+                </button>
 
-              <a
-                href="/cekilis"
-                className="haswolf-secondary-cta min-h-11 w-full rounded-lg px-3 py-3 text-center text-sm font-semibold sm:w-auto sm:px-6"
-              >
-                <span aria-hidden="true">★</span>
-                <span>Çekiliş Merkezi</span>
-              </a>
+                <a
+                  href="/cekilis"
+                  className="haswolf-secondary-cta min-h-11 w-full rounded-lg px-3 py-3 text-center text-sm font-semibold sm:w-auto sm:px-6"
+                >
+                  <span aria-hidden="true">★</span>
+                  <span>Çekiliş Merkezi</span>
+                </a>
+              </div>
 
-              <div className="haswolf-hero-install col-span-2 sm:basis-full">
+              <div className="mt-2 sm:mt-3">
                 <InstallAppButton />
               </div>
             </div>
@@ -431,13 +427,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="haswolf-server-section mx-auto max-w-[1500px] px-3 py-3 sm:px-5 sm:py-4 lg:px-6">
+      <section className="mx-auto max-w-[1500px] px-3 py-3 sm:px-5 sm:py-4 lg:px-6">
         <div className="rounded-xl border border-[#8c641e]/40 bg-[#0d0f0f]/95 p-3 sm:p-4">
           <h2 className="mb-3 text-center text-sm font-bold text-[#ddb45b] sm:text-base">
             ─── SUNUCU SEÇİNİZ ───
           </h2>
 
-          <div className="haswolf-server-grid mobile-swipe-row -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-1 pb-2 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 md:pb-0">
+          <div className="mobile-swipe-row -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-1 pb-2 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 md:pb-0">
             {servers.map((server) => {
               const active = selectedServer === server.name;
 
@@ -445,7 +441,7 @@ export default function Home() {
                 <button
                   key={server.name}
                   onClick={() => setSelectedServer(server.name)}
-                  className={`haswolf-server-card min-w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] snap-center rounded-xl border bg-black/70 p-4 text-left transition sm:min-w-[min(420px,78vw)] sm:max-w-[min(420px,78vw)] md:min-w-0 md:max-w-none md:p-5 md:hover:-translate-y-1 ${
+                  className={`min-w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] snap-center rounded-xl border bg-black/70 p-4 text-left transition sm:min-w-[min(420px,78vw)] sm:max-w-[min(420px,78vw)] md:min-w-0 md:max-w-none md:p-5 md:hover:-translate-y-1 ${
                     active ? "scale-[1.01]" : ""
                   }`}
                   style={{
@@ -651,58 +647,84 @@ export default function Home() {
       )}
 
       {market === "yang" && (
-        <section className="mx-auto max-w-[1500px] px-4 pb-12 sm:px-6">
-          <div className="rounded-xl border border-[#765625]/50 bg-[#090b0b] p-3 sm:p-6">
+        <section className="mx-auto max-w-[1500px] px-3 pb-12 sm:px-6">
+          <div className="rounded-xl border border-[#765625]/50 bg-[#090b0b] p-3 sm:p-5">
             <MarketTitle
-              server={selectedServer}
+              server="GENEL"
               title="YANG MARKET"
               color="#e5b64e"
               sortOption={sortOption}
               onSortChange={setSortOption}
             />
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {displayedYangPackages.map((pack) => (
-                <article
-                  key={pack.id}
-                  className="rounded-xl border border-[#8b672d]/60 bg-gradient-to-b from-[#15130d] to-[#080909] p-5 text-center transition hover:-translate-y-1 hover:border-[#e2b64e] sm:p-7"
+            <div className="haswolf-yang-server-grid">
+              {yangPackagesByServer.map((group) => (
+                <section
+                  key={group.name}
+                  className="haswolf-yang-server-column"
+                  style={{ "--server-color": group.color } as React.CSSProperties}
                 >
-                  <div className="flex h-28 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-black/30">
-                    {pack.image_url ? (
-                      <img
-                        src={pack.image_url}
-                        alt={pack.name}
-                        className="h-full w-full object-contain"
-                      />
+                  <header className="haswolf-yang-server-heading">
+                    <div>
+                      <p>Sunucu</p>
+                      <h3>{group.name}</h3>
+                    </div>
+                    <span>{group.products.length} ilan</span>
+                  </header>
+
+                  <div className="haswolf-yang-list">
+                    {group.products.length > 0 ? (
+                      group.products.map((pack) => (
+                        <article key={pack.id} className="haswolf-yang-card">
+                          <div className="haswolf-yang-card__media">
+                            {pack.image_url ? (
+                              <img src={pack.image_url} alt={pack.name} />
+                            ) : (
+                              <span aria-hidden="true">🪙</span>
+                            )}
+                          </div>
+
+                          <div className="haswolf-yang-card__content">
+                            <div className="haswolf-yang-card__title-row">
+                              <h4>{pack.name}</h4>
+                              <strong>{formatPrice(pack.price)}</strong>
+                            </div>
+
+                            {pack.description && (
+                              <p className="haswolf-yang-card__description">
+                                {descriptionLines(pack.description).slice(0, 2).join(" · ")}
+                              </p>
+                            )}
+
+                            <div className="haswolf-yang-card__meta">
+                              <span>Stok: {pack.stock}</span>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  openWhatsApp(
+                                    `Merhaba Haswolf, ${group.name} sunucusu için ${pack.name} ilanı hakkında bilgi almak istiyorum.`,
+                                  )
+                                }
+                              >
+                                WhatsApp
+                              </button>
+                            </div>
+                          </div>
+                        </article>
+                      ))
                     ) : (
-                      <span className="text-6xl">🪙</span>
+                      <div className="haswolf-yang-empty">
+                        Bu sunucuda aktif Yang ilanı yok.
+                      </div>
                     )}
                   </div>
-                  <h3 className="mt-5 text-2xl font-black text-[#e5b64e] sm:text-3xl">
-                    {pack.name}
-                  </h3>
-                  {pack.description && (
-                    <p className="mt-3 whitespace-pre-line text-sm text-emerald-400">
-                      {pack.description}
-                    </p>
-                  )}
-                  <div className="mt-7 text-2xl font-black">
-                    {formatPrice(pack.price)}
-                  </div>
-                  <p className="mt-3 text-sm text-zinc-500">
-                    Sunucu: {selectedServer} · Stok: {pack.stock}
-                  </p>
-
-                  <WhatsAppButton
-                    message={`Merhaba Haswolf, ${selectedServer} sunucusu için ${pack.name} ilanı hakkında bilgi almak istiyorum.`}
-                  />
-                </article>
+                </section>
               ))}
-
-              {!productsLoading && displayedYangPackages.length === 0 && (
-                <EmptyMarketMessage />
-              )}
             </div>
+
+            {!productsLoading && displayedYangPackages.length === 0 && (
+              <EmptyMarketMessage />
+            )}
           </div>
         </section>
       )}
