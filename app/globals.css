@@ -168,3 +168,88 @@ textarea:disabled {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Sprint 1 / Katman 2: görünür UI sistemi */
+.haswolf-header {
+  box-shadow: 0 12px 42px rgba(0, 0, 0, 0.38);
+}
+
+.haswolf-product-card {
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+}
+
+.haswolf-product-card:hover {
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(217, 170, 74, 0.08);
+}
+
+.haswolf-footer {
+  border-top: 1px solid rgba(217, 170, 74, 0.24);
+  background:
+    radial-gradient(circle at 15% 10%, rgba(217, 170, 74, 0.11), transparent 32%),
+    linear-gradient(180deg, #080909, #020303);
+}
+
+.haswolf-social {
+  display: inline-flex;
+  width: 2.6rem;
+  height: 2.6rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(217, 170, 74, 0.3);
+  border-radius: 0.85rem;
+  background: rgba(255,255,255,.035);
+  color: #e6bb63;
+  font-size: .72rem;
+  font-weight: 800;
+  transition: transform .2s ease, background .2s ease, color .2s ease;
+}
+
+.haswolf-social:hover { transform: translateY(-2px); background: #d9aa4a; color: #050505; }
+
+.haswolf-bottom-nav {
+  position: fixed;
+  z-index: 70;
+  left: 50%;
+  bottom: max(.65rem, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: min(calc(100% - 1rem), 34rem);
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: .2rem;
+  padding: .45rem;
+  border: 1px solid rgba(217, 170, 74, .26);
+  border-radius: 1.35rem;
+  background: rgba(7, 8, 8, .93);
+  box-shadow: 0 18px 60px rgba(0,0,0,.65);
+  backdrop-filter: blur(22px);
+}
+
+.haswolf-bottom-nav a,
+.haswolf-bottom-nav button {
+  min-width: 0;
+  min-height: 3.55rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .2rem;
+  border-radius: 1rem;
+  color: #8d9292;
+  font-size: .62rem;
+  font-weight: 700;
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+
+.haswolf-bottom-nav a:hover,
+.haswolf-bottom-nav button:hover,
+.haswolf-bottom-nav .is-active {
+  background: linear-gradient(180deg, rgba(217,170,74,.24), rgba(217,170,74,.08));
+  color: #f0c66d;
+  transform: translateY(-1px);
+}
+
+.haswolf-bottom-nav__icon { font-size: 1.15rem; line-height: 1; }
+
+@media (max-width: 1023px) {
+  main { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+}

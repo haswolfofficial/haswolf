@@ -1,6 +1,8 @@
 "use client";
 
 import AuthButton from "../components/AuthButton";
+import MobileBottomNav from "../components/MobileBottomNav";
+import SiteFooter from "../components/SiteFooter";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../lib/supabase";
 
@@ -251,31 +253,31 @@ export default function Home() {
 
   return (
     <main id="top" className="min-h-screen w-full overflow-x-hidden bg-[#050707] pb-[env(safe-area-inset-bottom)] text-white">
-      <header className="sticky top-0 z-50 border-b border-[#8c641e]/40 bg-black/95 backdrop-blur-xl">
+      <header className="haswolf-header sticky top-0 z-50 border-b border-[#8c641e]/40 bg-black/90 backdrop-blur-2xl">
         <div className="haswolf-container flex h-[62px] items-center justify-between sm:h-[70px] lg:h-auto lg:py-3">
           <WolfLogo />
 
-          <nav className="hidden items-center gap-8 text-sm text-zinc-300 lg:flex">
-            <a href="#top" className="hover:text-[#d9aa4a]">
+          <nav className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/[0.035] p-1.5 text-sm text-zinc-300 lg:flex">
+            <a href="#top" className="rounded-full px-4 py-2.5 transition hover:bg-white/5 hover:text-[#d9aa4a]">
               Ana Sayfa
             </a>
-            <a href="/topluluk" className="hover:text-[#d9aa4a]">
+            <a href="/topluluk" className="rounded-full px-4 py-2.5 transition hover:bg-white/5 hover:text-[#d9aa4a]">
               Sohbet Odaları
             </a>
-            <button onClick={() => goToMarket("item")} className="hover:text-[#d9aa4a]">
+            <button onClick={() => goToMarket("item")} className="rounded-full px-4 py-2.5 transition hover:bg-white/5 hover:text-[#d9aa4a]">
               Item
             </button>
-            <button onClick={() => goToMarket("account")} className="hover:text-[#d9aa4a]">
+            <button onClick={() => goToMarket("account")} className="rounded-full px-4 py-2.5 transition hover:bg-white/5 hover:text-[#d9aa4a]">
               Karakter
             </button>
-            <button onClick={() => goToMarket("yang")} className="hover:text-[#d9aa4a]">
+            <button onClick={() => goToMarket("yang")} className="rounded-full px-4 py-2.5 transition hover:bg-white/5 hover:text-[#d9aa4a]">
               Yang
             </button>
-            <a href="#footer" className="hover:text-[#d9aa4a]">
+            <a href="#footer" className="rounded-full px-4 py-2.5 transition hover:bg-white/5 hover:text-[#d9aa4a]">
               İletişim
             </a>
             {isAdmin && (
-              <a href="/admin" className="hover:text-[#d9aa4a]">
+              <a href="/admin" className="rounded-full px-4 py-2.5 transition hover:bg-white/5 hover:text-[#d9aa4a]">
                 Admin
               </a>
             )}
@@ -667,19 +669,19 @@ export default function Home() {
                 return (
                   <article
                     key={product.id}
-                    className="overflow-hidden rounded-xl border border-[#765625]/50 bg-gradient-to-b from-[#101313] to-[#070909] transition hover:-translate-y-1 hover:border-[#d0a14b]"
+                    className="haswolf-product-card group overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-b from-[#151818] to-[#080909] transition duration-300 hover:-translate-y-1.5 hover:border-[#d0a14b]/80"
                   >
                     <div className="p-4">
                       <h3 className="text-center text-base font-bold text-[#e7b74f] sm:text-lg">
                         {product.name}
                       </h3>
 
-                      <div className="mt-3 flex h-40 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-black/40 sm:h-44">
+                      <div className="relative mt-3 flex h-44 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-[radial-gradient(circle_at_50%_30%,rgba(217,170,74,.13),transparent_55%),#070808] sm:h-48">
                         {product.image_url ? (
                           <img
                             src={product.image_url}
                             alt={product.name}
-                            className="h-full w-full object-contain"
+                            className="h-full w-full object-contain p-3 transition duration-500 group-hover:scale-105"
                           />
                         ) : (
                           <span className="text-6xl">⚔️</span>
@@ -694,7 +696,7 @@ export default function Home() {
                         )}
                       </ul>
 
-                      <div className="mt-4 text-center text-xl font-black text-[#e7b74f]">
+                      <div className="mt-4 border-t border-white/10 pt-4 text-center text-xl font-black text-[#e7b74f]">
                         ◉ {formatPrice(product.price)}
                       </div>
 
@@ -906,21 +908,8 @@ export default function Home() {
         </div>
       </section>
 
-      <footer id="footer" className="border-t border-[#765625]/40 bg-black">
-        <div className="mx-auto flex max-w-[1500px] flex-col items-center justify-between gap-6 px-4 py-8 sm:px-6 sm:py-10 md:flex-row">
-          <WolfLogo />
-
-          <p className="text-center text-sm text-zinc-600">
-            © 2026 HASWOLF MARKET — Tüm hakları saklıdır.
-          </p>
-
-          <div className="flex gap-5 text-xl">
-            <span>☎</span>
-            <span>◎</span>
-            <span>◉</span>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
+      <MobileBottomNav activeMarket={market} onMarketChange={goToMarket} />
     </main>
   );
 }
