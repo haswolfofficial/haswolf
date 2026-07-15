@@ -1,7 +1,6 @@
 "use client";
 
 import AuthButton from "../components/AuthButton";
-import InstallAppButton from "../components/InstallAppButton";
 import MobileBottomNav from "../components/MobileBottomNav";
 import SiteFooter from "../components/SiteFooter";
 import { useEffect, useMemo, useState } from "react";
@@ -302,22 +301,36 @@ export default function Home() {
               ))}
               </div>
 
-            <div className="haswolf-header-auth">
-              <AuthButton />
-            </div>
-            <InstallAppButton />
+            <a
+              href="/uygulama"
+              className="haswolf-download-button"
+              aria-label="HASWOLF uygulamasını indir"
+            >
+              <span aria-hidden="true">⇩</span>
+              <span className="hidden sm:block">
+                <strong>UYGULAMA İNDİR</strong>
+                <small>HASWOLF APK</small>
+              </span>
+            </a>
+
+            <button
+              type="button"
+              aria-label={mobileMenuOpen ? "Menüyü kapat" : "Menüyü aç"}
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen((value) => !value)}
+              className="haswolf-menu-button"
+            >
+              {mobileMenuOpen ? "✕" : "☰"}
+            </button>
             </div>
           </div>
 
           <nav aria-label="Ana navigasyon" className="haswolf-main-nav">
             <a href="#top"><span aria-hidden="true">⌂</span><span>Ana Sayfa</span></a>
+            <a href="/topluluk"><span aria-hidden="true">👥</span><span>Sohbet Odaları</span></a>
             <button type="button" onClick={() => goToMarket("item")}><span aria-hidden="true">⚔</span><span>Item</span></button>
             <button type="button" onClick={() => goToMarket("account")}><span aria-hidden="true">♟</span><span>Karakter</span></button>
             <button type="button" onClick={() => goToMarket("yang")}><YangIcon /><span>Yang</span></button>
-            <a href="/topluluk" className="haswolf-chat-before-admin">
-              <span aria-hidden="true">👥</span>
-              <span>Sohbet Odaları</span>
-            </a>
             {isAdmin && <a href="/admin"><span aria-hidden="true">🛡</span><span>Admin</span></a>}
             <button
               type="button"

@@ -1,7 +1,6 @@
-"use client";
+﻿"use client";
 
 import AuthButton from "../components/AuthButton";
-import InstallAppButton from "../components/InstallAppButton";
 import MobileBottomNav from "../components/MobileBottomNav";
 import SiteFooter from "../components/SiteFooter";
 import { useEffect, useMemo, useState } from "react";
@@ -302,10 +301,17 @@ export default function Home() {
               ))}
               </div>
 
-            <div className="haswolf-header-auth">
-              <AuthButton />
-            </div>
-            <InstallAppButton />
+            <a
+              href="/uygulama"
+              className="haswolf-download-button"
+              aria-label="HASWOLF uygulamasını indir"
+            >
+              <span aria-hidden="true">⇩</span>
+              <span className="hidden sm:block">
+                <strong>UYGULAMA İNDİR</strong>
+                <small>HASWOLF APK</small>
+              </span>
+            </a>
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 :root {
   --background: #050707;
@@ -881,36 +881,5 @@ textarea:disabled {
     min-height: 3rem;
     padding: .55rem .7rem;
     font-size: .75rem;
-  }
-}
-
-
-/* HASWOLF HEADER AUTH + PWA */
-.haswolf-header-auth {
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-}
-
-.haswolf-header-auth > div {
-  display: flex;
-  align-items: center;
-}
-
-.haswolf-header-auth button {
-  min-height: 3rem;
-  white-space: nowrap;
-}
-
-.haswolf-download-button:disabled {
-  cursor: default;
-  opacity: 0.72;
-}
-
-@media (max-width: 639px) {
-  .haswolf-header-auth button {
-    min-height: 2.75rem;
-    padding-inline: 0.65rem;
-    font-size: 0.75rem;
   }
 }
