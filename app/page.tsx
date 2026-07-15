@@ -250,9 +250,9 @@ export default function Home() {
   }
 
   return (
-    <main id="top" className="min-h-screen overflow-x-hidden bg-[#050707] text-white">
+    <main id="top" className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#050707] text-white">
       <header className="sticky top-0 z-50 border-b border-[#8c641e]/40 bg-black/95 backdrop-blur-xl">
-        <div className="mx-auto flex h-[68px] max-w-[1500px] items-center justify-between px-3 sm:h-auto sm:px-6 sm:py-4">
+        <div className="mx-auto flex h-[62px] w-full max-w-[1500px] items-center justify-between px-3 sm:h-[70px] sm:px-5 lg:h-auto lg:px-6 lg:py-3">
           <WolfLogo />
 
           <nav className="hidden items-center gap-8 text-sm text-zinc-300 lg:flex">
@@ -448,13 +448,13 @@ export default function Home() {
       <section className="relative overflow-hidden border-b border-[#8c641e]/35">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_40%,rgba(190,120,25,0.22),transparent_35%),linear-gradient(110deg,#050707_20%,#10100d_55%,#070707)]" />
 
-        <div className="relative mx-auto grid min-h-[420px] max-w-[1500px] items-center gap-8 px-4 py-12 sm:px-6 sm:py-16 lg:min-h-[500px] lg:grid-cols-[1fr_0.8fr] lg:gap-12 lg:py-20">
+        <div className="relative mx-auto grid min-h-[285px] max-w-[1500px] items-center gap-4 px-4 py-7 sm:min-h-[330px] sm:px-5 sm:py-9 lg:min-h-[360px] lg:grid-cols-[1fr_0.62fr] lg:gap-8 lg:px-6 lg:py-10">
           <div>
             <p className="text-[11px] font-semibold tracking-[0.22em] text-[#d5a23e] sm:text-sm sm:tracking-[0.32em]">
               GÜVENİLİR • HIZLI • PROFESYONEL
             </p>
 
-            <h1 className="mt-4 text-[42px] font-black leading-none tracking-[0.08em] text-[#d9aa4a] sm:text-6xl md:text-8xl">
+            <h1 className="mt-3 text-[34px] font-black leading-none tracking-[0.06em] text-[#d9aa4a] sm:text-5xl md:text-6xl lg:text-7xl">
               HASWOLF
             </h1>
 
@@ -462,31 +462,31 @@ export default function Home() {
               MARKET
             </h2>
 
-            <p className="mt-6 max-w-xl text-[15px] leading-7 text-zinc-400 sm:mt-8 sm:text-lg sm:leading-8">
+            <p className="mt-4 max-w-xl text-sm leading-6 text-zinc-400 sm:mt-5 sm:text-base sm:leading-7">
               Item, Yang ve karakter alışverişinde güvenli, hızlı ve seçkin
               pazar deneyimi.
             </p>
 
-            <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap sm:gap-4">
+            <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
               <button
                 onClick={() => goToMarket("item")}
-                className="min-h-12 w-full rounded-lg bg-gradient-to-b from-[#e6ba58] to-[#a97521] px-7 py-3.5 text-center font-bold text-black sm:w-auto sm:py-4"
+                className="min-h-11 w-full rounded-lg bg-gradient-to-b from-[#e6ba58] to-[#a97521] px-3 py-3 text-center text-sm font-bold text-black sm:w-auto sm:px-6"
               >
                 Markete Git
               </button>
 
               <a
                 href="#nasil-alisveris"
-                className="min-h-12 w-full rounded-lg border border-[#88652b] px-7 py-3.5 text-center font-semibold text-[#e0bb70] sm:w-auto sm:py-4"
+                className="min-h-11 w-full rounded-lg border border-[#88652b] px-3 py-3 text-center text-sm font-semibold text-[#e0bb70] sm:w-auto sm:px-6"
               >
                 Nasıl Alışveriş Yapılır?
               </a>
             </div>
           </div>
 
-          <div className="hidden justify-center sm:flex">
-            <div className="relative flex h-64 w-64 items-center justify-center rounded-full border border-[#b18131]/30 bg-[radial-gradient(circle,#33220c,#090909_65%)] shadow-2xl shadow-amber-600/10 lg:h-80 lg:w-80">
-              <svg viewBox="0 0 120 120" className="h-44 w-44 lg:h-56 lg:w-56">
+          <div className="hidden justify-center lg:flex">
+            <div className="relative flex h-52 w-52 items-center justify-center rounded-full border border-[#b18131]/30 bg-[radial-gradient(circle,#33220c,#090909_65%)] shadow-2xl shadow-amber-600/10 lg:h-60 lg:w-60">
+              <svg viewBox="0 0 120 120" className="h-36 w-36 lg:h-44 lg:w-44">
                 <path
                   d="M18 20 L45 34 L60 22 L75 34 L102 20 L92 59 L103 82 L78 105 L60 94 L42 105 L17 82 L28 59 Z"
                   fill="#080808"
@@ -507,13 +507,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1500px] px-4 py-5 sm:px-6 sm:py-8">
-        <div className="rounded-xl border border-[#8c641e]/40 bg-[#0d0f0f]/95 p-4 sm:p-6">
-          <h2 className="mb-5 text-center text-base font-bold text-[#ddb45b] sm:mb-6 sm:text-xl">
+      <section className="mx-auto max-w-[1500px] px-3 py-3 sm:px-5 sm:py-4 lg:px-6">
+        <div className="rounded-xl border border-[#8c641e]/40 bg-[#0d0f0f]/95 p-3 sm:p-4">
+          <h2 className="mb-3 text-center text-sm font-bold text-[#ddb45b] sm:text-base">
             ─── SUNUCU SEÇİNİZ ───
           </h2>
 
-          <div className="-mx-2 flex snap-x snap-mandatory gap-3 overflow-x-auto px-2 pb-2 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 md:pb-0">
+          <div className="mobile-swipe-row -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-1 pb-2 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 md:pb-0">
             {servers.map((server) => {
               const active = selectedServer === server.name;
 
@@ -521,7 +521,7 @@ export default function Home() {
                 <button
                   key={server.name}
                   onClick={() => setSelectedServer(server.name)}
-                  className={`min-w-[82vw] snap-center rounded-xl border bg-black/70 p-5 text-left transition sm:min-w-[360px] md:min-w-0 md:p-6 md:hover:-translate-y-1 ${
+                  className={`min-w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] snap-center rounded-xl border bg-black/70 p-4 text-left transition sm:min-w-[min(420px,78vw)] sm:max-w-[min(420px,78vw)] md:min-w-0 md:max-w-none md:p-5 md:hover:-translate-y-1 ${
                     active ? "scale-[1.01]" : ""
                   }`}
                   style={{
@@ -615,14 +615,14 @@ export default function Home() {
       )}
 
       {market === "item" && (
-        <section className="mx-auto grid max-w-[1500px] gap-5 px-4 pb-12 sm:px-6 lg:grid-cols-[270px_1fr]">
+        <section className="mx-auto grid w-full max-w-[1500px] gap-3 px-3 pb-10 sm:px-5 lg:grid-cols-[230px_minmax(0,1fr)] lg:px-6">
           <aside>
             <div className="rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-3">
               <h2 className="border-b border-[#765625]/40 px-3 py-4 font-bold text-[#ddb45b] sm:px-4 sm:py-5">
                 ✣ KATEGORİLER
               </h2>
 
-              <div className="mt-3 flex gap-2 overflow-x-auto pb-1 lg:block lg:space-y-2 lg:overflow-visible">
+              <div className="mobile-swipe-row mt-3 flex snap-x gap-2 overflow-x-auto overscroll-x-contain pb-2 lg:block lg:space-y-2 lg:overflow-visible">
                 {categories.map(([icon, name]) => (
                   <button
                     key={name}
@@ -647,7 +647,7 @@ export default function Home() {
             </div>
           </aside>
 
-          <div className="rounded-xl border border-[#765625]/50 bg-[#090b0b] p-3 sm:p-5">
+          <div className="min-w-0 rounded-xl border border-[#765625]/50 bg-[#090b0b] p-3 sm:p-4">
             <MarketTitle
               server={selectedServer}
               title={
@@ -660,7 +660,7 @@ export default function Home() {
               onSortChange={setSortOption}
             />
 
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
               {displayedItemProducts.map((product) => {
                 const details = descriptionLines(product.description);
 
@@ -674,7 +674,7 @@ export default function Home() {
                         {product.name}
                       </h3>
 
-                      <div className="mt-4 flex h-36 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-black/40 sm:h-44">
+                      <div className="mt-3 flex h-40 items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-black/40 sm:h-44">
                         {product.image_url ? (
                           <img
                             src={product.image_url}
@@ -686,7 +686,7 @@ export default function Home() {
                         )}
                       </div>
 
-                      <ul className="mt-4 min-h-0 space-y-2 text-xs leading-5 text-zinc-400 sm:min-h-32">
+                      <ul className="mt-3 max-h-24 space-y-1 overflow-y-auto pr-1 text-xs leading-5 text-zinc-400 sm:min-h-28 sm:max-h-none">
                         {details.length > 0 ? (
                           details.map((detail) => <li key={detail}>◆ {detail}</li>)
                         ) : (

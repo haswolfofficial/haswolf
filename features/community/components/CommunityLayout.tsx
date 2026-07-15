@@ -121,7 +121,14 @@ export default function CommunityLayout({
 
 
   useEffect(() => {
+    if (!currentUserId) return;
+
     let active = true;
+    let heartbeatTimer: number | undefined;
+
+    setOnlineUserIds((current) =>
+      current.includes(currentUserId) ? current : [...current, currentUserId]
+    );
 
     const channel = supabase.channel("haswolf-online-users", {
       config: {
@@ -131,7 +138,7 @@ export default function CommunityLayout({
 
     function syncPresence() {
       const state = channel.presenceState<{ userId?: string }>();
-      const ids = new Set<string>();
+      const ids = new Set<string>([currentUserId]);
 
       Object.entries(state).forEach(([key, entries]) => {
         ids.add(key);
@@ -141,9 +148,15 @@ export default function CommunityLayout({
         });
       });
 
-      if (active) {
-        setOnlineUserIds([...ids]);
-      }
+      if (active) setOnlineUserIds([...ids]);
+    }
+
+    async function trackOnline() {
+      await channel.track({
+        userId: currentUserId,
+        nickname,
+        onlineAt: new Date().toISOString(),
+      });
     }
 
     channel
@@ -153,15 +166,20 @@ export default function CommunityLayout({
       .subscribe(async (status) => {
         if (status !== "SUBSCRIBED") return;
 
-        await channel.track({
-          userId: currentUserId,
-          nickname,
-          onlineAt: new Date().toISOString(),
-        });
+        await trackOnline();
+
+        heartbeatTimer = window.setInterval(() => {
+          void trackOnline();
+        }, 25_000);
       });
 
     return () => {
       active = false;
+
+      if (heartbeatTimer) {
+        window.clearInterval(heartbeatTimer);
+      }
+
       void channel.untrack();
       void supabase.removeChannel(channel);
     };

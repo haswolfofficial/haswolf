@@ -1,136 +1,226 @@
 import { NextResponse } from "next/server";
 
-const HANDLE = "ROYALEONLINEHASWOLF";
-const CHANNEL_URL = `https://www.youtube.com/@${HANDLE}`;
-const LIVE_URL = `${CHANNEL_URL}/live`;
+const CHANNEL_HANDLE = "ROYALEONLINEHASWOLF";
+const CHANNEL_URL = "https://www.youtube.com/@ROYALEONLINEHASWOLF";
+const CACHE_SECONDS = 900;
+
+type YouTubeChannelsResponse = {
+  items?: Array<{
+    id?: string;
+    snippet?: {
+      title?: string;
+      customUrl?: string;
+    };
+  }>;
+  error?: {
+    message?: string;
+  };
+};
+
+type YouTubeSearchResponse = {
+  items?: Array<{
+    id?: {
+      videoId?: string;
+    };
+    snippet?: {
+      channelId?: string;
+      channelTitle?: string;
+      liveBroadcastContent?: string;
+      title?: string;
+    };
+  }>;
+  error?: {
+    message?: string;
+  };
+};
+
+type YouTubeVideosResponse = {
+  items?: Array<{
+    id?: string;
+    snippet?: {
+      channelId?: string;
+      channelTitle?: string;
+      liveBroadcastContent?: string;
+      title?: string;
+    };
+    liveStreamingDetails?: {
+      actualStartTime?: string;
+      actualEndTime?: string;
+    };
+  }>;
+  error?: {
+    message?: string;
+  };
+};
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0;
 
-function extractChannelId(html: string) {
-  return (
-    html.match(/"externalId":"(UC[a-zA-Z0-9_-]+)"/)?.[1] ??
-    html.match(/"channelId":"(UC[a-zA-Z0-9_-]+)"/)?.[1] ??
-    html.match(/youtube\.com\/channel\/(UC[a-zA-Z0-9_-]+)/)?.[1] ??
-    null
-  );
-}
-
-function candidateVideoIds(html: string) {
-  const ids = new Set<string>();
-  for (const match of html.matchAll(/"videoId":"([a-zA-Z0-9_-]{11})"/g)) {
-    ids.add(match[1]);
-  }
-  return [...ids];
-}
-
-function looksLive(html: string, videoId: string) {
-  const indexes: number[] = [];
-  let index = html.indexOf(`"videoId":"${videoId}"`);
-  while (index >= 0) {
-    indexes.push(index);
-    index = html.indexOf(`"videoId":"${videoId}"`, index + 1);
-  }
-
-  return indexes.some((position) => {
-    const nearby = html.slice(Math.max(0, position - 7000), position + 14000);
-    return (
-      nearby.includes('"isLiveNow":true') ||
-      nearby.includes('"isLive":true') ||
-      nearby.includes('"style":"LIVE"') ||
-      nearby.includes('"label":"LIVE"') ||
-      nearby.includes('"text":"CANLI"')
-    );
-  });
-}
-
-async function fetchYouTube(url: string) {
-  return fetch(url, {
-    redirect: "follow",
-    cache: "no-store",
+function jsonResponse(
+  body: Record<string, unknown>,
+  status = 200
+) {
+  return NextResponse.json(body, {
+    status,
     headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36",
-      "Accept-Language": "tr-TR,tr;q=0.9,en;q=0.8",
-      Accept: "text/html,application/xhtml+xml",
+      "Cache-Control": `public, s-maxage=${CACHE_SECONDS}, stale-while-revalidate=60`,
     },
   });
 }
 
-async function videoBelongsToChannel(videoId: string, expectedChannelId: string) {
-  const response = await fetchYouTube(`https://www.youtube.com/watch?v=${videoId}`);
-  const html = await response.text();
-  const ownerChannelId =
-    html.match(/"ownerChannelName":"[^"]*","externalChannelId":"(UC[a-zA-Z0-9_-]+)"/)?.[1] ??
-    html.match(/"externalChannelId":"(UC[a-zA-Z0-9_-]+)"/)?.[1] ??
-    html.match(/"channelId":"(UC[a-zA-Z0-9_-]+)"/)?.[1] ??
-    null;
+async function youtubeFetch<T>(
+  endpoint: string,
+  params: Record<string, string>
+): Promise<T> {
+  const apiKey = process.env.YOUTUBE_API_KEY;
 
-  const live =
-    html.includes('"isLiveContent":true') ||
-    html.includes('"isLiveNow":true') ||
-    html.includes('"isLive":true');
+  if (!apiKey) {
+    throw new Error("YOUTUBE_API_KEY tanımlı değil.");
+  }
 
-  return ownerChannelId === expectedChannelId && live;
+  const url = new URL(`https://www.googleapis.com/youtube/v3/${endpoint}`);
+
+  Object.entries({
+    ...params,
+    key: apiKey,
+  }).forEach(([key, value]) => {
+    url.searchParams.set(key, value);
+  });
+
+  const response = await fetch(url, {
+    next: {
+      revalidate: CACHE_SECONDS,
+    },
+    headers: {
+      Accept: "application/json",
+    },
+  });
+
+  const data = (await response.json()) as T & {
+    error?: { message?: string };
+  };
+
+  if (!response.ok) {
+    throw new Error(data.error?.message || "YouTube API isteği başarısız.");
+  }
+
+  return data;
+}
+
+async function resolveExactChannelId() {
+  const configuredChannelId = process.env.YOUTUBE_CHANNEL_ID?.trim();
+
+  const channels = await youtubeFetch<YouTubeChannelsResponse>("channels", {
+    part: "id,snippet",
+    forHandle: CHANNEL_HANDLE,
+    maxResults: "1",
+  });
+
+  const channel = channels.items?.[0];
+  const resolvedChannelId = channel?.id?.trim();
+
+  if (!resolvedChannelId) {
+    throw new Error("HASWOLF YouTube kanalı çözülemedi.");
+  }
+
+  if (
+    configuredChannelId &&
+    configuredChannelId !== resolvedChannelId
+  ) {
+    throw new Error(
+      "YOUTUBE_CHANNEL_ID, ROYALEONLINEHASWOLF kanal kimliğiyle eşleşmiyor."
+    );
+  }
+
+  return {
+    channelId: resolvedChannelId,
+    channelTitle: channel?.snippet?.title || "Royale Online Haswolf",
+  };
 }
 
 export async function GET() {
   try {
-    const channelResponse = await fetchYouTube(CHANNEL_URL);
-    const channelHtml = await channelResponse.text();
-    const expectedChannelId = extractChannelId(channelHtml);
+    const { channelId, channelTitle } = await resolveExactChannelId();
 
-    if (!expectedChannelId) {
-      return NextResponse.json(
-        { live: false, videoId: null, reason: "channel-id-not-found" },
-        { headers: { "Cache-Control": "no-store" } }
-      );
+    const search = await youtubeFetch<YouTubeSearchResponse>("search", {
+      part: "snippet",
+      channelId,
+      eventType: "live",
+      type: "video",
+      maxResults: "1",
+      order: "date",
+    });
+
+    const searchItem = search.items?.[0];
+    const candidateVideoId = searchItem?.id?.videoId?.trim();
+
+    if (!candidateVideoId) {
+      return jsonResponse({
+        live: false,
+        videoId: null,
+        channelId,
+        channelTitle,
+        channelUrl: CHANNEL_URL,
+      });
     }
 
-    const liveResponse = await fetchYouTube(LIVE_URL);
-    const liveHtml = await liveResponse.text();
-    const resolvedLiveChannelId = extractChannelId(liveHtml);
-
-    if (resolvedLiveChannelId && resolvedLiveChannelId !== expectedChannelId) {
-      return NextResponse.json(
-        { live: false, videoId: null, reason: "channel-mismatch" },
-        { headers: { "Cache-Control": "no-store" } }
-      );
+    if (searchItem?.snippet?.channelId !== channelId) {
+      return jsonResponse({
+        live: false,
+        videoId: null,
+        channelId,
+        channelTitle,
+        channelUrl: CHANNEL_URL,
+      });
     }
 
-    const redirectedVideoId = (() => {
-      try {
-        const parsed = new URL(liveResponse.url);
-        return parsed.pathname === "/watch" ? parsed.searchParams.get("v") : null;
-      } catch {
-        return null;
-      }
-    })();
+    const videos = await youtubeFetch<YouTubeVideosResponse>("videos", {
+      part: "snippet,liveStreamingDetails",
+      id: candidateVideoId,
+      maxResults: "1",
+    });
 
-    const candidates = [
-      redirectedVideoId,
-      ...candidateVideoIds(liveHtml).filter((id) => looksLive(liveHtml, id)),
-      ...candidateVideoIds(channelHtml).filter((id) => looksLive(channelHtml, id)),
-    ].filter((id): id is string => Boolean(id));
+    const video = videos.items?.[0];
 
-    for (const videoId of [...new Set(candidates)].slice(0, 8)) {
-      if (await videoBelongsToChannel(videoId, expectedChannelId)) {
-        return NextResponse.json(
-          { live: true, videoId, channelId: expectedChannelId },
-          { headers: { "Cache-Control": "no-store, no-cache, must-revalidate" } }
-        );
-      }
+    const isExactChannel =
+      video?.snippet?.channelId === channelId;
+
+    const isActuallyLive =
+      video?.snippet?.liveBroadcastContent === "live" &&
+      Boolean(video?.liveStreamingDetails?.actualStartTime) &&
+      !video?.liveStreamingDetails?.actualEndTime;
+
+    if (!video?.id || !isExactChannel || !isActuallyLive) {
+      return jsonResponse({
+        live: false,
+        videoId: null,
+        channelId,
+        channelTitle,
+        channelUrl: CHANNEL_URL,
+      });
     }
 
-    return NextResponse.json(
-      { live: false, videoId: null, channelId: expectedChannelId },
-      { headers: { "Cache-Control": "no-store, no-cache, must-revalidate" } }
-    );
+    return jsonResponse({
+      live: true,
+      videoId: video.id,
+      channelId,
+      channelTitle,
+      videoTitle: video.snippet?.title || "HASWOLF canlı yayın",
+      channelUrl: CHANNEL_URL,
+    });
   } catch (error) {
-    console.error("YouTube live check failed:", error);
-    return NextResponse.json(
-      { live: false, videoId: null },
-      { headers: { "Cache-Control": "no-store, no-cache, must-revalidate" } }
+    console.error("YouTube canlı yayın kontrolü başarısız:", error);
+
+    return jsonResponse(
+      {
+        live: false,
+        videoId: null,
+        channelId: null,
+        channelTitle: "Royale Online Haswolf",
+        channelUrl: CHANNEL_URL,
+        configurationError:
+          error instanceof Error ? error.message : "Bilinmeyen YouTube API hatası.",
+      },
+      200
     );
   }
 }

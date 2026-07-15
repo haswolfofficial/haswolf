@@ -486,7 +486,7 @@ function YouTubeLiveCard() {
   useEffect(() => {
     async function checkLive() {
       try {
-        const response = await fetch(`/api/youtube-live?t=${Date.now()}`, { cache: "no-store" });
+        const response = await fetch("/api/youtube-live", { cache: "no-store" });
         const data = (await response.json()) as { live?: boolean; videoId?: string | null };
         setLive(Boolean(data.live));
         setVideoId(data.videoId ?? null);
