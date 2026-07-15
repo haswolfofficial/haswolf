@@ -3,164 +3,90 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
-import { supabase } from "../lib/supabase";
-
-declare global {
-  interface Window {
-    HaswolfAndroid?: {
-      signInWithGoogle: () => void;
-      signOutGoogle?: () => void;
-    };
-    onHaswolfGoogleToken?: (idToken: string) => void;
-    onHaswolfGoogleError?: (message: string) => void;
-  }
-}
+import { supabase } from "@/lib/supabase";
 
 export default function AuthButton() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [nickname, setNickname] = useState("");
   const [loading, setLoading] = useState(true);
-  const [authMessage, setAuthMessage] = useState("");
 
   useEffect(() => {
     let mounted = true;
 
-    async function loadSession() {
-      const { data } = await supabase.auth.getSession();
-
+    async function sync(sessionUser: User | null) {
       if (!mounted) return;
+      setUser(sessionUser);
+      setNickname("");
 
-      setUser(data.session?.user ?? null);
-      setLoading(false);
+      if (sessionUser) {
+        const { data: session } = await supabase.auth.getSession();
+        if (session.session) {
+          await fetch("/api/profile/bootstrap", {
+            method: "POST",
+            headers: { authorization: `Bearer ${session.session.access_token}` },
+          });
+        }
 
-      if (window.location.hash.includes("access_token")) {
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname + window.location.search
-        );
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("nickname")
+          .eq("id", sessionUser.id)
+          .maybeSingle();
+        if (mounted) setNickname(profile?.nickname || "");
       }
+
+      if (mounted) setLoading(false);
     }
 
-    loadSession();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!mounted) return;
-
-      setUser(session?.user ?? null);
-      setLoading(false);
-      setAuthMessage("");
+    supabase.auth.getSession().then(({ data }) => sync(data.session?.user ?? null));
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      sync(session?.user ?? null);
     });
-
-    window.onHaswolfGoogleToken = async (idToken: string) => {
-      setLoading(true);
-      setAuthMessage("Google hesabı doğrulanıyor...");
-
-      const { data, error } = await supabase.auth.signInWithIdToken({
-        provider: "google",
-        token: idToken,
-      });
-
-      if (error) {
-        setLoading(false);
-        setAuthMessage(error.message);
-        return;
-      }
-
-      setUser(data.user ?? data.session?.user ?? null);
-      setLoading(false);
-      setAuthMessage("");
-      router.refresh();
-    };
-
-    window.onHaswolfGoogleError = (message: string) => {
-      setLoading(false);
-      setAuthMessage(message || "Google girişi tamamlanamadı.");
-    };
 
     return () => {
       mounted = false;
-      subscription.unsubscribe();
-      delete window.onHaswolfGoogleToken;
-      delete window.onHaswolfGoogleError;
+      listener.subscription.unsubscribe();
     };
-  }, [router]);
+  }, []);
 
-  async function handleLogin() {
-    setAuthMessage("");
-
-    // Android uygulamasında native Google hesap seçiciyi açar.
-    if (window.HaswolfAndroid?.signInWithGoogle) {
-      setLoading(true);
-      setAuthMessage("Google hesabı açılıyor...");
-      window.HaswolfAndroid.signInWithGoogle();
-      return;
-    }
-
-    // Normal web tarayıcısında mevcut giriş sayfasını açar.
-    router.push("/login");
-  }
-
-  async function handleLogout() {
+  async function logout() {
     setLoading(true);
-    setAuthMessage("");
-
-    const { error } = await supabase.auth.signOut();
-
-    if (error) {
-      setLoading(false);
-      setAuthMessage(error.message);
-      return;
-    }
-
-    window.HaswolfAndroid?.signOutGoogle?.();
+    await supabase.auth.signOut();
     setUser(null);
+    setNickname("");
     setLoading(false);
     router.refresh();
   }
 
-  if (loading) {
-    return (
-      <span className="text-sm text-zinc-400">
-        {authMessage || "Kontrol ediliyor..."}
-      </span>
-    );
-  }
+  if (loading) return <span className="text-xs text-zinc-500">Kontrol ediliyor...</span>;
 
-  if (user) {
+  if (!user) {
     return (
-      <div className="haswolf-auth-user grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
-        <button
-          type="button"
-          onClick={handleLogout}
-          className="rounded-lg border border-[#8c641e]/60 bg-white/5 px-3 py-2 text-sm text-[#e8bd67] transition hover:bg-white/10"
-        >
-          Çıkış Yap
-        </button>
-        <span className="haswolf-auth-email col-span-2 max-w-[220px] truncate text-right text-xs text-zinc-400">
-          {user.email}
-        </span>
-      </div>
-    );
-  }
-
-  return (
-    <div>
       <button
         type="button"
-        onClick={handleLogin}
+        onClick={() => router.push("/login")}
         className="rounded-lg border border-[#b8862c] px-4 py-2.5 text-sm font-semibold text-[#e8bd67] transition hover:bg-[#d7a947] hover:text-black"
       >
-        Google ile Giriş Yap
+        Giriş Yap
       </button>
+    );
+  }
 
-      {authMessage && (
-        <p className="mt-2 max-w-[260px] text-xs text-red-400">
-          {authMessage}
-        </p>
-      )}
+  const label = nickname || (user.is_anonymous ? "Misafir" : user.email || "Hesap");
+
+  return (
+    <div className="haswolf-auth-user flex items-center gap-2">
+      <button
+        type="button"
+        onClick={logout}
+        className="rounded-lg border border-[#8c641e]/60 bg-white/5 px-3 py-2 text-sm text-[#e8bd67] transition hover:bg-white/10"
+      >
+        Çıkış Yap
+      </button>
+      <span className="haswolf-auth-email max-w-[220px] truncate text-xs text-zinc-400" title={label}>
+        {label}
+      </span>
     </div>
   );
 }

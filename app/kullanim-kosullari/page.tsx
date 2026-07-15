@@ -1,0 +1,3 @@
+import LegalPage from "@/components/LegalPage";
+const sections=[{"title": "Sorumluluk", "body": "Doğru bilgi verme ve hesap güvenliği kullanıcıya aittir."}, {"title": "Yasak davranış", "body": "Yetkisiz erişim, zarar verme, otomasyonla kötüye kullanım ve dolandırıcılık yasaktır."}];
+export default function Page(){return <LegalPage eyebrow="YASAL" title="Kullanım Koşulları" intro="Platformu kullanan herkes koşulları kabul eder." sections={sections}/>}

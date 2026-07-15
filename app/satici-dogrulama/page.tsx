@@ -1,0 +1,3 @@
+import LegalPage from "@/components/LegalPage";
+const sections=[{"title": "Başvuru", "body": "İletişim sayfasından başvuru yapılır."}, {"title": "Kontrol", "body": "Kimlik, iletişim ve ürün sahipliği kanıtı istenebilir."}, {"title": "İptal", "body": "Yanıltıcı bilgi veya ihlalde doğrulama kaldırılır."}];
+export default function Page(){return <LegalPage eyebrow="GÜVEN" title="Satıcı Doğrulama" intro="Satıcı güvenilirliğini artıran kontrol süreci." sections={sections}/>}

@@ -1,0 +1,3 @@
+import LegalPage from "@/components/LegalPage";
+const sections=[{"title": "Zorunlu çerezler", "body": "Kimlik doğrulama ve güvenlik tercihleri için kullanılır."}, {"title": "Kontrol", "body": "Tarayıcıdan silinebilir; bazı özellikler etkilenebilir."}];
+export default function Page(){return <LegalPage eyebrow="YASAL" title="Çerez Politikası" intro="Oturum ve güvenlik için gerekli teknik depolama kullanılır." sections={sections}/>}

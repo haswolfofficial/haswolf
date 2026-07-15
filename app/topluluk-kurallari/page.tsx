@@ -1,0 +1,3 @@
+import LegalPage from "@/components/LegalPage";
+const sections=[{"title": "Saygı", "body": "Hakaret, tehdit, taciz, nefret söylemi ve kişisel veri paylaşımı yasaktır."}, {"title": "Spam ve dolandırıcılık", "body": "Spam, sahte satış, kimlik taklidi ve zararlı bağlantı yasaktır."}, {"title": "Yaptırımlar", "body": "İçerik silme, susturma, hesap yasağı ve IP özeti üzerinden bağlantı yasağı uygulanabilir."}];
+export default function Page(){return <LegalPage eyebrow="TOPLULUK" title="Topluluk Kuralları" intro="Sohbet odalarının güvenli ve saygılı kalması için kurallar." sections={sections}/>}

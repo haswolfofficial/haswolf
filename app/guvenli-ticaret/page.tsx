@@ -1,0 +1,3 @@
+import LegalPage from "@/components/LegalPage";
+const sections=[{"title": "Doğrulama", "body": "Satıcı, ürün sahipliği ve teslimat yöntemi kontrol edilir."}, {"title": "Ödeme", "body": "Ödeme talimatları yalnızca resmî kanallardan alınır."}, {"title": "Uyuşmazlık", "body": "Mesaj, ödeme ve teslimat kayıtlarıyla destek talebi oluşturulur."}];
+export default function Page(){return <LegalPage eyebrow="GÜVEN" title="Güvenli Ticaret Rehberi" intro="Kontrollü ve doğrulanabilir işlem ilkeleri." sections={sections}/>}

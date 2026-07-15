@@ -1,0 +1,3 @@
+import LegalPage from "@/components/LegalPage";
+const sections=[{"title": "Toplanan veriler", "body": "Google hesabında kullanıcı kimliği ve e-posta; misafir girişinde anonim kimlik, otomatik mahlas ve IP adresinin geri döndürülemez özeti işlenir."}, {"title": "IP güvenliği", "body": "Ham IP veritabanında tutulmaz. Tuzlanmış SHA-256 özeti yalnızca kötüye kullanım ve yasak kontrolünde kullanılır."}, {"title": "Saklama", "body": "Veriler gerekli süre boyunca tutulur; destek üzerinden silme veya düzeltme talebi iletilebilir."}];
+export default function Page(){return <LegalPage eyebrow="YASAL" title="Gizlilik ve Kişisel Veriler" intro="HASWOLF, hizmet ve güvenlik için gerekli verileri işler." sections={sections}/>}

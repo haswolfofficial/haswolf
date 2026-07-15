@@ -884,253 +884,58 @@ textarea:disabled {
   }
 }
 
-/* HASWOLF MOBIL UX 2026-07 */
-.haswolf-mobile-menu-toggle,
-.haswolf-social-menu-button,
-.haswolf-mobile-social-panel { display: none; }
 
-.haswolf-header-auth > div { display: flex; }
-.haswolf-header-auth button { white-space: nowrap; }
-
+/* HASWOLF KAPSAMLI MOBIL/TABLET DÜZEN */
 @media (max-width: 767px) {
-  html, body { overflow-x: hidden; }
-
-  .haswolf-header { position: relative !important; }
-  .haswolf-topbar {
-    min-height: 4.25rem !important;
-    gap: .55rem !important;
-    padding-block: .45rem !important;
-  }
-  .haswolf-topbar > a { min-width: 0; }
-  .haswolf-topbar > a > div:first-child { width: 2.5rem !important; height: 2.5rem !important; }
-  .haswolf-topbar > a svg { width: 2.5rem !important; height: 2.5rem !important; }
-  .haswolf-topbar > a > div:last-child > div:first-child { font-size: 1.05rem !important; }
-  .haswolf-topbar > a > div:last-child > div:last-child { font-size: .42rem !important; }
-
-  .haswolf-social-strip { display: none !important; }
-  .haswolf-topbar__actions { margin-left: auto; gap: .4rem !important; }
-  .haswolf-download-button { display: none !important; }
-
-  .haswolf-header-auth { min-width: 0; max-width: 11.5rem; }
-  .haswolf-header-auth > div > div,
-  .haswolf-header-auth > div { min-width: 0; max-width: 100%; }
-  .haswolf-header-auth > div > div { display: grid !important; grid-template-columns: minmax(0,1fr) auto; gap: .35rem !important; align-items: center; }
-  .haswolf-header-auth span { grid-column: 1 / -1; grid-row: 2; max-width: 100% !important; font-size: .65rem !important; text-align: right; }
-  .haswolf-header-auth button { min-height: 2.4rem !important; padding: .45rem .65rem !important; font-size: .7rem !important; }
-
-  .haswolf-mobile-menu-toggle {
-    display: inline-flex !important;
-    min-height: 2.55rem;
-    align-items: center;
-    gap: .35rem;
-    border: 1px solid rgba(217,170,74,.58);
-    border-radius: .65rem;
-    padding: .45rem .65rem;
-    background: linear-gradient(180deg,#241a0a,#0b0b0a);
-    color: #efc76b;
-    font-size: .7rem;
-    font-weight: 800;
-  }
-
-  .haswolf-main-nav {
-    display: none !important;
-    grid-template-columns: 1fr !important;
-    gap: .42rem !important;
-    overflow: visible !important;
-    padding: .55rem 0 .75rem !important;
-  }
-  .haswolf-main-nav--open { display: grid !important; }
-  .haswolf-main-nav a,
-  .haswolf-main-nav button {
-    width: 100% !important;
-    min-height: 2.75rem !important;
-    justify-content: flex-start !important;
-    padding: .55rem .8rem !important;
-    font-size: .8rem !important;
-  }
-  .haswolf-main-nav .haswolf-chat-before-admin,
-  .haswolf-main-nav .haswolf-whatsapp-nav { margin-left: 0 !important; }
-  .haswolf-social-menu-button { display: inline-flex !important; }
-  .haswolf-mobile-social-panel {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    gap: .4rem;
-    padding: .15rem 0 .25rem;
-  }
-  .haswolf-mobile-social-panel a {
-    min-height: 3rem !important;
-    gap: .5rem !important;
-    padding: .45rem .55rem !important;
-  }
-  .haswolf-mobile-social-panel a span:last-child { display: grid; min-width: 0; }
-  .haswolf-mobile-social-panel strong { font-size: .72rem; }
-  .haswolf-mobile-social-panel small { overflow: hidden; text-overflow: ellipsis; font-size: .55rem; color: #999; }
-
-  .haswolf-hero__content {
-    min-height: 0 !important;
+  .haswolf-hero .haswolf-container {
+    min-height: auto !important;
     padding-top: 1rem !important;
-    padding-bottom: 1.05rem !important;
-    gap: .5rem !important;
+    padding-bottom: .65rem !important;
   }
-  .haswolf-hero__content p:first-child { font-size: .58rem !important; letter-spacing: .16em !important; }
-  .haswolf-hero__title { margin-top: .5rem !important; font-size: 2.25rem !important; }
-  .haswolf-hero__title + h2 { margin-top: .45rem !important; font-size: .72rem !important; }
-  .haswolf-hero__title + h2 + p { margin-top: .65rem !important; max-width: 22rem; font-size: .75rem !important; line-height: 1.25rem !important; }
-  .haswolf-hero__content .mt-5 { margin-top: .8rem !important; }
-  .haswolf-hero__content .min-h-11 { min-height: 2.65rem !important; padding-block: .55rem !important; }
-
-  .haswolf-server-section { padding-top: .55rem !important; padding-bottom: .55rem !important; }
-  .haswolf-server-section > div { padding: .65rem !important; }
-  .haswolf-server-section h2 { margin-bottom: .55rem !important; font-size: .76rem !important; }
-  .haswolf-server-grid {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: .48rem !important;
-    margin-inline: 0 !important;
-    overflow: visible !important;
-    padding: 0 !important;
-  }
-  .haswolf-server-card {
-    min-width: 0 !important;
-    max-width: none !important;
-    min-height: 0 !important;
-    padding: .68rem .85rem !important;
-    border-radius: .8rem !important;
-  }
-  .haswolf-server-card > div { gap: .75rem !important; }
-  .haswolf-server-card > div > div:first-child {
-    width: 2.85rem !important;
-    height: 2.85rem !important;
-    font-size: 1rem !important;
-  }
-  .haswolf-server-card h3 { font-size: 1.02rem !important; line-height: 1.15 !important; }
-  .haswolf-server-card p { margin-top: .15rem !important; font-size: .72rem !important; }
-}
-
-
-/* HASWOLF DESKTOP RESTORE — mobil düzen korunur */
-@media (min-width: 768px) {
-  /* Yalnızca mobil için eklenen kontroller masaüstünde görünmez. */
-  .haswolf-mobile-menu-toggle,
-  .haswolf-social-menu-button,
-  .haswolf-mobile-social-panel {
-    display: none !important;
-  }
-
-  /* Masaüstü üst menü tekrar tek satır yatay düzene döner. */
-  .haswolf-main-nav,
-  .haswolf-main-nav.haswolf-main-nav--open {
-    display: flex !important;
-    width: 100% !important;
-    flex-direction: row !important;
-    align-items: stretch !important;
-    justify-content: center !important;
-    gap: 0.7rem !important;
-    overflow-x: visible !important;
-    padding: 0.65rem 0 !important;
-  }
-
-  .haswolf-main-nav > a,
-  .haswolf-main-nav > button {
+  .haswolf-hero__title { margin-top: .55rem !important; }
+  .haswolf-hero p { margin-bottom: 0 !important; }
+  .haswolf-hero + section { padding-top: .45rem !important; }
+  .haswolf-bottom-nav__icon--chat {
     display: inline-flex !important;
-    width: auto !important;
-    min-width: max-content !important;
-    min-height: 3rem !important;
-    flex: 1 1 auto !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 0.6rem 1rem !important;
-  }
-
-  .haswolf-main-nav .haswolf-chat-before-admin {
-    margin-left: 0 !important;
-  }
-
-  .haswolf-main-nav .haswolf-whatsapp-nav {
-    width: auto !important;
-    flex: 0 1 15rem !important;
-    margin-left: 0 !important;
-  }
-
-  /* Telefon alt navigasyonu masaüstünde kesinlikle görünmez. */
-  .haswolf-bottom-nav {
-    display: none !important;
-  }
-
-  /* Hesap alanı masaüstünde sıkışmadan yatay görünür. */
-  .haswolf-header-auth {
-    width: auto !important;
-    max-width: none !important;
-    min-width: 0 !important;
-  }
-
-  .haswolf-header-auth .haswolf-auth-user {
-    display: flex !important;
-    grid-template-columns: none !important;
-    align-items: center !important;
-    gap: 0.65rem !important;
-  }
-
-  .haswolf-header-auth .haswolf-auth-email {
-    grid-column: auto !important;
-    grid-row: auto !important;
-    order: 2 !important;
-    max-width: 180px !important;
-    text-align: left !important;
-  }
-
-  .haswolf-header-auth .haswolf-auth-user button {
-    order: 1 !important;
+    width: 1.55rem;
+    height: 1.55rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: linear-gradient(180deg,#e8bd62,#8b5b18);
+    color: #090909 !important;
+    font-size: 1rem !important;
+    font-weight: 900;
+    box-shadow: 0 0 16px rgba(232,189,98,.38);
   }
 }
-
-/* Büyük masaüstünde menü elemanlarını dengeli yay. */
-@media (min-width: 1200px) {
-  .haswolf-main-nav > a,
-  .haswolf-main-nav > button {
-    padding-inline: 1.15rem !important;
+@media (min-width: 768px) and (max-width: 1023px) {
+  .haswolf-hero .haswolf-container {
+    min-height: 285px !important;
+    padding-block: 1.5rem !important;
   }
 }
-
-/* Orta masaüstü ve küçük laptoplarda taşmayı önle. */
-@media (min-width: 768px) and (max-width: 1199px) {
-  .haswolf-main-nav {
-    justify-content: flex-start !important;
-    overflow-x: auto !important;
-  }
-
-  .haswolf-main-nav > a,
-  .haswolf-main-nav > button {
-    flex: 0 0 auto !important;
-    padding-inline: 0.85rem !important;
-    font-size: 0.8rem !important;
-  }
+.haswolf-legal-shell {
+  min-height: 100vh;
+  background: radial-gradient(circle at 80% 0%, rgba(217,170,74,.13), transparent 30%), #050606;
+  color: white;
 }
-
-/* HASWOLF HERO INSTALL + MOBILE GAP FIX */
-.haswolf-hero-install {
-  display: flex;
+.haswolf-legal-card {
+  border: 1px solid rgba(140,100,30,.48);
+  background: linear-gradient(180deg,rgba(18,19,18,.97),rgba(8,9,9,.98));
+  border-radius: 1.25rem;
+  box-shadow: 0 18px 55px rgba(0,0,0,.35);
+}
+.haswolf-form-input {
   width: 100%;
+  border: 1px solid rgba(140,100,30,.55);
+  background: #0b0d0d;
+  color: white;
+  border-radius: .75rem;
+  padding: .85rem 1rem;
+  outline: none;
 }
-.haswolf-hero-install .haswolf-download-button {
-  margin-left: 0 !important;
-  min-height: 2.8rem;
-}
-@media (max-width: 767px) {
-  .haswolf-hero__content {
-    padding-bottom: .35rem !important;
-  }
-  .haswolf-server-section {
-    padding-top: .22rem !important;
-  }
-  .haswolf-hero-actions {
-    margin-bottom: 0 !important;
-  }
-  .haswolf-hero-install .haswolf-download-button {
-    width: 100% !important;
-    justify-content: center !important;
-  }
-  .haswolf-hero-install .haswolf-download-button span:last-child {
-    display: grid !important;
-  }
+.haswolf-form-input:focus {
+  border-color: #d9aa4a;
+  box-shadow: 0 0 0 3px rgba(217,170,74,.12);
 }

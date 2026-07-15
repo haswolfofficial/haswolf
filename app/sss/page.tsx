@@ -1,0 +1,3 @@
+import LegalPage from "@/components/LegalPage";
+const sections=[{"title": "Giriş", "body": "Google veya Misafir Olarak Giriş kullanılabilir."}, {"title": "Misafir adı", "body": "Sistem Misafir 1, Misafir 2 şeklinde benzersiz mahlas verir."}, {"title": "Çekiliş", "body": "Aktif çekilişte Çekilişe Katıl düğmesine basılır."}, {"title": "Yasak itirazı", "body": "Sorun Bildir sayfasından iletilebilir."}];
+export default function Page(){return <LegalPage eyebrow="DESTEK" title="Sık Sorulan Sorular" intro="HASWOLF kullanımıyla ilgili temel cevaplar." sections={sections}/>}
