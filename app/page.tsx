@@ -459,7 +459,7 @@ export default function Home() {
             ─── SUNUCU SEÇİNİZ ───
           </h2>
 
-          <div className="mobile-swipe-row -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-1 pb-2 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 md:pb-0">
+          <div className="haswolf-server-grid -mx-1 flex gap-3 px-1 pb-2 md:mx-0 md:grid md:grid-cols-3 md:px-0 md:pb-0">
             {servers.map((server) => {
               const active = selectedServer === server.name;
 
@@ -508,10 +508,10 @@ export default function Home() {
       </section>
 
       <section id="market" className="scroll-mt-20 mx-auto max-w-[1500px] px-4 pb-6 sm:px-6">
-        <div className="flex snap-x gap-2 overflow-x-auto rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-2 md:grid md:grid-cols-3 md:gap-3 md:p-3">
+        <div className="haswolf-market-tabs grid grid-cols-3 gap-2 rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-2 md:gap-3 md:p-3">
           <button
             onClick={() => goToMarket("item")}
-            className={`min-w-[180px] snap-start whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
+            className={`min-w-0 whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
               market === "item"
                 ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
                 : "bg-[#141616] text-zinc-400"
@@ -522,7 +522,7 @@ export default function Home() {
 
           <button
             onClick={() => goToMarket("yang")}
-            className={`min-w-[180px] snap-start whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
+            className={`min-w-0 whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
               market === "yang"
                 ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
                 : "bg-[#141616] text-zinc-400"
@@ -533,7 +533,7 @@ export default function Home() {
 
           <button
             onClick={() => goToMarket("account")}
-            className={`min-w-[180px] snap-start whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
+            className={`min-w-0 whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
               market === "account"
                 ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
                 : "bg-[#141616] text-zinc-400"
@@ -568,7 +568,7 @@ export default function Home() {
                 ✣ KATEGORİLER
               </h2>
 
-              <div className="mobile-swipe-row mt-3 flex snap-x gap-2 overflow-x-auto overscroll-x-contain pb-2 lg:block lg:space-y-2 lg:overflow-visible">
+              <div className="haswolf-category-grid mt-3 grid gap-2 lg:block lg:space-y-2">
                 {categories.map(([icon, name]) => (
                   <button
                     key={name}

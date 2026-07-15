@@ -1437,3 +1437,241 @@ textarea:disabled {
     grid-template-columns: repeat(3,minmax(0,1fr)) !important;
   }
 }
+
+
+/* HASWOLF MOBILE LAYOUT REPAIR — scoped, no desktop regression */
+.haswolf-server-grid {
+  width: 100%;
+}
+
+.haswolf-market-tabs > button {
+  min-width: 0;
+}
+
+.haswolf-category-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Raffle: stronger black/gold contrast without leaving brand palette */
+.haswolf-raffle-hero {
+  border-color: rgba(221, 180, 91, .52) !important;
+  background:
+    radial-gradient(circle at 88% 10%, rgba(217,170,74,.19), transparent 32%),
+    linear-gradient(145deg, rgba(24,19,10,.98), rgba(7,8,8,.99) 58%) !important;
+  box-shadow: inset 0 1px 0 rgba(255,224,142,.06), 0 20px 55px rgba(0,0,0,.38) !important;
+}
+
+.haswolf-raffle-step,
+.haswolf-raffle-card,
+.haswolf-raffle-admin,
+.haswolf-raffle-info {
+  border-color: rgba(184, 135, 45, .46) !important;
+  background:
+    linear-gradient(180deg, rgba(25,21,13,.97), rgba(8,9,9,.99)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,224,142,.045), 0 13px 34px rgba(0,0,0,.3) !important;
+}
+
+.haswolf-raffle-card {
+  overflow: hidden;
+}
+
+.haswolf-raffle-stat {
+  border: 1px solid rgba(221,180,91,.42);
+  background: linear-gradient(145deg, rgba(43,31,12,.86), rgba(9,10,10,.93));
+  box-shadow: inset 0 1px 0 rgba(255,232,168,.06);
+}
+
+.haswolf-raffle-mini {
+  border: 1px solid rgba(221,180,91,.24);
+  background: rgba(5,6,6,.58);
+}
+
+.haswolf-raffle-admin .haswolf-form-input {
+  border-color: rgba(221,180,91,.38);
+  background: rgba(4,5,5,.84);
+  color: #f3efe5;
+}
+
+.haswolf-raffle-admin .haswolf-form-input::placeholder {
+  color: #77736a;
+}
+
+.haswolf-raffle-admin label,
+.haswolf-raffle-admin p,
+.haswolf-raffle-card p,
+.haswolf-raffle-info p {
+  color: #aaa69d;
+}
+
+@media (max-width: 767px) {
+  /* Sunucu cards: three fully visible, no overlap */
+  .haswolf-server-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: .42rem !important;
+    overflow: visible !important;
+    margin-inline: 0 !important;
+    padding: 0 !important;
+  }
+
+  .haswolf-server-grid > button {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    min-height: 6rem !important;
+    padding: .55rem .25rem !important;
+    border-radius: .75rem !important;
+    text-align: center !important;
+    transform: none !important;
+  }
+
+  .haswolf-server-grid > button > div {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: .38rem !important;
+  }
+
+  .haswolf-server-grid > button > div > div:first-child {
+    width: 2.45rem !important;
+    height: 2.45rem !important;
+    margin-inline: auto !important;
+    font-size: .9rem !important;
+  }
+
+  .haswolf-server-grid h3 {
+    max-width: 100% !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    font-size: .68rem !important;
+    line-height: 1.05 !important;
+    letter-spacing: -.015em !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .haswolf-server-grid p {
+    margin-top: .18rem !important;
+    font-size: .54rem !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+  }
+
+  /* Item / Yang / Account: all 3 visible, no horizontal scroll */
+  .haswolf-market-tabs {
+    width: 100% !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: .35rem !important;
+    overflow: hidden !important;
+    padding: .38rem !important;
+  }
+
+  .haswolf-market-tabs > button {
+    min-width: 0 !important;
+    width: 100% !important;
+    min-height: 3.15rem !important;
+    padding: .55rem .2rem !important;
+    overflow: hidden !important;
+    border-radius: .58rem !important;
+    font-size: .61rem !important;
+    line-height: 1.12 !important;
+    text-overflow: ellipsis !important;
+    white-space: normal !important;
+  }
+
+  /* Categories: readable 2-column grid, no broken words */
+  .haswolf-category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: .48rem !important;
+    overflow: visible !important;
+  }
+
+  .haswolf-category-grid > button {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 3.55rem !important;
+    justify-content: flex-start !important;
+    gap: .45rem !important;
+    padding: .65rem .6rem !important;
+    border-radius: .72rem !important;
+    font-size: .72rem !important;
+  }
+
+  .haswolf-category-grid > button span:last-child {
+    min-width: 0 !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+    line-height: 1.22 !important;
+  }
+
+  .haswolf-category-grid > button span:first-child {
+    width: 1.55rem !important;
+    flex: 0 0 1.55rem !important;
+    font-size: .92rem !important;
+  }
+
+  /* Raffle mobile readability */
+  .haswolf-raffle-hero,
+  .haswolf-raffle-admin,
+  .haswolf-raffle-card,
+  .haswolf-raffle-step,
+  .haswolf-raffle-info {
+    border-radius: 1rem !important;
+  }
+
+  .haswolf-raffle-hero {
+    padding: 1.2rem !important;
+  }
+
+  .haswolf-raffle-hero h1 {
+    font-size: 2rem !important;
+    line-height: 1.08 !important;
+  }
+
+  .haswolf-raffle-hero p {
+    font-size: .82rem !important;
+    line-height: 1.65 !important;
+  }
+
+  .haswolf-raffle-stat {
+    padding: .85rem !important;
+  }
+
+  .haswolf-raffle-stat p:first-child {
+    font-size: 1.35rem !important;
+  }
+
+  .haswolf-raffle-step {
+    padding: 1rem !important;
+  }
+
+  .haswolf-raffle-card .p-6 {
+    padding: 1rem !important;
+  }
+
+  .haswolf-raffle-admin {
+    padding: 1rem !important;
+  }
+
+  .haswolf-raffle-admin h2 {
+    color: #f0c96d;
+  }
+}
+
+@media (min-width: 768px) {
+  .haswolf-server-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .haswolf-category-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .haswolf-category-grid {
+    display: block !important;
+  }
+}
