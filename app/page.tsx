@@ -344,14 +344,40 @@ export default function Home() {
         </div>
 
         {mobileMenuOpen && (
-          <div className="border-t border-[#8c641e]/30 bg-black/98 lg:hidden">
-            <div className="haswolf-container grid gap-2 py-3 text-sm">
-              {headerSocials.map((social) => (
-                <a key={social.name} href={social.href} target={social.href.startsWith("http") ? "_blank" : undefined} rel={social.href.startsWith("http") ? "noreferrer" : undefined} className="flex items-center gap-3 rounded-lg bg-white/5 px-4 py-3">
-                  <SocialIcon name={social.name} /><span>{social.label} · {social.detail}</span>
-                </a>
-              ))}
-              <div className="rounded-lg bg-white/5 px-4 py-3"><AuthButton /></div>
+          <div className="haswolf-mobile-drawer lg:hidden">
+            <div className="haswolf-container py-3">
+              <nav className="haswolf-mobile-drawer__links" aria-label="Mobil menü">
+                <a href="#top"><span>⌂</span><span>Ana Sayfa</span></a>
+                <button type="button" onClick={() => goToMarket("item")}><span>⚔</span><span>Item</span></button>
+                <button type="button" onClick={() => goToMarket("account")}><span>♟</span><span>Karakter</span></button>
+                <button type="button" onClick={() => goToMarket("yang")}><span>◉</span><span>Yang</span></button>
+                <a href="/topluluk"><span>✦</span><span>Sohbet Odaları</span></a>
+                <button
+                  type="button"
+                  onClick={() => openWhatsApp("Merhaba Haswolf, destek almak istiyorum.")}
+                >
+                  <span>◉</span><span>WhatsApp Destek</span>
+                </button>
+              </nav>
+
+              <details className="haswolf-mobile-socials">
+                <summary><span>◎</span><span>Sosyal Medyalar</span><span>＋</span></summary>
+                <div>
+                  {headerSocials.map((social) => (
+                    <a
+                      key={social.name}
+                      href={social.href}
+                      target={social.href.startsWith("http") ? "_blank" : undefined}
+                      rel={social.href.startsWith("http") ? "noreferrer" : undefined}
+                    >
+                      <SocialIcon name={social.name} />
+                      <span>{social.label}</span>
+                    </a>
+                  ))}
+                </div>
+              </details>
+
+              <div className="haswolf-mobile-drawer__auth"><AuthButton /></div>
             </div>
           </div>
         )}
