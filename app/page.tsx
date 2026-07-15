@@ -277,7 +277,7 @@ export default function Home() {
   }
 
   return (
-    <main id="top" className="min-h-screen w-full overflow-x-hidden bg-[#050707] pb-[env(safe-area-inset-bottom)] text-white">
+    <main id="top" className="min-h-screen w-full overflow-x-hidden bg-[#050707] pb-28 text-white sm:pb-[env(safe-area-inset-bottom)]">
       <header className="haswolf-header sticky top-0 z-50 border-b border-[#8c641e]/40 bg-black/95 backdrop-blur-2xl">
         <div className="haswolf-container">
           <div className="haswolf-topbar">
@@ -413,7 +413,7 @@ export default function Home() {
             ─── SUNUCU SEÇİNİZ ───
           </h2>
 
-          <div className="mobile-swipe-row -mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain px-1 pb-2 md:mx-0 md:grid md:grid-cols-3 md:overflow-visible md:px-0 md:pb-0">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {servers.map((server) => {
               const active = selectedServer === server.name;
 
@@ -421,7 +421,7 @@ export default function Home() {
                 <button
                   key={server.name}
                   onClick={() => setSelectedServer(server.name)}
-                  className={`min-w-[calc(100vw-2rem)] max-w-[calc(100vw-2rem)] snap-center rounded-xl border bg-black/70 p-4 text-left transition sm:min-w-[min(420px,78vw)] sm:max-w-[min(420px,78vw)] md:min-w-0 md:max-w-none md:p-5 md:hover:-translate-y-1 ${
+                  className={`w-full min-w-0 rounded-xl border bg-black/70 p-4 text-left transition md:p-5 md:hover:-translate-y-1 ${
                     active ? "scale-[1.01]" : ""
                   }`}
                   style={{
@@ -462,10 +462,10 @@ export default function Home() {
       </section>
 
       <section id="market" className="scroll-mt-20 mx-auto max-w-[1500px] px-4 pb-6 sm:px-6">
-        <div className="flex snap-x gap-2 overflow-x-auto rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-2 md:grid md:grid-cols-3 md:gap-3 md:p-3">
+        <div className="grid grid-cols-1 gap-2 rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-2 sm:grid-cols-3 md:gap-3 md:p-3">
           <button
             onClick={() => goToMarket("item")}
-            className={`min-w-[180px] snap-start whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
+            className={`w-full min-w-0 rounded-lg px-3 py-3 text-sm font-bold transition md:px-5 md:py-4 ${
               market === "item"
                 ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
                 : "bg-[#141616] text-zinc-400"
@@ -476,7 +476,7 @@ export default function Home() {
 
           <button
             onClick={() => goToMarket("yang")}
-            className={`min-w-[180px] snap-start whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
+            className={`w-full min-w-0 rounded-lg px-3 py-3 text-sm font-bold transition md:px-5 md:py-4 ${
               market === "yang"
                 ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
                 : "bg-[#141616] text-zinc-400"
@@ -487,7 +487,7 @@ export default function Home() {
 
           <button
             onClick={() => goToMarket("account")}
-            className={`min-w-[180px] snap-start whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
+            className={`w-full min-w-0 rounded-lg px-3 py-3 text-sm font-bold transition md:px-5 md:py-4 ${
               market === "account"
                 ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
                 : "bg-[#141616] text-zinc-400"
@@ -522,14 +522,14 @@ export default function Home() {
                 ✣ KATEGORİLER
               </h2>
 
-              <div className="mobile-swipe-row mt-3 flex snap-x gap-2 overflow-x-auto overscroll-x-contain pb-2 lg:block lg:space-y-2 lg:overflow-visible">
+              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:block lg:space-y-2">
                 {categories.map(([icon, name]) => (
                   <button
                     key={name}
                     type="button"
                     onClick={() => setSelectedCategory(name)}
                     aria-pressed={selectedCategory === name}
-                    className={`flex min-w-max items-center gap-2 rounded-lg border px-4 py-3 text-left text-sm transition lg:w-full lg:gap-4 lg:py-4 ${
+                    className={`flex min-w-0 items-center justify-center gap-2 rounded-lg border px-2 py-3 text-center text-xs transition sm:text-sm lg:w-full lg:justify-start lg:gap-4 lg:px-4 lg:py-4 lg:text-left ${
                       selectedCategory === name
                         ? "border-[#c7973d] bg-gradient-to-r from-[#795315] to-[#bd8d32] text-black"
                         : "border-white/10 bg-[#121515] text-zinc-300 hover:border-[#9c7432] hover:text-[#e6bd68]"

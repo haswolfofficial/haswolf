@@ -914,3 +914,56 @@ textarea:disabled {
     font-size: 0.75rem;
   }
 }
+
+/* HASWOLF MOBILE LAYOUT FIX 2026-07-15 */
+@media (max-width: 639px) {
+  html, body {
+    overflow-x: hidden;
+  }
+
+  .haswolf-container {
+    width: calc(100% - 1rem);
+  }
+
+  .haswolf-topbar {
+    gap: .5rem !important;
+  }
+
+  .haswolf-topbar__actions {
+    min-width: 0;
+    gap: .45rem !important;
+  }
+
+  .haswolf-header-auth,
+  .haswolf-download-button {
+    min-width: 0;
+  }
+
+  .haswolf-main-nav {
+    padding-inline: .25rem !important;
+    scroll-padding-inline: .5rem;
+  }
+
+  .haswolf-main-nav a,
+  .haswolf-main-nav button {
+    min-height: 2.75rem !important;
+    padding: .5rem .7rem !important;
+    font-size: .76rem !important;
+  }
+
+  .haswolf-chat-before-admin {
+    margin-left: 0 !important;
+  }
+
+  #market {
+    scroll-margin-top: 5rem;
+  }
+
+  select {
+    max-width: 100%;
+  }
+
+  .haswolf-product-card {
+    min-width: 0;
+  }
+}
