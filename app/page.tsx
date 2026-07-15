@@ -104,6 +104,30 @@ function WolfLogo() {
   );
 }
 
+function YangIcon({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+      <circle cx="12" cy="12" r="9" fill="#d9aa4a" stroke="#f4d27a" strokeWidth="1.5" />
+      <path d="M8 7.5 12 10l4-2.5-1.2 4.2 2.2 3.1-4.2-.1L12 18l-.8-3.3-4.2.1 2.2-3.1Z" fill="#5b3908" stroke="#fff0b0" strokeWidth=".65" strokeLinejoin="round" />
+      <circle cx="12" cy="12" r="1.25" fill="#f8de8c" />
+    </svg>
+  );
+}
+
+function SocialIcon({ name }: { name: "youtube" | "instagram" | "tiktok" | "discord" }) {
+  if (name === "youtube") return <span className="social-brand social-brand--youtube">▶</span>;
+  if (name === "instagram") return <span className="social-brand social-brand--instagram">◎</span>;
+  if (name === "tiktok") return <span className="social-brand social-brand--tiktok">♪</span>;
+  return <span className="social-brand social-brand--discord">☁</span>;
+}
+
+const headerSocials = [
+  { name: "youtube" as const, label: "YouTube", detail: "HASWOLF TV", href: "https://www.youtube.com/@ROYALEONLINEHASWOLF" },
+  { name: "instagram" as const, label: "Instagram", detail: "@royaleonlinehaswolf", href: "https://www.instagram.com/royaleonlinehaswolf" },
+  { name: "tiktok" as const, label: "TikTok", detail: "@haswolfgame", href: "https://www.tiktok.com/@haswolfgame" },
+  { name: "discord" as const, label: "Discord", detail: "HASWOLF Topluluğu", href: "#footer" },
+];
+
 export default function Home() {
   const [market, setMarket] = useState<MarketType>("item");
   const [isAdmin, setIsAdmin] = useState(false);
@@ -253,202 +277,88 @@ export default function Home() {
 
   return (
     <main id="top" className="min-h-screen w-full overflow-x-hidden bg-[#050707] pb-[env(safe-area-inset-bottom)] text-white">
-      <header className="haswolf-header sticky top-0 z-50 border-b border-[#8c641e]/40 bg-black/90 backdrop-blur-2xl">
-        <div className="haswolf-container flex h-[62px] items-center justify-between sm:h-[70px] lg:h-auto lg:py-3">
-          <WolfLogo />
+      <header className="haswolf-header sticky top-0 z-50 border-b border-[#8c641e]/40 bg-black/95 backdrop-blur-2xl">
+        <div className="haswolf-container">
+          <div className="haswolf-topbar">
+            <WolfLogo />
 
-          <nav className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/[0.035] p-1.5 text-sm text-zinc-300 lg:flex">
-            <a href="#top" className="rounded-full px-4 py-2.5 transition hover:bg-white/5 hover:text-[#d9aa4a]">
-              Ana Sayfa
-            </a>
-            <a href="/topluluk" className="rounded-full px-4 py-2.5 transition hover:bg-white/5 hover:text-[#d9aa4a]">
-              Sohbet Odaları
-            </a>
-            <button onClick={() => goToMarket("item")} className="rounded-full px-4 py-2.5 transition hover:bg-white/5 hover:text-[#d9aa4a]">
-              Item
-            </button>
-            <button onClick={() => goToMarket("account")} className="rounded-full px-4 py-2.5 transition hover:bg-white/5 hover:text-[#d9aa4a]">
-              Karakter
-            </button>
-            <button onClick={() => goToMarket("yang")} className="rounded-full px-4 py-2.5 transition hover:bg-white/5 hover:text-[#d9aa4a]">
-              Yang
-            </button>
-            <a href="#footer" className="rounded-full px-4 py-2.5 transition hover:bg-white/5 hover:text-[#d9aa4a]">
-              İletişim
-            </a>
-            {isAdmin && (
-              <a href="/admin" className="rounded-full px-4 py-2.5 transition hover:bg-white/5 hover:text-[#d9aa4a]">
-                Admin
-              </a>
-            )}
-          </nav>
+            <div className="haswolf-topbar__actions">
+              <div className="haswolf-social-strip">
+              {headerSocials.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  target={social.href.startsWith("http") ? "_blank" : undefined}
+                  rel={social.href.startsWith("http") ? "noreferrer" : undefined}
+                  className="haswolf-header-social"
+                >
+                  <SocialIcon name={social.name} />
+                  <span className="min-w-0">
+                    <strong>{social.label}</strong>
+                    <small>{social.detail}</small>
+                  </span>
+                </a>
+              ))}
+              </div>
 
-          <div className="hidden items-center gap-3 lg:flex">
-            <AuthButton />
-            <button
-              onClick={() =>
-                openWhatsApp("Merhaba Haswolf, destek almak istiyorum.")
-              }
-              className="rounded-lg border border-[#b8862c] px-4 py-3 text-sm font-semibold text-[#e8bd67] transition hover:bg-[#d7a947] hover:text-black"
+            <a
+              href="/uygulama"
+              className="haswolf-download-button"
+              aria-label="HASWOLF uygulamasını indir"
             >
-              7/24 Destek
+              <span aria-hidden="true">⇩</span>
+              <span className="hidden sm:block">
+                <strong>UYGULAMA İNDİR</strong>
+                <small>HASWOLF APK</small>
+              </span>
+            </a>
+
+            <button
+              type="button"
+              aria-label={mobileMenuOpen ? "Menüyü kapat" : "Menüyü aç"}
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen((value) => !value)}
+              className="haswolf-menu-button"
+            >
+              {mobileMenuOpen ? "✕" : "☰"}
             </button>
+            </div>
           </div>
 
-          <button
-            type="button"
-            aria-label={mobileMenuOpen ? "Menüyü kapat" : "Menüyü aç"}
-            aria-expanded={mobileMenuOpen}
-            onClick={() => setMobileMenuOpen((value) => !value)}
-            className="flex h-11 w-11 items-center justify-center rounded-lg border border-[#b8862c] text-2xl text-[#e8bd67] lg:hidden"
-          >
-            {mobileMenuOpen ? "✕" : "☰"}
-          </button>
+          <nav aria-label="Ana navigasyon" className="haswolf-main-nav">
+            <a href="#top"><span aria-hidden="true">⌂</span><span>Ana Sayfa</span></a>
+            <a href="/topluluk"><span aria-hidden="true">👥</span><span>Sohbet Odaları</span></a>
+            <button type="button" onClick={() => goToMarket("item")}><span aria-hidden="true">⚔</span><span>Item</span></button>
+            <button type="button" onClick={() => goToMarket("account")}><span aria-hidden="true">♟</span><span>Karakter</span></button>
+            <button type="button" onClick={() => goToMarket("yang")}><YangIcon /><span>Yang</span></button>
+            {isAdmin && <a href="/admin"><span aria-hidden="true">🛡</span><span>Admin</span></a>}
+            <button
+              type="button"
+              onClick={() => openWhatsApp("Merhaba Haswolf, destek almak istiyorum.")}
+              className="haswolf-whatsapp-nav"
+            >
+              <span aria-hidden="true">◉</span><span>WhatsApp Destek</span>
+            </button>
+          </nav>
         </div>
 
         {mobileMenuOpen && (
-          <div className="max-h-[calc(100vh-68px)] overflow-y-auto border-t border-[#8c641e]/30 bg-black/98 px-4 py-4 lg:hidden">
-            <div className="flex flex-col gap-3 text-sm text-zinc-200">
-              <a
-                href="#top"
-                onClick={() => setMobileMenuOpen(false)}
-                className="rounded-lg bg-white/5 px-4 py-3"
-              >
-                Ana Sayfa
-              </a>
-              <a
-                href="/topluluk"
-                onClick={() => setMobileMenuOpen(false)}
-                className="rounded-lg bg-white/5 px-4 py-3"
-              >
-                Sohbet Odaları
-              </a>
-              <button
-                onClick={() => goToMarket("item")}
-                className="rounded-lg bg-white/5 px-4 py-3 text-left"
-              >
-                Item
-              </button>
-              <button
-                onClick={() => goToMarket("account")}
-                className="rounded-lg bg-white/5 px-4 py-3 text-left"
-              >
-                Karakter
-              </button>
-              <button
-                onClick={() => goToMarket("yang")}
-                className="rounded-lg bg-white/5 px-4 py-3 text-left"
-              >
-                Yang
-              </button>
-              <a
-                href="#footer"
-                onClick={() => setMobileMenuOpen(false)}
-                className="rounded-lg bg-white/5 px-4 py-3"
-              >
-                İletişim
-              </a>
-              {isAdmin && (
-                <a
-                  href="/admin"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg bg-white/5 px-4 py-3"
-                >
-                  Admin Paneli
+          <div className="border-t border-[#8c641e]/30 bg-black/98 lg:hidden">
+            <div className="haswolf-container grid gap-2 py-3 text-sm">
+              {headerSocials.map((social) => (
+                <a key={social.name} href={social.href} target={social.href.startsWith("http") ? "_blank" : undefined} rel={social.href.startsWith("http") ? "noreferrer" : undefined} className="flex items-center gap-3 rounded-lg bg-white/5 px-4 py-3">
+                  <SocialIcon name={social.name} /><span>{social.label} · {social.detail}</span>
                 </a>
-              )}
-
-              <div className="rounded-lg bg-white/5 px-4 py-3">
-                <AuthButton />
-              </div>
-
-              <button
-                onClick={() =>
-                  openWhatsApp("Merhaba Haswolf, destek almak istiyorum.")
-                }
-                className="rounded-lg border border-green-500/50 bg-green-900/40 px-4 py-3 text-left text-green-300"
-              >
-                WhatsApp Destek
-              </button>
+              ))}
+              <div className="rounded-lg bg-white/5 px-4 py-3"><AuthButton /></div>
             </div>
           </div>
         )}
       </header>
 
-      {/* Mobil hızlı menü: header ile ana alan arasındaki şerit */}
-      <nav
-        aria-label="Mobil hızlı menü"
-        className="sticky top-[62px] z-40 sm:top-[70px] border-b border-[#8c641e]/35 bg-[#070909]/95 backdrop-blur-xl lg:hidden"
-      >
-        <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <a
-            href="#top"
-            className="min-w-max snap-start rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-[#b8862c] hover:text-[#e8bd67]"
-          >
-            ⌂ Ana Sayfa
-          </a>
-
-          <a
-            href="/topluluk"
-            className="min-w-max snap-start rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-[#b8862c] hover:text-[#e8bd67]"
-          >
-            👥 Sohbet Odaları
-          </a>
-
-          <button
-            type="button"
-            onClick={() => goToMarket("item")}
-            className="min-w-max snap-start rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-[#b8862c] hover:text-[#e8bd67]"
-          >
-            ⚔ Item
-          </button>
-
-          <button
-            type="button"
-            onClick={() => goToMarket("account")}
-            className="min-w-max snap-start rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-[#b8862c] hover:text-[#e8bd67]"
-          >
-            👤 Karakter
-          </button>
-
-          <button
-            type="button"
-            onClick={() => goToMarket("yang")}
-            className="min-w-max snap-start rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-[#b8862c] hover:text-[#e8bd67]"
-          >
-            ◉ Yang
-          </button>
-
-          <a
-            href="#footer"
-            className="min-w-max snap-start rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-[#b8862c] hover:text-[#e8bd67]"
-          >
-            ☎ İletişim
-          </a>
-
-          {isAdmin && (
-            <a
-              href="/admin"
-              className="min-w-max snap-start rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-zinc-200 transition hover:border-[#b8862c] hover:text-[#e8bd67]"
-            >
-              🛡 Admin
-            </a>
-          )}
-
-          <button
-            type="button"
-            onClick={() =>
-              openWhatsApp("Merhaba Haswolf, destek almak istiyorum.")
-            }
-            className="min-w-max snap-start rounded-lg border border-green-500/40 bg-green-900/30 px-4 py-2.5 text-sm font-medium text-green-300 transition hover:bg-green-800/40"
-          >
-            WhatsApp Destek
-          </button>
-        </div>
-      </nav>
-
-      <section className="relative overflow-hidden border-b border-[#8c641e]/35">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_40%,rgba(190,120,25,0.22),transparent_35%),linear-gradient(110deg,#050707_20%,#10100d_55%,#070707)]" />
+      <section className="haswolf-hero relative overflow-hidden border-b border-[#8c641e]/35">
+        <div className="haswolf-hero__background absolute inset-0" />
+        <div className="haswolf-hero__particles absolute inset-0" aria-hidden="true" />
 
         <div className="haswolf-container relative grid min-h-[285px] items-center gap-4 py-7 sm:min-h-[330px] sm:py-9 md:grid-cols-[1fr_0.45fr] lg:min-h-[360px] lg:grid-cols-[1fr_0.62fr] lg:gap-8 lg:py-10">
           <div>
@@ -456,7 +366,7 @@ export default function Home() {
               GÜVENİLİR • HIZLI • PROFESYONEL
             </p>
 
-            <h1 className="mt-3 text-[34px] font-black leading-none tracking-[0.06em] text-[#d9aa4a] sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 className="haswolf-hero__title mt-3 text-[34px] font-black leading-none tracking-[0.06em] text-[#d9aa4a] sm:text-5xl md:text-6xl lg:text-7xl">
               HASWOLF
             </h1>
 
@@ -472,22 +382,23 @@ export default function Home() {
             <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
               <button
                 onClick={() => goToMarket("item")}
-                className="min-h-11 w-full rounded-lg bg-gradient-to-b from-[#e6ba58] to-[#a97521] px-3 py-3 text-center text-sm font-bold text-black sm:w-auto sm:px-6"
+                className="haswolf-primary-cta min-h-11 w-full rounded-lg px-3 py-3 text-center text-sm font-bold text-black sm:w-auto sm:px-6"
               >
                 Markete Git
               </button>
 
               <a
-                href="#nasil-alisveris"
-                className="min-h-11 w-full rounded-lg border border-[#88652b] px-3 py-3 text-center text-sm font-semibold text-[#e0bb70] sm:w-auto sm:px-6"
+                href="/cekilis"
+                className="haswolf-secondary-cta min-h-11 w-full rounded-lg px-3 py-3 text-center text-sm font-semibold sm:w-auto sm:px-6"
               >
-                Nasıl Alışveriş Yapılır?
+                <span aria-hidden="true">★</span>
+                <span>Çekiliş Merkezi</span>
               </a>
             </div>
           </div>
 
           <div className="hidden justify-center md:flex">
-            <div className="relative flex h-52 w-52 items-center justify-center rounded-full border border-[#b18131]/30 bg-[radial-gradient(circle,#33220c,#090909_65%)] shadow-2xl shadow-amber-600/10 lg:h-60 lg:w-60">
+            <div className="haswolf-hero__emblem relative flex h-52 w-52 items-center justify-center rounded-full lg:h-60 lg:w-60">
               <svg viewBox="0 0 120 120" className="h-36 w-36 lg:h-44 lg:w-44">
                 <path
                   d="M18 20 L45 34 L60 22 L75 34 L102 20 L92 59 L103 82 L78 105 L60 94 L42 105 L17 82 L28 59 Z"

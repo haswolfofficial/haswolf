@@ -8,11 +8,6 @@ export default function SiteFooter() {
             <p className="mt-4 max-w-md text-sm leading-7 text-zinc-400">
               Oyuncuları güvenli ticaret, gerçek zamanlı topluluk ve seçkin içeriklerle tek çatı altında buluşturan yeni nesil platform.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              {["Instagram", "YouTube", "TikTok", "Discord"].map((name) => (
-                <a key={name} href="#" className="haswolf-social" aria-label={name}>{name.slice(0, 2)}</a>
-              ))}
-            </div>
           </div>
 
           <FooterColumn title="Platform" links={["Market", "Sohbet Odaları", "HASWOLF TV", "Çekiliş Merkezi"]} />
@@ -34,7 +29,11 @@ function FooterColumn({ title, links }: { title: string; links: string[] }) {
     <div>
       <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-[#dfb456]">{title}</h3>
       <div className="mt-5 flex flex-col gap-3 text-sm text-zinc-400">
-        {links.map((link) => <a key={link} href="#" className="transition hover:text-white">{link}</a>)}
+        {links.map((link) => (
+          <a key={link} href="#" className="transition hover:text-white">
+            {link}
+          </a>
+        ))}
       </div>
     </div>
   );

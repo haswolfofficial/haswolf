@@ -253,3 +253,604 @@ textarea:disabled {
 @media (max-width: 1023px) {
   main { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
 }
+
+/* Sprint 1 / Katman 3: üst sosyal alan, tek satır menü ve APK indirme */
+.haswolf-header-social {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  min-width: 0;
+  padding: .5rem .7rem;
+  border-right: 1px solid rgba(255,255,255,.13);
+  color: #f4f4f5;
+  transition: color .2s ease, background .2s ease;
+}
+.haswolf-header-social:hover { color: #e8bd67; background: rgba(255,255,255,.035); }
+.haswolf-header-social strong,
+.haswolf-header-social small { display: block; white-space: nowrap; }
+.haswolf-header-social strong { font-size: .78rem; line-height: 1.1; }
+.haswolf-header-social small { margin-top: .18rem; color: #8f9298; font-size: .64rem; }
+.social-brand { display: inline-flex; width: 2rem; height: 2rem; flex: 0 0 auto; align-items: center; justify-content: center; border-radius: .55rem; color: #fff; font-weight: 900; }
+.social-brand--youtube { background: #f20d20; }
+.social-brand--instagram { background: linear-gradient(135deg,#f9ce34,#ee2a7b,#6228d7); }
+.social-brand--tiktok { background: #111; text-shadow: -2px 0 #25f4ee, 2px 0 #fe2c55; }
+.social-brand--discord { background: #5865f2; }
+.haswolf-download-button,
+.haswolf-menu-button { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; border: 1px solid #9d701c; color: #edbd52; background: #080808; transition: background .2s ease, color .2s ease, transform .2s ease; }
+.haswolf-download-button { min-height: 3rem; gap: .55rem; border-radius: .75rem; padding: .45rem .8rem; }
+.haswolf-download-button > span:first-child { font-size: 1.55rem; line-height: 1; }
+.haswolf-download-button strong,
+.haswolf-download-button small { display: block; white-space: nowrap; }
+.haswolf-download-button strong { font-size: .72rem; }
+.haswolf-download-button small { margin-top: .12rem; color: #8f9298; font-size: .6rem; }
+.haswolf-menu-button { width: 3rem; height: 3rem; border-radius: .7rem; font-size: 1.35rem; }
+.haswolf-download-button:hover,
+.haswolf-menu-button:hover { background: #d9aa4a; color: #050505; transform: translateY(-1px); }
+.haswolf-main-nav { display: flex; align-items: stretch; gap: .55rem; overflow-x: auto; padding: .65rem 0; border-top: 1px solid rgba(217,170,74,.14); scrollbar-width: none; }
+.haswolf-main-nav::-webkit-scrollbar { display: none; }
+.haswolf-main-nav a,
+.haswolf-main-nav button { display: inline-flex; min-height: 3rem; flex: 0 0 auto; align-items: center; justify-content: center; gap: .55rem; white-space: nowrap; border: 1px solid rgba(255,255,255,.11); border-radius: .65rem; background: linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025)); padding: .6rem 1rem; color: #e7e7e7; font-size: .85rem; font-weight: 700; }
+.haswolf-main-nav a:hover,
+.haswolf-main-nav button:hover { border-color: rgba(217,170,74,.58); color: #efc76b; }
+.haswolf-main-nav .haswolf-whatsapp-nav { margin-left: auto; border-color: rgba(34,197,94,.55); background: rgba(4,77,34,.42); color: #8cf0ad; }
+.haswolf-bottom-nav { grid-template-columns: repeat(6,minmax(0,1fr)); width: min(calc(100% - 1rem), 40rem); }
+@media (max-width: 639px) {
+  .haswolf-download-button { width: 3rem; padding: 0; }
+  .haswolf-main-nav a,
+  .haswolf-main-nav button { min-height: 2.75rem; padding: .5rem .78rem; font-size: .77rem; }
+  .haswolf-bottom-nav a,
+  .haswolf-bottom-nav button { font-size: .55rem; }
+}
+
+/* Sprint 1 / Katman 4: sıkışmayan masaüstü üst alan */
+.haswolf-topbar {
+  min-height: 88px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-block: .65rem;
+}
+
+.haswolf-topbar__actions {
+  margin-left: auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .65rem;
+}
+
+.haswolf-social-strip {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .2rem;
+}
+
+.haswolf-header-social {
+  border-right: 0;
+  border-radius: .65rem;
+  padding: .45rem .55rem;
+}
+
+.haswolf-header-social strong { font-size: .72rem; }
+.haswolf-header-social small { font-size: .58rem; }
+.social-brand { width: 1.8rem; height: 1.8rem; }
+
+.haswolf-main-nav {
+  justify-content: center;
+  overflow: visible;
+  gap: .7rem;
+}
+
+.haswolf-main-nav a,
+.haswolf-main-nav button {
+  flex: 1 1 auto;
+  min-width: max-content;
+  padding-inline: 1.15rem;
+}
+
+.haswolf-main-nav .haswolf-whatsapp-nav {
+  flex: 0 1 15rem;
+  margin-left: 0;
+}
+
+@media (max-width: 1279px) {
+  .haswolf-social-strip { display: none; }
+  .haswolf-topbar__actions { margin-left: auto; }
+}
+
+@media (max-width: 900px) {
+  .haswolf-topbar { min-height: 72px; }
+  .haswolf-main-nav {
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+  .haswolf-main-nav a,
+  .haswolf-main-nav button {
+    flex: 0 0 auto;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1500px) {
+  .haswolf-header-social { padding-inline: .35rem; }
+  .haswolf-header-social small { display: none; }
+  .haswolf-main-nav a,
+  .haswolf-main-nav button { padding-inline: .85rem; font-size: .8rem; }
+}
+
+/* Sprint 1 / Katman 5: canlı altın tonlar ve dengeli mobil hızlı menü */
+.haswolf-hero {
+  isolation: isolate;
+  background: #050505;
+}
+
+.haswolf-hero__background {
+  background:
+    radial-gradient(circle at 74% 48%, rgba(255, 177, 36, .34), transparent 24%),
+    radial-gradient(circle at 58% 50%, rgba(158, 91, 11, .18), transparent 34%),
+    linear-gradient(112deg, #030404 10%, #080705 47%, #1b1105 72%, #050505 100%);
+}
+
+.haswolf-hero__particles {
+  opacity: .72;
+  background-image:
+    radial-gradient(circle at 68% 24%, rgba(255, 188, 55, .8) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 77% 62%, rgba(255, 160, 20, .65) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 63% 78%, rgba(255, 198, 70, .55) 0 1px, transparent 1.7px);
+  background-size: 46px 46px, 61px 61px, 79px 79px;
+  mask-image: linear-gradient(90deg, transparent 38%, #000 64%, transparent 100%);
+}
+
+.haswolf-hero__title {
+  color: #f0b83e;
+  text-shadow: 0 0 24px rgba(214, 139, 25, .18);
+}
+
+.haswolf-hero__emblem {
+  border: 1px solid rgba(241, 174, 45, .66);
+  background: radial-gradient(circle, #2b1b08 0%, #0b0906 55%, #020202 76%);
+  box-shadow:
+    0 0 0 1px rgba(255, 194, 77, .08),
+    0 0 44px rgba(233, 145, 18, .38),
+    0 0 105px rgba(196, 105, 7, .24),
+    inset 0 0 34px rgba(255, 177, 39, .12);
+}
+
+.haswolf-primary-cta {
+  background: linear-gradient(180deg, #f6ca62 0%, #d99b2a 58%, #b87514 100%);
+  box-shadow: 0 10px 28px rgba(197, 119, 15, .28), inset 0 1px rgba(255,255,255,.4);
+  transition: transform .2s ease, filter .2s ease, box-shadow .2s ease;
+}
+
+.haswolf-secondary-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  border: 1px solid #aa781f;
+  background: rgba(4,4,4,.68);
+  color: #f0ca79;
+  box-shadow: inset 0 0 22px rgba(217,170,74,.035);
+  transition: transform .2s ease, border-color .2s ease, background .2s ease;
+}
+
+.haswolf-primary-cta:hover,
+.haswolf-secondary-cta:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.haswolf-secondary-cta:hover {
+  border-color: #e5b64f;
+  background: rgba(217,170,74,.08);
+}
+
+/* Katman 3'te kalan 6 kolon genişlik kuralını kesin olarak geçersiz kılar. */
+.haswolf-bottom-nav {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: min(calc(100% - 1rem), 25rem);
+  padding: .38rem;
+}
+
+.haswolf-bottom-nav a,
+.haswolf-bottom-nav button {
+  min-height: 3.35rem;
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .haswolf-bottom-nav {
+    width: 27rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .haswolf-hero__background {
+    background:
+      radial-gradient(circle at 86% 28%, rgba(255, 177, 36, .18), transparent 27%),
+      linear-gradient(120deg, #030404 8%, #0a0805 72%, #120b04 100%);
+  }
+}
+
+/* HASWOLF KATMAN 5 DUZELTILMIS - 2026-07-15 */
+.haswolf-hero {
+  min-height: 340px;
+  background: #030303 !important;
+}
+
+.haswolf-hero__background {
+  background:
+    radial-gradient(circle at 78% 48%, rgba(255, 181, 48, .44) 0%, rgba(174, 93, 8, .22) 20%, transparent 43%),
+    radial-gradient(circle at 58% 70%, rgba(255, 139, 0, .12), transparent 34%),
+    linear-gradient(112deg, #020303 0%, #080603 46%, #261605 75%, #050403 100%) !important;
+}
+
+.haswolf-hero__particles {
+  opacity: .95 !important;
+  filter: drop-shadow(0 0 5px rgba(255, 173, 35, .6));
+}
+
+.haswolf-hero__title {
+  color: transparent !important;
+  background: linear-gradient(180deg, #ffe493 0%, #efb942 44%, #b97816 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: 0 8px 28px rgba(220, 136, 21, .25) !important;
+}
+
+.haswolf-hero__emblem {
+  border: 1px solid rgba(255, 190, 65, .86) !important;
+  background: radial-gradient(circle at 50% 42%, #241706 0%, #090806 54%, #010101 78%) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 212, 122, .12),
+    0 0 42px rgba(255, 165, 25, .55),
+    0 0 110px rgba(193, 100, 4, .32),
+    inset 0 0 38px rgba(255, 184, 45, .14) !important;
+}
+
+.haswolf-primary-cta {
+  background: linear-gradient(180deg, #ffe083 0%, #e6aa37 52%, #bd7916 100%) !important;
+  color: #090704 !important;
+  box-shadow: 0 12px 34px rgba(205, 125, 15, .34), inset 0 1px 0 rgba(255,255,255,.55) !important;
+}
+
+.haswolf-secondary-cta {
+  border-color: #c28b29 !important;
+  color: #f3cf7d !important;
+  background: linear-gradient(180deg, rgba(21,16,8,.92), rgba(4,4,4,.9)) !important;
+}
+
+.haswolf-bottom-nav {
+  grid-template-columns: repeat(4, 82px) !important;
+  width: fit-content !important;
+  max-width: calc(100vw - 20px) !important;
+  padding: 6px !important;
+  gap: 4px !important;
+}
+
+.haswolf-bottom-nav a,
+.haswolf-bottom-nav button {
+  width: 82px !important;
+  min-width: 82px !important;
+  min-height: 56px !important;
+  padding-inline: 4px !important;
+}
+
+@media (max-width: 380px) {
+  .haswolf-bottom-nav {
+    grid-template-columns: repeat(4, minmax(68px, 1fr)) !important;
+    width: calc(100vw - 16px) !important;
+  }
+  .haswolf-bottom-nav a,
+  .haswolf-bottom-nav button {
+    width: auto !important;
+    min-width: 0 !important;
+  }
+}
+
+/* HASWOLF KATMAN 6 - CANLI UST MENÜ VE NAVİGASYON */
+.haswolf-header {
+  background:
+    radial-gradient(circle at 52% -30%, rgba(247, 183, 52, .10), transparent 36%),
+    linear-gradient(180deg, rgba(3,3,3,.99), rgba(0,0,0,.98)) !important;
+  border-bottom-color: rgba(224, 163, 43, .52) !important;
+  box-shadow: 0 10px 34px rgba(0,0,0,.72), 0 1px 0 rgba(245,187,69,.08) !important;
+}
+
+.haswolf-topbar {
+  border-bottom: 1px solid rgba(217,170,74,.18);
+}
+
+.haswolf-header-social {
+  border: 1px solid transparent;
+  border-radius: .8rem !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.008));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+  color: #fff !important;
+  transition: transform .22s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease !important;
+}
+
+.haswolf-header-social:hover {
+  transform: translateY(-2px);
+  border-color: rgba(237,180,66,.68);
+  background: linear-gradient(180deg, rgba(217,170,74,.14), rgba(217,170,74,.035));
+  box-shadow: 0 8px 24px rgba(0,0,0,.38), 0 0 18px rgba(217,170,74,.12);
+  color: #ffd66f !important;
+}
+
+.haswolf-header-social strong {
+  color: #fff;
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba(255,255,255,.12);
+}
+
+.haswolf-header-social small {
+  color: #b6b8bd !important;
+}
+
+.social-brand {
+  box-shadow: 0 6px 16px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.28);
+  filter: saturate(1.28) brightness(1.08);
+}
+
+.social-brand--youtube {
+  background: linear-gradient(145deg, #ff2537, #d80012) !important;
+  box-shadow: 0 0 18px rgba(255,25,45,.28), inset 0 1px 0 rgba(255,255,255,.3);
+}
+
+.social-brand--instagram {
+  background: radial-gradient(circle at 30% 105%, #ffd45a 0 18%, #ff365f 40%, #d62976 62%, #6f35db 100%) !important;
+  box-shadow: 0 0 18px rgba(222,44,126,.28), inset 0 1px 0 rgba(255,255,255,.32);
+}
+
+.social-brand--tiktok {
+  background: #050505 !important;
+  border: 1px solid rgba(255,255,255,.16);
+  text-shadow: -2px 0 #25f4ee, 2px 0 #fe2c55 !important;
+  box-shadow: -4px 0 14px rgba(37,244,238,.12), 4px 0 14px rgba(254,44,85,.12);
+}
+
+.social-brand--discord {
+  background: linear-gradient(145deg, #7289ff, #5865f2) !important;
+  box-shadow: 0 0 18px rgba(88,101,242,.3), inset 0 1px 0 rgba(255,255,255,.28);
+}
+
+.haswolf-download-button,
+.haswolf-menu-button {
+  border-color: rgba(240,180,55,.86) !important;
+  background:
+    linear-gradient(180deg, rgba(39,27,8,.96), rgba(8,7,5,.98)) !important;
+  color: #ffd35f !important;
+  box-shadow:
+    0 0 0 1px rgba(255,203,99,.05),
+    0 9px 22px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,225,151,.12),
+    inset 0 0 20px rgba(206,135,21,.08) !important;
+}
+
+.haswolf-download-button strong {
+  color: #ffd35f;
+  text-shadow: 0 0 14px rgba(255,193,63,.26);
+}
+
+.haswolf-download-button small {
+  color: #c7b181 !important;
+}
+
+.haswolf-download-button:hover,
+.haswolf-menu-button:hover {
+  background: linear-gradient(180deg, #ffd66f, #c88a22) !important;
+  border-color: #ffe28d !important;
+  color: #050505 !important;
+  filter: brightness(1.08);
+  box-shadow: 0 0 28px rgba(230,162,39,.34), 0 10px 24px rgba(0,0,0,.55) !important;
+}
+
+.haswolf-main-nav {
+  border-top-color: rgba(224,163,43,.22) !important;
+  border-bottom: 1px solid rgba(224,163,43,.28);
+  padding-block: .78rem !important;
+}
+
+.haswolf-main-nav a,
+.haswolf-main-nav button {
+  border-color: rgba(217,170,74,.34) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,220,137,.07), transparent 55%),
+    linear-gradient(180deg, #171715 0%, #0b0c0c 58%, #070707 100%) !important;
+  color: #f3f3f3 !important;
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.065),
+    inset 0 0 18px rgba(217,170,74,.025);
+  text-shadow: 0 1px 1px #000;
+  transition: transform .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease, background .2s ease !important;
+}
+
+.haswolf-main-nav a > span:first-child,
+.haswolf-main-nav button > span:first-child,
+.haswolf-main-nav button > svg {
+  color: #f0b73e;
+  filter: drop-shadow(0 0 7px rgba(228,160,38,.28));
+}
+
+.haswolf-main-nav a:hover,
+.haswolf-main-nav button:hover {
+  transform: translateY(-2px);
+  border-color: #e6ac3d !important;
+  color: #ffd66f !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,215,120,.16), transparent 58%),
+    linear-gradient(180deg, #241a0a 0%, #11100d 62%, #080808 100%) !important;
+  box-shadow: 0 12px 26px rgba(0,0,0,.52), 0 0 22px rgba(217,152,36,.12), inset 0 1px 0 rgba(255,230,164,.1) !important;
+}
+
+.haswolf-main-nav .haswolf-whatsapp-nav {
+  border-color: rgba(28,210,101,.72) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(98,255,159,.12), transparent 60%),
+    linear-gradient(180deg, #07371c 0%, #032411 100%) !important;
+  color: #8ff7b5 !important;
+  box-shadow: 0 0 22px rgba(25,190,88,.12), inset 0 1px 0 rgba(147,255,187,.12) !important;
+}
+
+.haswolf-main-nav .haswolf-whatsapp-nav:hover {
+  border-color: #3bea83 !important;
+  background: linear-gradient(180deg, #0b542a, #07351c) !important;
+  color: #d9ffe7 !important;
+  box-shadow: 0 0 28px rgba(27,212,99,.22), 0 12px 26px rgba(0,0,0,.5) !important;
+}
+
+@media (max-width: 1279px) {
+  .haswolf-main-nav a,
+  .haswolf-main-nav button {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.055), 0 6px 14px rgba(0,0,0,.28);
+  }
+}
+
+/* KATMAN 6 KONTROL İMZASI: CANLI UST MENU */
+
+/* HASWOLF KATMAN 6.1 - ULTRA CANLI ÜST MENÜ */
+.haswolf-topbar {
+  min-height: 5.25rem;
+  background:
+    radial-gradient(circle at 62% 0%, rgba(255, 184, 50, .09), transparent 35%),
+    linear-gradient(180deg, rgba(4,4,4,.98), rgba(0,0,0,.99));
+}
+
+.haswolf-social-strip {
+  gap: .45rem !important;
+}
+
+.haswolf-header-social {
+  padding: .58rem .72rem !important;
+  border-color: rgba(255,255,255,.08) !important;
+  background:
+    radial-gradient(circle at 22% 0%, rgba(255,255,255,.11), transparent 38%),
+    linear-gradient(180deg, #171717 0%, #090909 100%) !important;
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.48),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -1px 0 rgba(255,183,48,.08) !important;
+}
+
+.haswolf-header-social strong {
+  font-size: .8rem !important;
+  color: #ffffff !important;
+  letter-spacing: .01em;
+}
+
+.haswolf-header-social small {
+  color: #d7d7d9 !important;
+  font-size: .62rem !important;
+}
+
+.social-brand {
+  width: 2rem !important;
+  height: 2rem !important;
+  min-width: 2rem !important;
+  border-radius: .65rem !important;
+  font-size: .9rem !important;
+  filter: saturate(1.55) brightness(1.18) contrast(1.05) !important;
+}
+
+.haswolf-download-button {
+  min-height: 3.25rem !important;
+  padding-inline: 1rem !important;
+  border-width: 1px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,222,128,.16), transparent 55%),
+    linear-gradient(180deg, #2b1d08 0%, #100d07 55%, #060606 100%) !important;
+  box-shadow:
+    0 0 24px rgba(224,154,35,.20),
+    0 11px 25px rgba(0,0,0,.52),
+    inset 0 1px 0 rgba(255,235,176,.18),
+    inset 0 0 24px rgba(226,157,36,.10) !important;
+}
+
+.haswolf-download-button > span:first-child {
+  color: #ffcb4f;
+  font-size: 1.35rem;
+  filter: drop-shadow(0 0 9px rgba(255,190,54,.42));
+}
+
+.haswolf-main-nav {
+  gap: .7rem !important;
+  padding-block: .82rem !important;
+}
+
+.haswolf-main-nav a,
+.haswolf-main-nav button {
+  min-height: 3.35rem !important;
+  border-color: rgba(218,164,59,.46) !important;
+  border-radius: .78rem !important;
+  background:
+    radial-gradient(circle at 50% -20%, rgba(255,217,122,.14), transparent 52%),
+    linear-gradient(180deg, #1d1d1b 0%, #101110 55%, #080808 100%) !important;
+  color: #fff !important;
+  font-size: .88rem !important;
+  font-weight: 800 !important;
+  box-shadow:
+    0 10px 26px rgba(0,0,0,.50),
+    0 0 0 1px rgba(255,205,94,.025),
+    inset 0 1px 0 rgba(255,255,255,.11),
+    inset 0 -1px 0 rgba(217,170,74,.10) !important;
+}
+
+.haswolf-main-nav a > span:first-child,
+.haswolf-main-nav button > span:first-child,
+.haswolf-main-nav button > svg {
+  color: #ffc84b !important;
+  filter: saturate(1.35) drop-shadow(0 0 9px rgba(242,173,45,.48)) !important;
+}
+
+.haswolf-main-nav a:hover,
+.haswolf-main-nav button:hover {
+  border-color: #ffc95c !important;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(255,226,143,.25), transparent 58%),
+    linear-gradient(180deg, #342309 0%, #17130d 58%, #090909 100%) !important;
+  color: #ffe28a !important;
+  box-shadow:
+    0 14px 32px rgba(0,0,0,.56),
+    0 0 28px rgba(235,168,46,.21),
+    inset 0 1px 0 rgba(255,239,190,.16) !important;
+}
+
+.haswolf-main-nav .haswolf-whatsapp-nav {
+  border-color: rgba(34,227,111,.82) !important;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(128,255,176,.21), transparent 60%),
+    linear-gradient(180deg, #0b4f29 0%, #04371b 54%, #022612 100%) !important;
+  color: #b7ffd0 !important;
+  box-shadow:
+    0 0 28px rgba(25,205,91,.20),
+    0 10px 24px rgba(0,0,0,.44),
+    inset 0 1px 0 rgba(176,255,206,.18) !important;
+}
+
+.haswolf-main-nav .haswolf-whatsapp-nav > span:first-child {
+  color: #b9ffd1 !important;
+  filter: drop-shadow(0 0 9px rgba(64,244,133,.50)) !important;
+}
+
+/* Masaüstünde hamburger gizli, mobil ve tablette görünür */
+@media (min-width: 1024px) {
+  .haswolf-menu-button {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .haswolf-menu-button {
+    display: inline-flex !important;
+  }
+}
+
+/* Eski footer sosyal ikonları artık gösterilmez */
+.haswolf-footer .haswolf-social {
+  display: none !important;
+}
+
+/* KATMAN 6.1 KONTROL İMZASI: ULTRA CANLI MENU */
