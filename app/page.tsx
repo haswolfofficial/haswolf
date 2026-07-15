@@ -250,9 +250,9 @@ export default function Home() {
   }
 
   return (
-    <main id="top" className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#050707] text-white">
+    <main id="top" className="min-h-screen w-full overflow-x-hidden bg-[#050707] pb-[env(safe-area-inset-bottom)] text-white">
       <header className="sticky top-0 z-50 border-b border-[#8c641e]/40 bg-black/95 backdrop-blur-xl">
-        <div className="mx-auto flex h-[62px] w-full max-w-[1500px] items-center justify-between px-3 sm:h-[70px] sm:px-5 lg:h-auto lg:px-6 lg:py-3">
+        <div className="haswolf-container flex h-[62px] items-center justify-between sm:h-[70px] lg:h-auto lg:py-3">
           <WolfLogo />
 
           <nav className="hidden items-center gap-8 text-sm text-zinc-300 lg:flex">
@@ -376,7 +376,7 @@ export default function Home() {
       {/* Mobil hızlı menü: header ile ana alan arasındaki şerit */}
       <nav
         aria-label="Mobil hızlı menü"
-        className="sticky top-[68px] z-40 border-b border-[#8c641e]/35 bg-[#070909]/95 backdrop-blur-xl lg:hidden"
+        className="sticky top-[62px] z-40 sm:top-[70px] border-b border-[#8c641e]/35 bg-[#070909]/95 backdrop-blur-xl lg:hidden"
       >
         <div className="flex snap-x snap-mandatory gap-2 overflow-x-auto px-3 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <a
@@ -448,7 +448,7 @@ export default function Home() {
       <section className="relative overflow-hidden border-b border-[#8c641e]/35">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_40%,rgba(190,120,25,0.22),transparent_35%),linear-gradient(110deg,#050707_20%,#10100d_55%,#070707)]" />
 
-        <div className="relative mx-auto grid min-h-[285px] max-w-[1500px] items-center gap-4 px-4 py-7 sm:min-h-[330px] sm:px-5 sm:py-9 lg:min-h-[360px] lg:grid-cols-[1fr_0.62fr] lg:gap-8 lg:px-6 lg:py-10">
+        <div className="haswolf-container relative grid min-h-[285px] items-center gap-4 py-7 sm:min-h-[330px] sm:py-9 md:grid-cols-[1fr_0.45fr] lg:min-h-[360px] lg:grid-cols-[1fr_0.62fr] lg:gap-8 lg:py-10">
           <div>
             <p className="text-[11px] font-semibold tracking-[0.22em] text-[#d5a23e] sm:text-sm sm:tracking-[0.32em]">
               GÜVENİLİR • HIZLI • PROFESYONEL
@@ -484,7 +484,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="hidden justify-center lg:flex">
+          <div className="hidden justify-center md:flex">
             <div className="relative flex h-52 w-52 items-center justify-center rounded-full border border-[#b18131]/30 bg-[radial-gradient(circle,#33220c,#090909_65%)] shadow-2xl shadow-amber-600/10 lg:h-60 lg:w-60">
               <svg viewBox="0 0 120 120" className="h-36 w-36 lg:h-44 lg:w-44">
                 <path

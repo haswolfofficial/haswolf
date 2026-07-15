@@ -1,32 +1,73 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050707;
+  --surface: #090b0b;
+  --surface-raised: #101313;
+  --foreground: #f4f4f5;
+  --muted: #a1a1aa;
+  --brand: #d9aa4a;
+  --brand-strong: #e8bd67;
+  --brand-dark: #765016;
+  --border: rgba(140, 100, 30, 0.42);
+  --page-gutter: 1rem;
+  --content-width: 1500px;
+  color-scheme: dark;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scroll-padding-top: 7rem;
+  background: var(--background);
 }
 
 body {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
-a,
+img,
+video,
+iframe,
+svg,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
 button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a,
 select,
 summary,
 label,
@@ -37,10 +78,7 @@ input[type="reset"],
 input[type="checkbox"],
 input[type="radio"],
 input[type="file"] {
-  cursor:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M9 4.5c0-1.1.9-2 2-2s2 .9 2 2V12h.7V6.5c0-1.1.9-2 2-2s2 .9 2 2V12h.7V8c0-1.1.9-2 2-2s2 .9 2 2v8.7c0 5-3.5 8.8-8.3 8.8h-1.2c-2.3 0-4.3-1-5.7-2.8L3.9 18c-.8-1-.6-2.5.5-3.2 1-.7 2.3-.5 3.1.4L9 17V4.5Z' fill='white' stroke='black' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E")
-      8 3,
-    pointer;
+  cursor: pointer;
 }
 
 button:disabled,
@@ -50,51 +88,23 @@ textarea:disabled {
   cursor: not-allowed;
 }
 
-@keyframes haswolf-wolf-run {
-  0% {
-    transform: translateX(-100px) scaleX(1);
-    opacity: 0;
-  }
-  8% {
-    opacity: 1;
-  }
-  48% {
-    transform: translateX(52vw) translateY(-12px) scaleX(1);
-  }
-  52% {
-    transform: translateX(52vw) translateY(-12px) scaleX(-1);
-  }
-  92% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(calc(100vw + 100px)) scaleX(-1);
-    opacity: 0;
-  }
+:focus-visible {
+  outline: 2px solid var(--brand-strong);
+  outline-offset: 3px;
 }
 
-.haswolf-wolf-cameo {
-  animation: haswolf-wolf-run 4.5s ease-in-out forwards;
+::selection {
+  background: rgba(217, 170, 74, 0.32);
+  color: white;
 }
 
-
-html,
-body {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-  overscroll-behavior-x: none;
+.haswolf-container {
+  width: min(100% - (var(--page-gutter) * 2), var(--content-width));
+  margin-inline: auto;
 }
 
-* {
-  min-width: 0;
-}
-
-img,
-video,
-iframe,
-svg {
-  max-width: 100%;
+.haswolf-safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
 }
 
 .mobile-swipe-row {
@@ -107,28 +117,54 @@ svg {
   display: none;
 }
 
-@media (max-width: 767px) {
-  body {
-    width: 100vw;
-  }
+@keyframes haswolf-wolf-run {
+  0% { transform: translateX(-100px) scaleX(1); opacity: 0; }
+  8% { opacity: 1; }
+  48% { transform: translateX(52vw) translateY(-12px) scaleX(1); }
+  52% { transform: translateX(52vw) translateY(-12px) scaleX(-1); }
+  92% { opacity: 1; }
+  100% { transform: translateX(calc(100vw + 100px)) scaleX(-1); opacity: 0; }
+}
 
+.haswolf-wolf-cameo {
+  animation: haswolf-wolf-run 4.5s ease-in-out forwards;
+}
+
+@media (min-width: 640px) {
+  :root { --page-gutter: 1.25rem; }
+}
+
+@media (min-width: 768px) {
+  :root { --page-gutter: 1.5rem; }
+  .mobile-swipe-row { scroll-padding-inline: 1rem; }
+}
+
+@media (min-width: 1024px) {
+  :root { --page-gutter: 2rem; }
+}
+
+@media (max-width: 767px) {
   main,
   header,
   section,
-  footer {
+  footer,
+  nav {
     max-width: 100vw;
   }
 
   input,
   select,
-  textarea,
-  button {
-    max-width: 100%;
+  textarea {
+    font-size: 16px;
   }
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
-  .mobile-swipe-row {
-    scroll-padding-inline: 1rem;
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
