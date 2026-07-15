@@ -306,7 +306,6 @@ export default function Home() {
               <div className="haswolf-header-auth">
                 <AuthButton />
               </div>
-              <InstallAppButton />
               <button
                 type="button"
                 className="haswolf-mobile-menu-toggle"
@@ -387,7 +386,7 @@ export default function Home() {
               pazar deneyimi.
             </p>
 
-            <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
+            <div className="haswolf-hero-actions mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
               <button
                 onClick={() => goToMarket("item")}
                 className="haswolf-primary-cta min-h-11 w-full rounded-lg px-3 py-3 text-center text-sm font-bold text-black sm:w-auto sm:px-6"
@@ -402,6 +401,10 @@ export default function Home() {
                 <span aria-hidden="true">★</span>
                 <span>Çekiliş Merkezi</span>
               </a>
+
+              <div className="haswolf-hero-install col-span-2 sm:basis-full">
+                <InstallAppButton />
+              </div>
             </div>
           </div>
 

@@ -1106,3 +1106,31 @@ textarea:disabled {
     font-size: 0.8rem !important;
   }
 }
+
+/* HASWOLF HERO INSTALL + MOBILE GAP FIX */
+.haswolf-hero-install {
+  display: flex;
+  width: 100%;
+}
+.haswolf-hero-install .haswolf-download-button {
+  margin-left: 0 !important;
+  min-height: 2.8rem;
+}
+@media (max-width: 767px) {
+  .haswolf-hero__content {
+    padding-bottom: .35rem !important;
+  }
+  .haswolf-server-section {
+    padding-top: .22rem !important;
+  }
+  .haswolf-hero-actions {
+    margin-bottom: 0 !important;
+  }
+  .haswolf-hero-install .haswolf-download-button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  .haswolf-hero-install .haswolf-download-button span:last-child {
+    display: grid !important;
+  }
+}
