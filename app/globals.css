@@ -1006,3 +1006,103 @@ textarea:disabled {
   .haswolf-server-card h3 { font-size: 1.02rem !important; line-height: 1.15 !important; }
   .haswolf-server-card p { margin-top: .15rem !important; font-size: .72rem !important; }
 }
+
+
+/* HASWOLF DESKTOP RESTORE — mobil düzen korunur */
+@media (min-width: 768px) {
+  /* Yalnızca mobil için eklenen kontroller masaüstünde görünmez. */
+  .haswolf-mobile-menu-toggle,
+  .haswolf-social-menu-button,
+  .haswolf-mobile-social-panel {
+    display: none !important;
+  }
+
+  /* Masaüstü üst menü tekrar tek satır yatay düzene döner. */
+  .haswolf-main-nav,
+  .haswolf-main-nav.haswolf-main-nav--open {
+    display: flex !important;
+    width: 100% !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    justify-content: center !important;
+    gap: 0.7rem !important;
+    overflow-x: visible !important;
+    padding: 0.65rem 0 !important;
+  }
+
+  .haswolf-main-nav > a,
+  .haswolf-main-nav > button {
+    display: inline-flex !important;
+    width: auto !important;
+    min-width: max-content !important;
+    min-height: 3rem !important;
+    flex: 1 1 auto !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.6rem 1rem !important;
+  }
+
+  .haswolf-main-nav .haswolf-chat-before-admin {
+    margin-left: 0 !important;
+  }
+
+  .haswolf-main-nav .haswolf-whatsapp-nav {
+    width: auto !important;
+    flex: 0 1 15rem !important;
+    margin-left: 0 !important;
+  }
+
+  /* Telefon alt navigasyonu masaüstünde kesinlikle görünmez. */
+  .haswolf-bottom-nav {
+    display: none !important;
+  }
+
+  /* Hesap alanı masaüstünde sıkışmadan yatay görünür. */
+  .haswolf-header-auth {
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  .haswolf-header-auth .haswolf-auth-user {
+    display: flex !important;
+    grid-template-columns: none !important;
+    align-items: center !important;
+    gap: 0.65rem !important;
+  }
+
+  .haswolf-header-auth .haswolf-auth-email {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    order: 2 !important;
+    max-width: 180px !important;
+    text-align: left !important;
+  }
+
+  .haswolf-header-auth .haswolf-auth-user button {
+    order: 1 !important;
+  }
+}
+
+/* Büyük masaüstünde menü elemanlarını dengeli yay. */
+@media (min-width: 1200px) {
+  .haswolf-main-nav > a,
+  .haswolf-main-nav > button {
+    padding-inline: 1.15rem !important;
+  }
+}
+
+/* Orta masaüstü ve küçük laptoplarda taşmayı önle. */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .haswolf-main-nav {
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+  }
+
+  .haswolf-main-nav > a,
+  .haswolf-main-nav > button {
+    flex: 0 0 auto !important;
+    padding-inline: 0.85rem !important;
+    font-size: 0.8rem !important;
+  }
+}
