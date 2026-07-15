@@ -1,0 +1,24 @@
+/* HASWOLF: giriş, APK indirme ve menü sıralaması */
+.haswolf-auth-slot {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+.haswolf-chat-nav {
+  margin-left: auto;
+}
+
+@media (max-width: 639px) {
+  .haswolf-auth-slot {
+    max-width: 8rem;
+  }
+
+  .haswolf-auth-slot button,
+  .haswolf-auth-slot a {
+    min-height: 3rem;
+    padding-inline: .7rem;
+    font-size: .72rem;
+    white-space: nowrap;
+  }
+}
