@@ -1,0 +1,27 @@
+HASWOLF v2 PREMIUM KURULUM
+
+1) Supabase SQL Editor'da şu dosyayı bir kez çalıştır:
+   supabase/haswolf_v2_premium_upgrade.sql
+
+2) Proje klasöründe:
+   npm install
+   npm run dev
+
+3) Kontrol adresi:
+   http://localhost:3000
+
+4) Test sırası:
+   - Üst menüde WhatsApp Destek kaldırılmış olmalı.
+   - Sağ alttaki büyük WhatsApp düğmesi kaydırmada sabit kalmalı.
+   - Bize Sat altın renkte olmalı ve tıklamada para efekti görünmeli.
+   - Mobil alt menü 5 öğeyi aynı satırda göstermeli.
+   - Admin panelinde Eski fiyat ve Admin özel açıklaması alanları görünmeli.
+   - Eski fiyat girilen ürünlerde eski fiyat çizili ve indirim oranı görünmeli.
+   - İndirimli aktif ürün varsa sağdan İNDİRİMMM bildirimi çıkmalı.
+   - Misafir hesap çekilişe katılamamalı.
+   - Aynı cihaz/bağlantı ikinci misafir hesabını açamamalı.
+
+NOTLAR
+- Otomatik dil, ziyaretçinin tarayıcı dilini algılar ve Türkçe dışındaki dillerde Google Translate istemcisini devreye alır. Kusursuz marka dili gereken sayfalar için ileride insan çevirili next-intl sözlükleri önerilir.
+- IP tekilliği ortak Wi-Fi kullanan herkesi etkileyebilir. İstek doğrultusunda cihaz + IP birlikte kontrol edilir.
+- .env.local güvenlik nedeniyle ZIP'e eklenmemiştir. Mevcut .env.local dosyanı koru.

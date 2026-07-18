@@ -1,0 +1,16 @@
+HASWOLF v3 - Uygulama adımları
+
+1) Eski .env.local dosyanı yeni proje klasörüne kopyala.
+2) Supabase SQL Editor içinde supabase/haswolf_v3_dc_and_guest_resume.sql dosyasını bir kez çalıştır.
+3) Terminal:
+   npm install
+   npm run dev
+4) http://localhost:3000 adresini aç.
+
+Kontrol:
+- Admin panelinde DC ürünü: Paket adı 100 DC, fiyat 8 girildiğinde ana sayfada 8 M görünür.
+- Eski DC fiyatı da M olarak üzeri çizili görünür.
+- Aktif ve stoklu ilan ana sayfada görünür; sekmeye dönünce ve Realtime değişikliğinde liste yenilenir.
+- /login sayfasında daha önceki cihaz/bağlantıya ait Misafir N hesabı bulunursa “Misafir N ile Devam Et” düğmesi çıkar.
+
+Not: Misafir geri yükleme API'si için .env.local içinde SUPABASE_SERVICE_ROLE_KEY ve IP_HASH_SALT değerleri bulunmalıdır. Bunları tarayıcıya açık NEXT_PUBLIC_ değişkeni olarak yazma.

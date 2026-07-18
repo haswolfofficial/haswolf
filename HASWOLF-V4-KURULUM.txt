@@ -1,0 +1,25 @@
+HASWOLF v4 PREMIUM - KURULUM
+
+1) Eski projendeki .env.local dosyasını bu klasöre kopyala.
+2) Terminalde: npm install
+3) Local test: npm run dev
+4) Tarayıcı: http://localhost:3000
+5) Kontroller bittikten sonra Git/Vercel üzerinden yayınla.
+
+BU SÜRÜMDE YAPILANLAR
+- Ana ekranda Bizden Satın Al ve Bize Sat akışları eşit ağırlıkta gösterildi.
+- İndirimler artık durmadan tekrar çıkmaz; kapatılan bildirim Bildirim Merkezi'nde saklanır.
+- Üst menüye Bildirimler butonu ve okunmamış sayacı eklendi.
+- Mobil alt menü ikonları özel premium SVG ikonlarla yenilendi.
+- Kategoriler ilk açılışta kapalıdır; tıklayınca açılır.
+- Diğer oyunlar Yakında !! etiketiyle kategori paneline eklendi.
+- Tarayıcı dil algılama ve görünür dil seçici eklendi.
+- SEO başlık/açıklama, Open Graph, Twitter kartı, JSON-LD, robots ve sitemap geliştirildi.
+- Favicon yeniden üretildi.
+
+NOT
+Google arama sonucundaki alt bağlantıları Google kendisi seçer. Bu sürüm gerekli yapılandırılmış veriyi,
+sitemap'i ve başlıkları hazırlar; görünmesi Search Console taraması sonrası zaman alabilir ve garanti edilemez.
+
+VERİTABANI
+Bu sürüm yeni Supabase SQL çalıştırmayı gerektirmez.
