@@ -3,6 +3,7 @@
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
+import { hasAdminAccess } from "../../lib/admin-access";
 import AdminSearchAnalytics from "../../components/AdminSearchAnalytics";
 import AdminNav from "../../components/AdminNav";
 import ProductPresetPicker, { autoPreset } from "../../components/ProductPresetPicker";
@@ -26,7 +27,6 @@ type Product = {
   low_stock_alert?: boolean | null;
 };
 
-const ADMIN_EMAIL = "haswolf666@gmail.com";
 const IMAGE_BUCKET = "product-images";
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
@@ -86,15 +86,14 @@ export default function AdminPage() {
   useEffect(() => {
     async function init() {
       const { data } = await supabase.auth.getSession();
-      const email = data.session?.user.email;
 
       if (!data.session) {
         router.replace("/login");
         return;
       }
 
-      if (email !== ADMIN_EMAIL) {
-        setMessage("Bu sayfaya yalnızca yönetici hesabı erişebilir.");
+      if (!(await hasAdminAccess(data.session.user))) {
+        setMessage("Bu sayfaya yalnızca yetkili yönetici hesapları erişebilir.");
         setLoading(false);
         return;
       }

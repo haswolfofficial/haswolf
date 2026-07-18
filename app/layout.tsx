@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import CampaignRenderer from "../components/CampaignRenderer";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import AutoTranslate from "@/components/AutoTranslate";
 import SitePresence from "@/components/SitePresence";
+import AnnouncementBroadcast from "@/components/AnnouncementBroadcast";
 
 const siteUrl = "https://www.haswolf.com";
 
@@ -92,7 +94,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
         <AutoTranslate />
         <SitePresence />
+        <AnnouncementBroadcast />
         {children}
+        <CampaignRenderer />
         <FloatingWhatsApp />
       </body>
     </html>

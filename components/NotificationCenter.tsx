@@ -41,6 +41,8 @@ export default function NotificationCenter({ deals }: { deals: Deal[] }) {
   const [seen, setSeen] = useState<number[]>([]);
   const [now, setNow] = useState(Date.now());
   const root = useRef<HTMLDivElement>(null);
+  const soundReady = useRef(false);
+  const previousNotificationIds = useRef<number[]>([]);
 
   useEffect(() => {
     try {
@@ -68,16 +70,39 @@ export default function NotificationCenter({ deals }: { deals: Deal[] }) {
   }
 
   useEffect(() => {
-    if (!discounted.length) return;
-    const newest=discounted[0];
-    if(seen.includes(newest.id))return;
-    try{
-      const context=new AudioContext();
-      const osc=context.createOscillator();const gain=context.createGain();
-      osc.frequency.value=880;gain.gain.value=.035;osc.connect(gain);gain.connect(context.destination);
-      osc.start();osc.stop(context.currentTime+.12);
-    }catch{}
-  },[discounted,seen]);
+    const ids = discounted.map((item) => item.id);
+
+    // Sayfa ilk açıldığında veya menülere tıklarken ses çalma.
+    // Yalnızca oturum sırasında gerçekten yeni bir bildirim geldiğinde uyarı ver.
+    if (!soundReady.current) {
+      previousNotificationIds.current = ids;
+      soundReady.current = true;
+      return;
+    }
+
+    const newest = discounted.find(
+      (item) => !previousNotificationIds.current.includes(item.id) && !seen.includes(item.id),
+    );
+    previousNotificationIds.current = ids;
+    if (!newest) return;
+
+    try {
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!AudioContextClass) return;
+      const context = new AudioContextClass();
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.frequency.value = 880;
+      gain.gain.value = 0.035;
+      oscillator.connect(gain);
+      gain.connect(context.destination);
+      oscillator.start();
+      oscillator.stop(context.currentTime + 0.12);
+      oscillator.addEventListener("ended", () => void context.close(), { once: true });
+    } catch {}
+  }, [discounted, seen]);
 
   function openDeal(deal: Deal) {
     mark(deal.id);
@@ -104,7 +129,7 @@ export default function NotificationCenter({ deals }: { deals: Deal[] }) {
         <aside className="haswolf-notification-panel">
           <header>
             <div><small>HASWOLF</small><h2>Bildirim Merkezi</h2></div>
-            <button type="button" onClick={() => setOpen(false)}>×</button>
+            <button type="button" className="haswolf-panel-close" onClick={() => setOpen(false)} aria-label="Bildirim merkezini kapat">✕</button>
           </header>
           <div className="haswolf-notification-list">
             {discounted.length ? discounted.map((deal) => {

@@ -8,6 +8,7 @@ import VoiceRoom from "./VoiceRoom";
 import { supabase } from "@/lib/supabase";
 import type { ChatMessage, ChatRoom } from "../../../types/chat";
 import CommunityAdminTools from "./CommunityAdminTools";
+import { moderateText } from "@/lib/moderation";
 
 type CommunityLayoutProps = {
   nickname: string;
@@ -472,11 +473,23 @@ export default function CommunityLayout({
       return;
     }
 
+    const moderation = moderateText(text);
     const { error } = await supabase.from("chat_messages").insert({
       room_id: selectedRoomId,
       user_id: currentUserId,
-      message: text,
+      message: moderation.masked,
+      moderation_risk: moderation.risk,
+      is_hidden: moderation.blocked,
     });
+
+    if (!error && moderation.risk > 0) {
+      await supabase.from("moderation_queue").insert({
+        user_id: currentUserId, room_id: selectedRoomId, original_text: text,
+        masked_text: moderation.masked, risk_score: moderation.risk,
+        reasons: moderation.reasons, status: moderation.blocked ? "hidden" : "review",
+      });
+      if (moderation.blocked) setMessageError("Riskli mesaj gizlendi ve moderasyon kuyruğuna gönderildi.");
+    }
 
     if (error) {
       setMessageError("Mesaj gönderilemedi.");

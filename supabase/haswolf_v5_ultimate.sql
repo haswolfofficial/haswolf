@@ -137,3 +137,27 @@ DO $$ BEGIN CREATE POLICY "haswolf admin guild invites" ON public.guild_invites 
 create index if not exists profiles_premium_until_idx on public.profiles(premium_until);
 create index if not exists profiles_chat_banned_until_idx on public.profiles(chat_banned_until);
 create index if not exists campaigns_active_dates_idx on public.campaigns(is_active,starts_at,ends_at);
+
+
+-- HASWOLF V5.2: Kurucu + en fazla iki yardımcı yönetici
+create table if not exists public.admin_members (
+ user_id uuid primary key references public.profiles(id) on delete cascade,
+ granted_by uuid references auth.users(id),
+ created_at timestamptz not null default now()
+);
+alter table public.admin_members enable row level security;
+create or replace function public.enforce_two_delegated_admins() returns trigger language plpgsql security definer set search_path=public as $$
+begin
+ if (select count(*) from public.admin_members)>=2 then raise exception 'En fazla 2 yardımcı yönetici atanabilir.'; end if;
+ new.granted_by:=auth.uid(); return new;
+end $$;
+drop trigger if exists enforce_two_delegated_admins_trigger on public.admin_members;
+create trigger enforce_two_delegated_admins_trigger before insert on public.admin_members for each row execute function public.enforce_two_delegated_admins();
+create or replace function public.is_haswolf_founder() returns boolean language sql stable security definer set search_path=public as $$ select coalesce(auth.jwt()->>'email','')='haswolf666@gmail.com'; $$;
+create or replace function public.is_haswolf_admin() returns boolean language sql stable security definer set search_path=public as $$
+ select public.is_haswolf_founder() or exists(select 1 from public.admin_members where user_id=auth.uid());
+$$;
+do $$ begin create policy "admin members self read" on public.admin_members for select using(user_id=auth.uid() or public.is_haswolf_founder()); exception when duplicate_object then null; end $$;
+do $$ begin create policy "founder grants admins" on public.admin_members for insert with check(public.is_haswolf_founder()); exception when duplicate_object then null; end $$;
+do $$ begin create policy "founder revokes admins" on public.admin_members for delete using(public.is_haswolf_founder()); exception when duplicate_object then null; end $$;
+create index if not exists admin_members_created_at_idx on public.admin_members(created_at);

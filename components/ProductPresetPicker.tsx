@@ -1,8 +1,8 @@
 "use client";
 const presets={
- item:Array.from({length:5},(_,i)=>`/images/product-presets/item/item-${i+1}.svg`),
- yang:Array.from({length:5},(_,i)=>`/images/product-presets/yang/yang-${i+1}.svg`),
- dc:Array.from({length:5},(_,i)=>`/images/product-presets/dc/dc-${i+1}.svg`),
+ item:Array.from({length:3},(_,i)=>`/images/product-presets/item/item-${i+1}.svg`),
+ yang:Array.from({length:3},(_,i)=>`/images/product-presets/yang/yang-${i+1}.svg`),
+ dc:Array.from({length:3},(_,i)=>`/images/product-presets/dc/dc-${i+1}.svg`),
  account:[],
 };
 export function autoPreset(category:keyof typeof presets,name:string){

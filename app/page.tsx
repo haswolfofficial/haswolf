@@ -15,6 +15,7 @@ import AdminLiveVisitors from "../components/AdminLiveVisitors";
 import InstallAppButton from "./components/InstallAppButton";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../lib/supabase";
+import { hasAdminAccess } from "../lib/admin-access";
 
 type MarketType = "item" | "yang" | "dc" | "account";
 type SortOption = "recommended" | "price-asc" | "price-desc" | "newest";
@@ -144,6 +145,43 @@ const headerSocials = [
   { name: "tiktok" as const, label: "TikTok", detail: "@haswolfgame", href: "https://www.tiktok.com/@haswolfgame" },
   { name: "discord" as const, label: "Discord", detail: "HASWOLF Topluluğu", href: "#footer" },
 ];
+function MobileSocialRail() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <aside
+      className={`haswolf-mobile-social-rail ${open ? "is-open" : ""}`}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <button
+        type="button"
+        className="haswolf-mobile-social-rail__trigger"
+        onClick={() => setOpen((value) => !value)}
+        aria-expanded={open}
+        aria-label="Sosyal medya bağlantılarını aç"
+      >
+        <span>◎</span>
+        <b>Sosyal Medyalar</b>
+      </button>
+      <div className="haswolf-mobile-social-rail__panel">
+        {headerSocials.map((social) => (
+          <a
+            key={social.name}
+            href={social.href}
+            target={social.href.startsWith("http") ? "_blank" : undefined}
+            rel={social.href.startsWith("http") ? "noreferrer" : undefined}
+            aria-label={social.label}
+          >
+            <SocialIcon name={social.name} />
+            <span>{social.label}</span>
+          </a>
+        ))}
+      </div>
+    </aside>
+  );
+}
+
 
 export default function Home() {
   const [market, setMarket] = useState<MarketType>("item");
@@ -162,7 +200,7 @@ export default function Home() {
         data: { user },
       } = await supabase.auth.getUser();
 
-      setIsAdmin(user?.email === "haswolf666@gmail.com");
+      setIsAdmin(await hasAdminAccess(user));
     }
 
     checkAdmin();
@@ -416,6 +454,7 @@ export default function Home() {
           </div>
         )}
       </header>
+      <MobileSocialRail />
 
       <section className="haswolf-hero relative overflow-hidden border-b border-[#8c641e]/35">
         <div className="haswolf-hero__background absolute inset-0" />
@@ -616,12 +655,12 @@ export default function Home() {
       {market === "item" && (
         <section className="mx-auto grid w-full max-w-[1500px] gap-3 px-3 pb-10 sm:px-5 lg:grid-cols-[230px_minmax(0,1fr)] lg:px-6">
           <aside>
-            <details className="haswolf-category-drawer rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-3">
+            <details className="haswolf-category-drawer rounded-xl border border-[#765625]/50 bg-[#0b0d0d]">
               <summary className="haswolf-category-summary">
-                <span>✣ KATEGORİLER</span><span className="haswolf-category-summary__hint">Dokun ve Aç</span><span className="haswolf-category-summary__chevron">▼</span>
+                <span>✦ KATEGORİLER</span><span className="haswolf-category-summary__hint">AÇ</span><span className="haswolf-category-summary__chevron" aria-hidden="true">⌄</span>
               </summary>
 
-              <div className="haswolf-category-grid mt-3 grid gap-2 lg:block lg:space-y-2">
+              <div className="haswolf-category-grid grid gap-2 p-3 lg:block lg:space-y-2">
                 {categories.map(([icon, name]) => (
                   <button
                     key={name}
@@ -639,12 +678,13 @@ export default function Home() {
                   </button>
                 ))}
               </div>
-              <details className="haswolf-games-drawer">
-                <summary><span>🎮 OYUNLAR</span><small>8 yeni pazar</small><i>▼</i></summary>
-                <div>{["Mobile2","Wild Rift","Mobile Legends: Bang Bang","Knight Online","Silkroad Online","World of Warcraft","Valorant","PUBG Mobile"].map((game) => (
-                  <button type="button" key={game} disabled><span>{game}</span><b>YAKINDA</b></button>
-                ))}</div>
-              </details>
+            </details>
+
+            <details className="haswolf-games-drawer">
+              <summary><span>🎮 OYUNLAR</span><small>8 yeni pazar</small><i>▼</i></summary>
+              <div>{["Mobile2","Wild Rift","Mobile Legends: Bang Bang","Knight Online","Silkroad Online","World of Warcraft","Valorant","PUBG Mobile"].map((game) => (
+                <button type="button" key={game} disabled><span>{game}</span><b>YAKINDA</b></button>
+              ))}</div>
             </details>
 
             <div className="hidden lg:block">

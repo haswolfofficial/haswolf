@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import CommunityLayout from "@/features/community/components/CommunityLayout";
+import { hasAdminAccess } from "@/lib/admin-access";
 
 const ADMIN_EMAIL = "haswolf666@gmail.com";
 const MANAGER_ROLES = new Set(["kurucu", "yönetici", "yonetici"]);
@@ -103,8 +104,9 @@ export default function ToplulukPage() {
         user.email?.trim().toLocaleLowerCase("tr-TR") ===
         ADMIN_EMAIL.toLocaleLowerCase("tr-TR");
 
-      setCanManageMembers(Boolean(isMainAdmin || managerByRole));
-      setCanChangeNicknames(Boolean(isMainAdmin || founderByRole));
+      const delegatedAdmin = await hasAdminAccess(user);
+      setCanManageMembers(Boolean(isMainAdmin || delegatedAdmin || managerByRole));
+      setCanChangeNicknames(Boolean(isMainAdmin || delegatedAdmin || founderByRole));
       setReady(true);
     }
 

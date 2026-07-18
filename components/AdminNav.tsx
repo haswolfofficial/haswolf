@@ -2,7 +2,7 @@
 import { usePathname } from "next/navigation";
 const links=[
 ["/admin","Genel Bakış","⌂"],["/admin/urunler","Ürünler ve Görseller","▦"],
-["/admin/kullanicilar","Kullanıcı Yönetimi","👥"],["/admin/premium","Premium Üyelikler","★"],
+["/admin/kullanicilar","Kullanıcı Yönetimi","👥"],["/admin/yetkililer","Yönetici Üyelikleri","♛"],["/admin/premium","Premium Üyelikler","★"],
 ["/admin/loncalar","Lonca Yönetimi","🛡"],["/admin/sohbet","Sohbet Yönetimi","💬"],
 ["/admin/moderasyon","AI Moderasyon","✦"],["/admin/guvenlik","Güvenlik Merkezi","🔒"],
 ["/admin/reklamlar","Reklam ve Duyurular","📣"],["/admin/bildirimler","Bildirim Yönetimi","🔔"],

@@ -1911,3 +1911,303 @@ body>.skiptranslate{display:none!important}
 .haswolf-admin-form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:.7rem;margin-bottom:1rem;border:1px solid rgba(217,170,74,.22);border-radius:1rem;background:#0a0d0d;padding:1rem}.haswolf-admin-form-grid label span,.haswolf-admin-campaign-form label span{display:block;margin-bottom:.35rem;color:#777;font-size:.58rem;text-transform:uppercase}.haswolf-admin-form-grid input,.haswolf-admin-form-grid select,.haswolf-admin-campaign-form input,.haswolf-admin-campaign-form select,.haswolf-admin-campaign-form textarea{width:100%;border:1px solid #303535;border-radius:.6rem;background:#070909;padding:.7rem;color:#fff}.haswolf-admin-form-grid button,.haswolf-admin-primary{align-self:end;border-radius:.65rem;background:linear-gradient(90deg,#976518,#dbab45);padding:.75rem;color:#100b03;font-weight:950}.haswolf-guild-preview{display:flex;align-items:center;gap:.7rem;border-left:4px solid;padding-left:.7rem}.haswolf-guild-preview>strong{font-size:1.8rem}.haswolf-guild-preview span b,.haswolf-guild-preview span small{display:block}.haswolf-admin-campaign-form{margin-bottom:1rem;border:1px solid rgba(217,170,74,.22);border-radius:1rem;background:#0a0d0d;padding:1rem}.haswolf-admin-campaign-form textarea{min-height:6rem;resize:vertical}.haswolf-admin-check{display:flex!important;align-items:center;gap:.5rem;margin:.75rem 0;color:#bbb}.haswolf-admin-check input{width:auto}.haswolf-admin-two-column{display:grid;grid-template-columns:1.35fr .85fr;gap:1rem}.haswolf-admin-section-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem}.haswolf-admin-section-title small{color:#d9aa4a;font-size:.55rem}.haswolf-admin-section-title h2{font-size:1.1rem;font-weight:900}.haswolf-admin-section-title>b{display:grid;place-items:center;width:2.2rem;height:2.2rem;border-radius:50%;background:#18130a;color:#e8bd67}.haswolf-admin-room-list,.haswolf-admin-user-list{display:grid;gap:.5rem}.haswolf-admin-room-list article{display:grid;grid-template-columns:minmax(10rem,1fr) 9rem auto auto;align-items:center;gap:.5rem;border:1px solid #202626;border-radius:.7rem;background:#0d1111;padding:.7rem}.haswolf-admin-room-list strong,.haswolf-admin-room-list small{display:block}.haswolf-admin-room-list small{color:#667070;font-size:.58rem}.haswolf-admin-room-list label span{display:block;color:#777;font-size:.5rem}.haswolf-admin-room-list select{width:100%;border:1px solid #303535;border-radius:.45rem;background:#070909;padding:.45rem;color:#fff}.haswolf-admin-room-list button{border:1px solid #383f3f;border-radius:.45rem;padding:.45rem;color:#ccc;font-size:.58rem}.haswolf-admin-user-list article{position:relative}.haswolf-user-menu-trigger{display:grid;width:100%;grid-template-columns:auto 1fr auto;align-items:center;gap:.6rem;border:1px solid #202626;border-radius:.7rem;background:#0d1111;padding:.65rem;text-align:left}.haswolf-user-menu-trigger b,.haswolf-user-menu-trigger small{display:block}.haswolf-user-menu-trigger small{color:#687070;font-size:.56rem}.haswolf-user-quick-menu{position:absolute;z-index:20;right:.4rem;top:3.5rem;display:grid;width:12rem;gap:.3rem;border:1px solid rgba(217,170,74,.35);border-radius:.7rem;background:#090b0b;padding:.6rem;box-shadow:0 20px 60px #000}.haswolf-user-quick-menu strong{color:#d9aa4a;font-size:.62rem}.haswolf-user-quick-menu button,.haswolf-user-quick-menu a{border-radius:.45rem;background:#151919;padding:.5rem;text-align:left;color:#ddd;font-size:.6rem}.haswolf-games-drawer{margin-top:.8rem;border:1px solid rgba(82,148,255,.22);border-radius:.8rem;background:linear-gradient(180deg,rgba(30,60,110,.13),#090c0d);overflow:hidden}.haswolf-games-drawer summary{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:.5rem;cursor:pointer;padding:.75rem;color:#8fc1ff;font-weight:900;list-style:none}.haswolf-games-drawer summary::-webkit-details-marker{display:none}.haswolf-games-drawer summary small{color:#5d718a;font-size:.52rem}.haswolf-games-drawer summary i{font-style:normal;transition:.2s}.haswolf-games-drawer[open] summary i{transform:rotate(180deg)}.haswolf-games-drawer>div{display:grid;gap:.35rem;padding:0 .65rem .65rem}.haswolf-games-drawer button{display:flex;align-items:center;justify-content:space-between;border:1px solid rgba(255,255,255,.06);border-radius:.55rem;background:#0d1112;padding:.55rem;color:#9ba5aa;font-size:.62rem}.haswolf-games-drawer button b{border-radius:999px;background:rgba(69,128,214,.12);padding:.2rem .4rem;color:#64a4ff;font-size:.48rem}.haswolf-category-summary{display:grid!important;grid-template-columns:1fr auto auto!important;gap:.45rem!important}.haswolf-category-summary__hint{white-space:nowrap;margin:0!important}.haswolf-category-summary>span:first-child{min-width:0}.haswolf-preset-picker img{filter:saturate(1.25) contrast(1.08);box-shadow:inset 0 0 30px rgba(217,170,74,.18)}
 @media(max-width:980px){.haswolf-admin-two-column{grid-template-columns:1fr}.haswolf-admin-room-list article{grid-template-columns:1fr 8rem auto auto}.haswolf-premium-trigger b{display:none}}
 @media(max-width:680px){.haswolf-admin-toolbar{align-items:stretch;flex-direction:column}.haswolf-admin-room-list article{grid-template-columns:1fr 1fr}.haswolf-admin-room-list article>div{grid-column:1/-1}.haswolf-admin-actions{grid-column:1/-1}.haswolf-category-summary__hint{font-size:.5rem;padding:.2rem .35rem}.haswolf-premium-panel{position:fixed;top:5rem;right:.5rem}.haswolf-premium-trigger{min-width:2.8rem;justify-content:center}}
+
+
+/* HASWOLF V5.2 responsive category/game and admin membership polish */
+.haswolf-category-summary{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:.65rem!important;min-height:3.8rem!important;padding:.8rem .85rem!important}
+.haswolf-category-summary>span:first-child{display:block;flex:1;min-width:0;white-space:normal;line-height:1.15;font-size:.86rem}
+.haswolf-category-summary__hint{display:inline-flex!important;align-items:center;justify-content:center;flex:0 0 auto;max-width:6rem;white-space:nowrap!important;border:1px solid rgba(217,170,74,.3);border-radius:999px;background:rgba(217,170,74,.12);padding:.28rem .52rem!important;font-size:.52rem!important;line-height:1!important}
+.haswolf-category-summary__chevron{display:grid;place-items:center;flex:0 0 1.65rem;width:1.65rem;height:1.65rem;border-radius:50%;background:rgba(217,170,74,.15);font-size:.62rem}
+.haswolf-games-drawer{margin-top:.75rem!important}.haswolf-games-drawer summary{min-height:3.5rem}.haswolf-games-drawer button{min-height:2.65rem;gap:.5rem;text-align:left}.haswolf-games-drawer button span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.haswolf-games-drawer button b{flex:0 0 auto}
+.haswolf-founder-card{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.8rem;border:1px solid rgba(255,107,31,.4);border-radius:.85rem;background:linear-gradient(110deg,rgba(93,24,4,.32),#0d1111);padding:1rem}.haswolf-founder-card span,.haswolf-founder-card small{display:block}.haswolf-founder-card span{color:#ff9148;font-size:.55rem;text-transform:uppercase}.haswolf-founder-card small{color:#7d8585;font-size:.58rem}.haswolf-founder-card strong{border-radius:999px;background:rgba(255,92,20,.13);padding:.4rem .6rem;color:#ff9a55;font-size:.55rem}.haswolf-admin-action-list article.is-admin-member{border-color:rgba(217,170,74,.55);background:linear-gradient(105deg,rgba(217,170,74,.12),#0d1111)}
+@media(max-width:1100px){.haswolf-category-summary{min-height:3.45rem!important}.haswolf-admin-v5__content{min-width:0}.haswolf-admin-responsive-list article{overflow:hidden}.haswolf-admin-responsive-list article>div{min-width:0}.haswolf-admin-responsive-list b,.haswolf-admin-responsive-list small{overflow-wrap:anywhere}}
+@media(max-width:680px){.haswolf-category-drawer{padding:.55rem!important}.haswolf-category-summary{padding:.65rem!important}.haswolf-category-summary>span:first-child{font-size:.76rem}.haswolf-category-summary__hint{max-width:5.2rem;font-size:.46rem!important;padding:.25rem .4rem!important}.haswolf-games-drawer summary{grid-template-columns:minmax(0,1fr) auto auto}.haswolf-games-drawer summary small{display:none}.haswolf-founder-card{align-items:flex-start;flex-direction:column}.haswolf-admin-action-list article{grid-template-columns:1fr!important}.haswolf-admin-action-list article>div{grid-column:1/-1}.haswolf-admin-actions button,.haswolf-admin-actions a{min-height:2.5rem}.haswolf-admin-nav__brand{position:sticky;left:0}}
+
+
+/* HASWOLF V5.3 - Kategoriler/Oyunlar eşit panel düzeltmesi */
+.haswolf-category-drawer{overflow:hidden;width:100%;padding:0!important}
+.haswolf-category-summary{width:100%;min-height:3.45rem!important;border:0!important;border-radius:.8rem!important;padding:.75rem!important;box-sizing:border-box}
+.haswolf-category-summary>span:first-child{white-space:nowrap!important;font-size:.82rem!important;letter-spacing:.02em}
+.haswolf-category-summary__hint{font-size:.48rem!important;padding:.22rem .42rem!important;max-width:none!important}
+.haswolf-category-grid{margin-top:0!important;border-top:1px solid rgba(217,170,74,.16)}
+.haswolf-games-drawer{width:100%}
+@media(max-width:1100px){.haswolf-category-summary{grid-template-columns:minmax(0,1fr) auto auto!important;display:grid!important}.haswolf-category-summary>span:first-child{overflow:hidden;text-overflow:ellipsis}}
+@media(max-width:680px){.haswolf-category-summary{min-height:3.2rem!important;padding:.65rem!important}.haswolf-category-summary>span:first-child{font-size:.74rem!important}.haswolf-category-summary__hint{font-size:.43rem!important;padding:.2rem .34rem!important}}
+
+/* HASWOLF V5.5 category control: no overlap on desktop/tablet/mobile */
+.haswolf-category-summary{display:grid!important;grid-template-columns:minmax(0,1fr) 2.4rem 2.4rem!important;align-items:center!important;gap:.5rem!important;min-height:3.45rem!important;padding:.62rem .7rem!important}
+.haswolf-category-summary>span:first-child{overflow:visible!important;text-overflow:clip!important;white-space:nowrap!important;font-size:.78rem!important;letter-spacing:.025em!important}
+.haswolf-category-summary__hint{display:grid!important;place-items:center!important;width:2.4rem!important;height:1.9rem!important;margin:0!important;padding:0!important;border:1px solid rgba(217,170,74,.55)!important;border-radius:.55rem!important;background:linear-gradient(180deg,#d9aa4a,#986617)!important;color:#0b0802!important;font-size:.56rem!important;font-weight:1000!important;box-shadow:0 0 18px rgba(217,170,74,.18)!important}
+.haswolf-category-summary__chevron{display:grid!important;place-items:center!important;width:2.4rem!important;height:2.4rem!important;border:1px solid rgba(217,170,74,.65)!important;border-radius:.65rem!important;background:#171108!important;color:#ffd66f!important;font-size:1rem!important;line-height:1!important;box-shadow:inset 0 0 12px rgba(217,170,74,.12),0 0 16px rgba(217,170,74,.13)!important}
+@media(max-width:680px){.haswolf-category-summary{grid-template-columns:minmax(0,1fr) 2.25rem 2.25rem!important;padding:.56rem .62rem!important}.haswolf-category-summary>span:first-child{font-size:.7rem!important}.haswolf-category-summary__hint{width:2.25rem!important}.haswolf-category-summary__chevron{width:2.25rem!important;height:2.25rem!important;font-size:.95rem!important}}
+
+.haswolf-live-campaign{position:fixed;z-index:85;right:1rem;top:8rem;width:min(22rem,calc(100vw - 2rem));border:1px solid rgba(217,170,74,.55);border-radius:1rem;background:linear-gradient(145deg,#171108,#090b0b 65%);padding:1rem 2.4rem 1rem 1rem;box-shadow:0 24px 80px #000,0 0 34px rgba(217,170,74,.15);animation:haswolfCampaignIn .35s ease}.haswolf-live-campaign>button{position:absolute;right:.7rem;top:.6rem;color:#fff;font-size:1.1rem}.haswolf-live-campaign small,.haswolf-live-campaign strong,.haswolf-live-campaign p{display:block}.haswolf-live-campaign small{color:#d9aa4a;font-size:.55rem;letter-spacing:.2em}.haswolf-live-campaign strong{margin-top:.25rem;color:#fff;font-size:1rem}.haswolf-live-campaign p{margin-top:.35rem;color:#aeb4b4;font-size:.72rem}.haswolf-live-campaign--banner{left:50%;right:auto;top:5.5rem;transform:translateX(-50%);width:min(58rem,calc(100vw - 2rem))}.haswolf-live-campaign--popup{left:50%;right:auto;top:50%;transform:translate(-50%,-50%);width:min(30rem,calc(100vw - 2rem))}@keyframes haswolfCampaignIn{from{opacity:0;translate:40px 0}to{opacity:1;translate:0 0}}@media(max-width:680px){.haswolf-live-campaign{right:.65rem;top:5.5rem;width:calc(100vw - 1.3rem)}}
+
+/* HASWOLF V5.6 compact professional category control */
+.haswolf-category-drawer{width:100%!important;border-radius:.8rem!important}
+.haswolf-category-summary{display:grid!important;grid-template-columns:minmax(0,1fr) 1.9rem 2rem!important;align-items:center!important;gap:.38rem!important;min-height:3.2rem!important;padding:.55rem .62rem!important;cursor:pointer!important}
+.haswolf-category-summary>span:first-child{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;font-size:.68rem!important;letter-spacing:.015em!important;font-weight:900!important}
+.haswolf-category-summary__hint{display:grid!important;place-items:center!important;width:1.9rem!important;height:1.65rem!important;padding:0!important;border:1px solid rgba(217,170,74,.62)!important;border-radius:.48rem!important;background:linear-gradient(180deg,#dcb04f,#946116)!important;color:#090601!important;font-size:.48rem!important;font-weight:1000!important;box-shadow:0 4px 12px rgba(0,0,0,.35)!important}
+.haswolf-category-summary__chevron{display:grid!important;place-items:center!important;width:2rem!important;height:2rem!important;border:1px solid rgba(217,170,74,.62)!important;border-radius:.55rem!important;background:#171108!important;color:#ffd66f!important;font-size:1.15rem!important;font-weight:900!important;line-height:1!important;box-shadow:inset 0 0 10px rgba(217,170,74,.12)!important;transition:transform .2s ease!important}
+.haswolf-category-drawer[open] .haswolf-category-summary__chevron{transform:rotate(180deg)!important}
+@media(max-width:1100px){.haswolf-category-summary{grid-template-columns:minmax(0,1fr) 1.85rem 1.95rem!important}.haswolf-category-summary>span:first-child{font-size:.66rem!important}}
+@media(max-width:680px){.haswolf-category-summary{min-height:3rem!important;padding:.5rem .56rem!important}.haswolf-category-summary>span:first-child{font-size:.62rem!important}.haswolf-category-summary__hint{width:1.82rem!important;height:1.58rem!important}.haswolf-category-summary__chevron{width:1.9rem!important;height:1.9rem!important;font-size:1.05rem!important}}
+
+/* HASWOLF V5.6 compact professional category control */
+.haswolf-category-drawer{width:100%!important;border-radius:.8rem!important}
+.haswolf-category-summary{display:grid!important;grid-template-columns:minmax(0,1fr) 1.9rem 2rem!important;align-items:center!important;gap:.38rem!important;min-height:3.2rem!important;padding:.55rem .62rem!important;cursor:pointer!important}
+.haswolf-category-summary>span:first-child{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;font-size:.68rem!important;letter-spacing:.015em!important;font-weight:900!important}
+.haswolf-category-summary__hint{display:grid!important;place-items:center!important;width:1.9rem!important;height:1.65rem!important;padding:0!important;border:1px solid rgba(217,170,74,.62)!important;border-radius:.48rem!important;background:linear-gradient(180deg,#dcb04f,#946116)!important;color:#090601!important;font-size:.48rem!important;font-weight:1000!important;box-shadow:0 4px 12px rgba(0,0,0,.35)!important}
+.haswolf-category-summary__chevron{display:grid!important;place-items:center!important;width:2rem!important;height:2rem!important;border:1px solid rgba(217,170,74,.62)!important;border-radius:.55rem!important;background:#171108!important;color:#ffd66f!important;font-size:1.15rem!important;font-weight:900!important;line-height:1!important;box-shadow:inset 0 0 10px rgba(217,170,74,.12)!important;transition:transform .2s ease!important}
+.haswolf-category-drawer[open] .haswolf-category-summary__chevron{transform:rotate(180deg)!important}
+@media(max-width:1100px){.haswolf-category-summary{grid-template-columns:minmax(0,1fr) 1.85rem 1.95rem!important}.haswolf-category-summary>span:first-child{font-size:.66rem!important}}
+@media(max-width:680px){.haswolf-category-summary{min-height:3rem!important;padding:.5rem .56rem!important}.haswolf-category-summary>span:first-child{font-size:.62rem!important}.haswolf-category-summary__hint{width:1.82rem!important;height:1.58rem!important}.haswolf-category-summary__chevron{width:1.9rem!important;height:1.9rem!important;font-size:1.05rem!important}}
+.haswolf-guild-admin-top{align-items:start}.haswolf-guild-invite-grid{grid-template-columns:1fr 1.35fr auto!important}.haswolf-guild-member-list article{grid-template-columns:minmax(10rem,1fr) 9rem auto!important}.haswolf-guild-invite-row{display:grid!important;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:.55rem;border:1px solid #202626;border-radius:.7rem;background:#0d1111;padding:.7rem}.haswolf-guild-invite-row b,.haswolf-guild-invite-row small{display:block}.haswolf-guild-invite-row small,.haswolf-guild-invite-row time{color:#737d7d;font-size:.55rem}.haswolf-guild-invite-row button{border:1px solid #704040;border-radius:.45rem;padding:.42rem .6rem;color:#ffaaaa;font-size:.58rem}
+@media(max-width:900px){.haswolf-guild-invite-grid{grid-template-columns:1fr!important}.haswolf-guild-member-list article{grid-template-columns:1fr auto!important}.haswolf-guild-member-list article>div{grid-column:1/-1}.haswolf-guild-invite-row{grid-template-columns:1fr auto}.haswolf-guild-invite-row time{grid-column:1/-1}}
+
+/* HASWOLF V5.7 — profesyonel panel kapatma düğmeleri */
+.haswolf-panel-close,
+.haswolf-notification-panel header .haswolf-panel-close,
+.haswolf-premium-panel header .haswolf-panel-close {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 2.35rem;
+  height: 2.35rem;
+  margin-left: 1rem;
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: .78rem;
+  background: linear-gradient(145deg, rgba(255,255,255,.11), rgba(255,255,255,.035));
+  color: #f3f4f4;
+  font-size: .92rem;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.09), 0 8px 22px rgba(0,0,0,.35);
+  transition: transform .18s ease, border-color .18s ease, background .18s ease, color .18s ease;
+}
+.haswolf-panel-close:hover {
+  transform: translateY(-1px);
+  border-color: rgba(239,68,68,.58);
+  background: linear-gradient(145deg, rgba(127,29,29,.9), rgba(69,10,10,.86));
+  color: white;
+}
+.haswolf-panel-close:active { transform: translateY(0) scale(.96); }
+.haswolf-notification-panel header,
+.haswolf-premium-panel header { gap: 1rem; }
+
+@media (max-width: 680px) {
+  .haswolf-panel-close,
+  .haswolf-notification-panel header .haswolf-panel-close,
+  .haswolf-premium-panel header .haswolf-panel-close {
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-left: .75rem;
+  }
+}
+
+/* HASWOLF V5.8 — mobile/tablet tam üst menü ve sosyal ray */
+.haswolf-mobile-social-rail { display: none; }
+
+@media (max-width: 1023px) {
+  .haswolf-header { position: sticky; top: 0; }
+
+  .haswolf-topbar {
+    min-height: 60px !important;
+    padding-block: .4rem !important;
+  }
+
+  .haswolf-topbar > a svg,
+  .haswolf-topbar > a > div:first-child {
+    width: 2.7rem !important;
+    height: 2.7rem !important;
+  }
+
+  .haswolf-topbar > a > div:last-child > div:first-child {
+    font-size: 1.05rem !important;
+  }
+
+  .haswolf-header-account button,
+  .haswolf-header-account a {
+    min-height: 2.25rem !important;
+    padding-inline: .55rem !important;
+    font-size: .64rem !important;
+    border-radius: .55rem !important;
+  }
+
+  /* Önceden mobilde tamamen gizlenen ana menüyü iki kompakt satırda göster. */
+  .haswolf-main-nav {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: .28rem !important;
+    overflow: visible !important;
+    padding: .42rem 0 .5rem !important;
+    border-top: 1px solid rgba(217,170,74,.16);
+  }
+
+  .haswolf-main-nav > a,
+  .haswolf-main-nav > button,
+  .haswolf-notification-root > button,
+  .haswolf-premium-benefits > button {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 2.25rem !important;
+    padding: .28rem .18rem !important;
+    gap: .2rem !important;
+    border-radius: .48rem !important;
+    font-size: .57rem !important;
+    line-height: 1.08 !important;
+    white-space: normal !important;
+    text-align: center !important;
+  }
+
+  .haswolf-main-nav > a,
+  .haswolf-main-nav > button {
+    flex-direction: column;
+  }
+
+  .haswolf-main-nav > a > span:first-child,
+  .haswolf-main-nav > button > span:first-child,
+  .haswolf-main-nav > button > svg {
+    width: .85rem !important;
+    height: .85rem !important;
+    font-size: .78rem !important;
+    flex: 0 0 auto;
+  }
+
+  .haswolf-main-nav .haswolf-notification-root,
+  .haswolf-main-nav .haswolf-premium-benefits,
+  .haswolf-main-nav .haswolf-language-selector {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .haswolf-language-selector select,
+  .haswolf-language-selector button {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 2.25rem !important;
+    padding: .25rem .12rem !important;
+    border-radius: .48rem !important;
+    font-size: .58rem !important;
+  }
+
+  .haswolf-notification-trigger b {
+    position: absolute;
+    top: -.2rem;
+    right: -.15rem;
+    min-width: 1rem;
+    height: 1rem;
+    font-size: .52rem;
+  }
+
+  .haswolf-mobile-social-rail {
+    position: fixed;
+    z-index: 68;
+    right: 0;
+    top: 42%;
+    display: flex;
+    align-items: stretch;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .haswolf-mobile-social-rail__trigger {
+    pointer-events: auto;
+    display: flex;
+    width: 2.45rem;
+    min-height: 7.2rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .35rem;
+    border: 1px solid rgba(217,170,74,.52);
+    border-right: 0;
+    border-radius: .85rem 0 0 .85rem;
+    background: linear-gradient(180deg,rgba(25,19,9,.96),rgba(5,6,6,.97));
+    color: #efc768;
+    box-shadow: -8px 12px 30px rgba(0,0,0,.48);
+  }
+
+  .haswolf-mobile-social-rail__trigger b {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: .58rem;
+    letter-spacing: .05em;
+    white-space: nowrap;
+  }
+
+  .haswolf-mobile-social-rail__panel {
+    pointer-events: auto;
+    width: 0;
+    overflow: hidden;
+    display: grid;
+    gap: .35rem;
+    padding: .45rem 0;
+    border: 0 solid rgba(217,170,74,.38);
+    border-radius: .85rem 0 0 .85rem;
+    background: rgba(5,7,7,.97);
+    opacity: 0;
+    transition: width .22s ease, padding .22s ease, opacity .18s ease;
+    backdrop-filter: blur(18px);
+  }
+
+  .haswolf-mobile-social-rail.is-open .haswolf-mobile-social-rail__panel {
+    width: 9.2rem;
+    padding: .45rem;
+    border-width: 1px 0 1px 1px;
+    opacity: 1;
+  }
+
+  .haswolf-mobile-social-rail__panel a {
+    display: flex;
+    min-height: 2.25rem;
+    align-items: center;
+    gap: .45rem;
+    border-radius: .55rem;
+    background: rgba(255,255,255,.045);
+    padding: .3rem .42rem;
+    color: #f3f3f3;
+    font-size: .67rem;
+    font-weight: 750;
+  }
+
+  .haswolf-mobile-social-rail__panel .social-brand {
+    width: 1.65rem;
+    height: 1.65rem;
+    border-radius: .45rem;
+    font-size: .7rem;
+  }
+
+  /* Üst menü görünür olduğu için hero ve içerik daha dengeli başlasın. */
+  .haswolf-hero .haswolf-container {
+    min-height: 285px !important;
+    padding-top: 1.15rem !important;
+  }
+}
+
+@media (max-width: 639px) {
+  .haswolf-container { width: min(100% - .7rem, var(--content-width)); }
+
+  .haswolf-main-nav {
+    gap: .2rem !important;
+  }
+
+  .haswolf-main-nav > a,
+  .haswolf-main-nav > button,
+  .haswolf-notification-root > button,
+  .haswolf-premium-benefits > button,
+  .haswolf-language-selector select,
+  .haswolf-language-selector button {
+    min-height: 2.05rem !important;
+    font-size: .52rem !important;
+  }
+
+  .haswolf-mobile-social-rail__trigger {
+    width: 2.2rem;
+    min-height: 6.6rem;
+  }
+
+  .haswolf-mobile-social-rail.is-open .haswolf-mobile-social-rail__panel {
+    width: 8.5rem;
+  }
+}

@@ -1,0 +1,10 @@
+HASWOLF V5.3 KATEGORİ PANELİ DÜZELTMESİ
+
+1. ZIP içindeki app/page.tsx ve app/globals.css dosyalarını projenin aynı yollarına kopyala.
+2. Terminal:
+   taskkill /F /IM node.exe
+   Remove-Item .next -Recurse -Force -ErrorAction SilentlyContinue
+   npm run dev
+3. Tarayıcıda Ctrl + Shift + R yap.
+
+Bu düzeltme Kategoriler panelini Oyunlar paneliyle aynı dış genişliğe getirir ve Dokun ve Aç yazısının üst üste binmesini engeller.
