@@ -1,13 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600">
-<defs>
- <radialGradient id="g" cx="50%" cy="35%" r="75%"><stop offset="0" stop-color="#f1cb6a" stop-opacity=".42"/><stop offset=".55" stop-color="#241a05" stop-opacity=".55"/><stop offset="1" stop-color="#050707"/></radialGradient>
- <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f7dd8c"/><stop offset=".5" stop-color="#d9aa4a"/><stop offset="1" stop-color="#795017"/></linearGradient>
- <filter id="glow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-</defs>
-<rect width="900" height="600" rx="42" fill="#050707"/>
-<rect x="18" y="18" width="864" height="564" rx="34" fill="url(#g)" stroke="url(#gold)" stroke-width="3"/>
-<path d="M235 115 L365 175 L450 120 L535 175 L665 115 L620 300 L675 410 L535 515 L450 465 L365 515 L225 410 L280 300 Z" fill="#070909" stroke="url(#gold)" stroke-width="10" opacity=".92"/>
-<text x="450" y="345" text-anchor="middle" font-size="150" filter="url(#glow)">₿</text>
-<text x="450" y="85" text-anchor="middle" fill="#eac76f" font-family="Arial,sans-serif" font-weight="900" font-size="54" letter-spacing="13">HASWOLF</text>
-<text x="450" y="558" text-anchor="middle" fill="#9ba0a0" font-family="Arial,sans-serif" font-weight="700" font-size="25" letter-spacing="8">YANG PREMIUM 2</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+<defs><radialGradient id="bg"><stop stop-color="#ffdb4d" stop-opacity=".34"/><stop offset=".48" stop-color="#130d08"/><stop offset="1" stop-color="#030404"/></radialGradient><linearGradient id="gold" x2="1" y2="1"><stop stop-color="#fff0a8"/><stop offset=".45" stop-color="#ffdb4d"/><stop offset="1" stop-color="#b15b00"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="14" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="shadow"><feDropShadow dx="0" dy="25" stdDeviation="18" flood-opacity=".75"/></filter></defs>
+<rect width="900" height="600" rx="34" fill="url(#bg)"/><path d="M0 470 Q225 390 450 475T900 440V600H0Z" fill="#b15b00" opacity=".12"/><g opacity=".18" fill="#ffdb4d"><circle cx="90" cy="90" r="4"/><circle cx="235" cy="170" r="6"/><circle cx="380" cy="90" r="8"/><circle cx="525" cy="170" r="4"/><circle cx="670" cy="90" r="6"/><circle cx="815" cy="170" r="8"/></g>
+<g filter="url(#shadow)"><path d="M450 105 565 160 680 135 640 280 695 390 560 500 450 450 340 500 205 390 260 280 220 135 335 160Z" fill="#070808" stroke="url(#gold)" stroke-width="13"/><path d="M290 180 390 245 325 320Z" fill="url(#gold)" opacity=".88"/><path d="M610 180 510 245 575 320Z" fill="url(#gold)" opacity=".88"/><path d="M330 325 420 300 385 365Z" fill="#ffdb4d" filter="url(#glow)"/><path d="M570 325 480 300 515 365Z" fill="#ffdb4d" filter="url(#glow)"/><path d="M385 395 450 430 515 395 485 465 450 480 415 465Z" fill="url(#gold)"/></g>
+<text x="450" y="75" text-anchor="middle" fill="url(#gold)" font-size="44" font-family="Arial Black,Arial" letter-spacing="14">HASWOLF</text><g filter="url(#glow)"><circle cx="450" cy="310" r="84" fill="#080909" stroke="#ffdb4d" stroke-width="5"/><text x="450" y="340" text-anchor="middle" fill="url(#gold)" font-size="90" font-family="Arial Black,Arial">₩</text></g><text x="450" y="552" text-anchor="middle" fill="#ffdb4d" font-size="32" font-family="Arial Black,Arial" letter-spacing="10">YANG ELITE 2</text>
 </svg>

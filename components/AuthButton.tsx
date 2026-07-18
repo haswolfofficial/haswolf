@@ -10,6 +10,7 @@ export default function AuthButton() {
   const [user, setUser] = useState<User | null>(null);
   const [nickname, setNickname] = useState("");
   const [loading, setLoading] = useState(true);
+  const [premium, setPremium] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -30,10 +31,10 @@ export default function AuthButton() {
 
         const { data: profile } = await supabase
           .from("profiles")
-          .select("nickname")
+          .select("nickname,premium_tier,premium_until")
           .eq("id", sessionUser.id)
           .maybeSingle();
-        if (mounted) setNickname(profile?.nickname || "");
+        if (mounted) { setNickname(profile?.nickname || ""); setPremium(Boolean(profile?.premium_tier && profile.premium_tier !== "normal" && (!profile.premium_until || new Date(profile.premium_until) > new Date()))); }
       }
 
       if (mounted) setLoading(false);
@@ -76,9 +77,9 @@ export default function AuthButton() {
   const label = nickname || (user.is_anonymous ? "Misafir" : user.email || "Hesap");
 
   return (
-    <div className="haswolf-auth-user">
+    <div className={premium ? "haswolf-auth-user is-premium" : "haswolf-auth-user"}>
       <button type="button" onClick={() => router.push("/hesabim")} className="haswolf-auth-action">
-        <span>👤</span><span>Hesabım</span>
+        <span>{premium ? "🔥" : "👤"}</span><span>{premium ? "Premium Hesabım" : "Hesabım"}</span>
       </button>
       <button type="button" onClick={logout} className="haswolf-auth-action haswolf-auth-action--logout">
         <span>↪</span><span>Çıkış Yap</span>

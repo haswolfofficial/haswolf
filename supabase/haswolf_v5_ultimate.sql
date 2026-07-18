@@ -115,3 +115,25 @@ exception when duplicate_object then null; end $$;
 do $$ begin
  create policy "public active notifications" on public.site_notifications for select using(is_active=true);
 exception when duplicate_object then null; end $$;
+
+-- HASWOLF V5.1 ACTIVE ADMIN PANELS
+alter table public.guilds
+ add column if not exists badge text default '🛡',
+ add column if not exists color text default '#d9aa4a',
+ add column if not exists description text,
+ add column if not exists logo_url text;
+alter table public.profiles
+ add column if not exists chat_banned_until timestamptz,
+ add column if not exists account_banned_until timestamptz,
+ add column if not exists warning_count integer not null default 0;
+
+-- Adminin mevcut tabloları panelden yönetebilmesi
+DO $$ BEGIN CREATE POLICY "haswolf admin profiles update" ON public.profiles FOR UPDATE USING(public.is_haswolf_admin()) WITH CHECK(public.is_haswolf_admin()); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE POLICY "haswolf admin profiles select" ON public.profiles FOR SELECT USING(public.is_haswolf_admin() OR auth.uid()=id); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE POLICY "haswolf admin chat rooms" ON public.chat_rooms FOR ALL USING(public.is_haswolf_admin()) WITH CHECK(public.is_haswolf_admin()); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE POLICY "haswolf admin guild members" ON public.guild_members FOR ALL USING(public.is_haswolf_admin()) WITH CHECK(public.is_haswolf_admin()); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE POLICY "haswolf admin guild invites" ON public.guild_invites FOR ALL USING(public.is_haswolf_admin()) WITH CHECK(public.is_haswolf_admin()); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+
+create index if not exists profiles_premium_until_idx on public.profiles(premium_until);
+create index if not exists profiles_chat_banned_until_idx on public.profiles(chat_banned_until);
+create index if not exists campaigns_active_dates_idx on public.campaigns(is_active,starts_at,ends_at);

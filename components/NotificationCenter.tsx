@@ -18,6 +18,8 @@ type Deal = {
 
 const KEY = "haswolf_seen_discount_ids_v3";
 
+function liveTime(value:string|undefined,now:number){const date=new Date(value||now);const diff=Math.max(0,now-date.getTime());const min=Math.floor(diff/60000);if(min<1)return "Şimdi";if(min<60)return `${min} dakika önce`;const hour=Math.floor(min/60);if(hour<24)return `${hour} saat önce`;return `${date.toLocaleDateString("tr-TR")} · ${date.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})}`;}
+
 function dealUrl(deal: Deal) {
   const params = new URLSearchParams({
     market: deal.category,
@@ -37,6 +39,7 @@ export default function NotificationCenter({ deals }: { deals: Deal[] }) {
   );
   const [open, setOpen] = useState(false);
   const [seen, setSeen] = useState<number[]>([]);
+  const [now, setNow] = useState(Date.now());
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -45,6 +48,8 @@ export default function NotificationCenter({ deals }: { deals: Deal[] }) {
       if (Array.isArray(value)) setSeen(value);
     } catch {}
   }, []);
+
+  useEffect(() => { const timer=window.setInterval(()=>setNow(Date.now()),30000); return()=>window.clearInterval(timer); },[]);
 
   useEffect(() => {
     const close = (event: PointerEvent) => {
@@ -126,7 +131,7 @@ export default function NotificationCenter({ deals }: { deals: Deal[] }) {
                       {deal.is_best_price&&<em>En Uygun Fiyat</em>}
                       {deal.low_stock_alert&&<em>Stok Azalıyor · {deal.stock ?? "Az"}</em>}
                     </span>
-                    <time>{new Date(deal.created_at || Date.now()).toLocaleString("tr-TR",{dateStyle:"short",timeStyle:"short"})}</time>
+                    <time title={new Date(deal.created_at || now).toLocaleString("tr-TR")}>{liveTime(deal.created_at,now)}</time>
                   </span>
                   <i>›</i>
                 </button>

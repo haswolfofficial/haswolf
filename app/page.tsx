@@ -5,6 +5,7 @@ import MobileBottomNav from "../components/MobileBottomNav";
 import SiteFooter from "../components/SiteFooter";
 import FloatingWhatsApp from "../components/FloatingWhatsApp";
 import NotificationCenter from "../components/NotificationCenter";
+import PremiumBenefits from "../components/PremiumBenefits";
 import AutoTranslate from "../components/AutoTranslate";
 import LanguageSelector from "../components/LanguageSelector";
 import ProductExperience from "../components/ProductExperience";
@@ -375,6 +376,7 @@ export default function Home() {
               <span>Sohbet Odaları</span>
             </a>
             {isAdmin && <a href="/admin"><span aria-hidden="true">🛡</span><span>Admin</span></a>}
+            <PremiumBenefits />
             <LanguageSelector />
             <NotificationCenter deals={products.map(({id,name,price,old_price,server,category,created_at,stock,is_daily_favorite,is_best_price,low_stock_alert})=>({id,name,price,old_price,server,category,created_at,stock,is_daily_favorite:Boolean(is_daily_favorite),is_best_price:Boolean(is_best_price),low_stock_alert:Boolean(low_stock_alert)}))} />
           </nav>
@@ -637,12 +639,12 @@ export default function Home() {
                   </button>
                 ))}
               </div>
-              <div className="haswolf-upcoming-games">
-                <h3>Diğer Oyunlar</h3>
-                {['Knight Online','Silkroad Online','World of Warcraft','Valorant','PUBG','League of Legends'].map((game) => (
-                  <div key={game}><span>{game}</span><b>YAKINDA !!</b></div>
-                ))}
-              </div>
+              <details className="haswolf-games-drawer">
+                <summary><span>🎮 OYUNLAR</span><small>8 yeni pazar</small><i>▼</i></summary>
+                <div>{["Mobile2","Wild Rift","Mobile Legends: Bang Bang","Knight Online","Silkroad Online","World of Warcraft","Valorant","PUBG Mobile"].map((game) => (
+                  <button type="button" key={game} disabled><span>{game}</span><b>YAKINDA</b></button>
+                ))}</div>
+              </details>
             </details>
 
             <div className="hidden lg:block">
