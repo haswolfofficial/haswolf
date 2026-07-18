@@ -1,0 +1,1841 @@
+@import "tailwindcss";
+
+:root {
+  --background: #050707;
+  --surface: #090b0b;
+  --surface-raised: #101313;
+  --foreground: #f4f4f5;
+  --muted: #a1a1aa;
+  --brand: #d9aa4a;
+  --brand-strong: #e8bd67;
+  --brand-dark: #765016;
+  --border: rgba(140, 100, 30, 0.42);
+  --page-gutter: 1rem;
+  --content-width: 1500px;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+html {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scroll-padding-top: 7rem;
+  background: var(--background);
+}
+
+body {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+video,
+iframe,
+svg,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a,
+select,
+summary,
+label,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="checkbox"],
+input[type="radio"],
+input[type="file"] {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand-strong);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: rgba(217, 170, 74, 0.32);
+  color: white;
+}
+
+.haswolf-container {
+  width: min(100% - (var(--page-gutter) * 2), var(--content-width));
+  margin-inline: auto;
+}
+
+.haswolf-safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+.mobile-swipe-row {
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.mobile-swipe-row::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes haswolf-wolf-run {
+  0% { transform: translateX(-100px) scaleX(1); opacity: 0; }
+  8% { opacity: 1; }
+  48% { transform: translateX(52vw) translateY(-12px) scaleX(1); }
+  52% { transform: translateX(52vw) translateY(-12px) scaleX(-1); }
+  92% { opacity: 1; }
+  100% { transform: translateX(calc(100vw + 100px)) scaleX(-1); opacity: 0; }
+}
+
+.haswolf-wolf-cameo {
+  animation: haswolf-wolf-run 4.5s ease-in-out forwards;
+}
+
+@media (min-width: 640px) {
+  :root { --page-gutter: 1.25rem; }
+}
+
+@media (min-width: 768px) {
+  :root { --page-gutter: 1.5rem; }
+  .mobile-swipe-row { scroll-padding-inline: 1rem; }
+}
+
+@media (min-width: 1024px) {
+  :root { --page-gutter: 2rem; }
+}
+
+@media (max-width: 767px) {
+  main,
+  header,
+  section,
+  footer,
+  nav {
+    max-width: 100vw;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Sprint 1 / Katman 2: görünür UI sistemi */
+.haswolf-header {
+  box-shadow: 0 12px 42px rgba(0, 0, 0, 0.38);
+}
+
+.haswolf-product-card {
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+}
+
+.haswolf-product-card:hover {
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(217, 170, 74, 0.08);
+}
+
+.haswolf-footer {
+  border-top: 1px solid rgba(217, 170, 74, 0.24);
+  background:
+    radial-gradient(circle at 15% 10%, rgba(217, 170, 74, 0.11), transparent 32%),
+    linear-gradient(180deg, #080909, #020303);
+}
+
+.haswolf-social {
+  display: inline-flex;
+  width: 2.6rem;
+  height: 2.6rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(217, 170, 74, 0.3);
+  border-radius: 0.85rem;
+  background: rgba(255,255,255,.035);
+  color: #e6bb63;
+  font-size: .72rem;
+  font-weight: 800;
+  transition: transform .2s ease, background .2s ease, color .2s ease;
+}
+
+.haswolf-social:hover { transform: translateY(-2px); background: #d9aa4a; color: #050505; }
+
+.haswolf-bottom-nav {
+  position: fixed;
+  z-index: 70;
+  left: 50%;
+  bottom: max(.65rem, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: min(calc(100% - 1rem), 34rem);
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: .2rem;
+  padding: .45rem;
+  border: 1px solid rgba(217, 170, 74, .26);
+  border-radius: 1.35rem;
+  background: rgba(7, 8, 8, .93);
+  box-shadow: 0 18px 60px rgba(0,0,0,.65);
+  backdrop-filter: blur(22px);
+}
+
+.haswolf-bottom-nav a,
+.haswolf-bottom-nav button {
+  min-width: 0;
+  min-height: 3.55rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .2rem;
+  border-radius: 1rem;
+  color: #8d9292;
+  font-size: .62rem;
+  font-weight: 700;
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+
+.haswolf-bottom-nav a:hover,
+.haswolf-bottom-nav button:hover,
+.haswolf-bottom-nav .is-active {
+  background: linear-gradient(180deg, rgba(217,170,74,.24), rgba(217,170,74,.08));
+  color: #f0c66d;
+  transform: translateY(-1px);
+}
+
+.haswolf-bottom-nav__icon { font-size: 1.15rem; line-height: 1; }
+
+@media (max-width: 1023px) {
+  main { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+}
+
+/* Sprint 1 / Katman 3: üst sosyal alan, tek satır menü ve APK indirme */
+.haswolf-header-social {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  min-width: 0;
+  padding: .5rem .7rem;
+  border-right: 1px solid rgba(255,255,255,.13);
+  color: #f4f4f5;
+  transition: color .2s ease, background .2s ease;
+}
+.haswolf-header-social:hover { color: #e8bd67; background: rgba(255,255,255,.035); }
+.haswolf-header-social strong,
+.haswolf-header-social small { display: block; white-space: nowrap; }
+.haswolf-header-social strong { font-size: .78rem; line-height: 1.1; }
+.haswolf-header-social small { margin-top: .18rem; color: #8f9298; font-size: .64rem; }
+.social-brand { display: inline-flex; width: 2rem; height: 2rem; flex: 0 0 auto; align-items: center; justify-content: center; border-radius: .55rem; color: #fff; font-weight: 900; }
+.social-brand--youtube { background: #f20d20; }
+.social-brand--instagram { background: linear-gradient(135deg,#f9ce34,#ee2a7b,#6228d7); }
+.social-brand--tiktok { background: #111; text-shadow: -2px 0 #25f4ee, 2px 0 #fe2c55; }
+.social-brand--discord { background: #5865f2; }
+.haswolf-download-button,
+.haswolf-menu-button { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; border: 1px solid #9d701c; color: #edbd52; background: #080808; transition: background .2s ease, color .2s ease, transform .2s ease; }
+.haswolf-download-button { min-height: 3rem; gap: .55rem; border-radius: .75rem; padding: .45rem .8rem; }
+.haswolf-download-button > span:first-child { font-size: 1.55rem; line-height: 1; }
+.haswolf-download-button strong,
+.haswolf-download-button small { display: block; white-space: nowrap; }
+.haswolf-download-button strong { font-size: .72rem; }
+.haswolf-download-button small { margin-top: .12rem; color: #8f9298; font-size: .6rem; }
+.haswolf-menu-button { width: 3rem; height: 3rem; border-radius: .7rem; font-size: 1.35rem; }
+.haswolf-download-button:hover,
+.haswolf-menu-button:hover { background: #d9aa4a; color: #050505; transform: translateY(-1px); }
+.haswolf-main-nav { display: flex; align-items: stretch; gap: .55rem; overflow-x: auto; padding: .65rem 0; border-top: 1px solid rgba(217,170,74,.14); scrollbar-width: none; }
+.haswolf-main-nav::-webkit-scrollbar { display: none; }
+.haswolf-main-nav a,
+.haswolf-main-nav button { display: inline-flex; min-height: 3rem; flex: 0 0 auto; align-items: center; justify-content: center; gap: .55rem; white-space: nowrap; border: 1px solid rgba(255,255,255,.11); border-radius: .65rem; background: linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025)); padding: .6rem 1rem; color: #e7e7e7; font-size: .85rem; font-weight: 700; }
+.haswolf-main-nav a:hover,
+.haswolf-main-nav button:hover { border-color: rgba(217,170,74,.58); color: #efc76b; }
+.haswolf-main-nav .haswolf-whatsapp-nav { margin-left: auto; border-color: rgba(34,197,94,.55); background: rgba(4,77,34,.42); color: #8cf0ad; }
+.haswolf-bottom-nav { grid-template-columns: repeat(6,minmax(0,1fr)); width: min(calc(100% - 1rem), 40rem); }
+@media (max-width: 639px) {
+  .haswolf-download-button { width: 3rem; padding: 0; }
+  .haswolf-main-nav a,
+  .haswolf-main-nav button { min-height: 2.75rem; padding: .5rem .78rem; font-size: .77rem; }
+  .haswolf-bottom-nav a,
+  .haswolf-bottom-nav button { font-size: .55rem; }
+}
+
+/* Sprint 1 / Katman 4: sıkışmayan masaüstü üst alan */
+.haswolf-topbar {
+  min-height: 88px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-block: .65rem;
+}
+
+.haswolf-topbar__actions {
+  margin-left: auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .65rem;
+}
+
+.haswolf-social-strip {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .2rem;
+}
+
+.haswolf-header-social {
+  border-right: 0;
+  border-radius: .65rem;
+  padding: .45rem .55rem;
+}
+
+.haswolf-header-social strong { font-size: .72rem; }
+.haswolf-header-social small { font-size: .58rem; }
+.social-brand { width: 1.8rem; height: 1.8rem; }
+
+.haswolf-main-nav {
+  justify-content: center;
+  overflow: visible;
+  gap: .7rem;
+}
+
+.haswolf-main-nav a,
+.haswolf-main-nav button {
+  flex: 1 1 auto;
+  min-width: max-content;
+  padding-inline: 1.15rem;
+}
+
+.haswolf-main-nav .haswolf-whatsapp-nav {
+  flex: 0 1 15rem;
+  margin-left: 0;
+}
+
+@media (max-width: 1279px) {
+  .haswolf-social-strip { display: none; }
+  .haswolf-topbar__actions { margin-left: auto; }
+}
+
+@media (max-width: 900px) {
+  .haswolf-topbar { min-height: 72px; }
+  .haswolf-main-nav {
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+  .haswolf-main-nav a,
+  .haswolf-main-nav button {
+    flex: 0 0 auto;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1500px) {
+  .haswolf-header-social { padding-inline: .35rem; }
+  .haswolf-header-social small { display: none; }
+  .haswolf-main-nav a,
+  .haswolf-main-nav button { padding-inline: .85rem; font-size: .8rem; }
+}
+
+/* Sprint 1 / Katman 5: canlı altın tonlar ve dengeli mobil hızlı menü */
+.haswolf-hero {
+  isolation: isolate;
+  background: #050505;
+}
+
+.haswolf-hero__background {
+  background:
+    radial-gradient(circle at 74% 48%, rgba(255, 177, 36, .34), transparent 24%),
+    radial-gradient(circle at 58% 50%, rgba(158, 91, 11, .18), transparent 34%),
+    linear-gradient(112deg, #030404 10%, #080705 47%, #1b1105 72%, #050505 100%);
+}
+
+.haswolf-hero__particles {
+  opacity: .72;
+  background-image:
+    radial-gradient(circle at 68% 24%, rgba(255, 188, 55, .8) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 77% 62%, rgba(255, 160, 20, .65) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 63% 78%, rgba(255, 198, 70, .55) 0 1px, transparent 1.7px);
+  background-size: 46px 46px, 61px 61px, 79px 79px;
+  mask-image: linear-gradient(90deg, transparent 38%, #000 64%, transparent 100%);
+}
+
+.haswolf-hero__title {
+  color: #f0b83e;
+  text-shadow: 0 0 24px rgba(214, 139, 25, .18);
+}
+
+.haswolf-hero__emblem {
+  border: 1px solid rgba(241, 174, 45, .66);
+  background: radial-gradient(circle, #2b1b08 0%, #0b0906 55%, #020202 76%);
+  box-shadow:
+    0 0 0 1px rgba(255, 194, 77, .08),
+    0 0 44px rgba(233, 145, 18, .38),
+    0 0 105px rgba(196, 105, 7, .24),
+    inset 0 0 34px rgba(255, 177, 39, .12);
+}
+
+.haswolf-primary-cta {
+  background: linear-gradient(180deg, #f6ca62 0%, #d99b2a 58%, #b87514 100%);
+  box-shadow: 0 10px 28px rgba(197, 119, 15, .28), inset 0 1px rgba(255,255,255,.4);
+  transition: transform .2s ease, filter .2s ease, box-shadow .2s ease;
+}
+
+.haswolf-secondary-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  border: 1px solid #aa781f;
+  background: rgba(4,4,4,.68);
+  color: #f0ca79;
+  box-shadow: inset 0 0 22px rgba(217,170,74,.035);
+  transition: transform .2s ease, border-color .2s ease, background .2s ease;
+}
+
+.haswolf-primary-cta:hover,
+.haswolf-secondary-cta:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.haswolf-secondary-cta:hover {
+  border-color: #e5b64f;
+  background: rgba(217,170,74,.08);
+}
+
+/* Katman 3'te kalan 6 kolon genişlik kuralını kesin olarak geçersiz kılar. */
+.haswolf-bottom-nav {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  width: min(calc(100% - 1rem), 25rem);
+  padding: .38rem;
+}
+
+.haswolf-bottom-nav a,
+.haswolf-bottom-nav button {
+  min-height: 3.35rem;
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .haswolf-bottom-nav {
+    width: 27rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .haswolf-hero__background {
+    background:
+      radial-gradient(circle at 86% 28%, rgba(255, 177, 36, .18), transparent 27%),
+      linear-gradient(120deg, #030404 8%, #0a0805 72%, #120b04 100%);
+  }
+}
+
+/* HASWOLF KATMAN 5 DUZELTILMIS - 2026-07-15 */
+.haswolf-hero {
+  min-height: 340px;
+  background: #030303 !important;
+}
+
+.haswolf-hero__background {
+  background:
+    radial-gradient(circle at 78% 48%, rgba(255, 181, 48, .44) 0%, rgba(174, 93, 8, .22) 20%, transparent 43%),
+    radial-gradient(circle at 58% 70%, rgba(255, 139, 0, .12), transparent 34%),
+    linear-gradient(112deg, #020303 0%, #080603 46%, #261605 75%, #050403 100%) !important;
+}
+
+.haswolf-hero__particles {
+  opacity: .95 !important;
+  filter: drop-shadow(0 0 5px rgba(255, 173, 35, .6));
+}
+
+.haswolf-hero__title {
+  color: transparent !important;
+  background: linear-gradient(180deg, #ffe493 0%, #efb942 44%, #b97816 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: 0 8px 28px rgba(220, 136, 21, .25) !important;
+}
+
+.haswolf-hero__emblem {
+  border: 1px solid rgba(255, 190, 65, .86) !important;
+  background: radial-gradient(circle at 50% 42%, #241706 0%, #090806 54%, #010101 78%) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 212, 122, .12),
+    0 0 42px rgba(255, 165, 25, .55),
+    0 0 110px rgba(193, 100, 4, .32),
+    inset 0 0 38px rgba(255, 184, 45, .14) !important;
+}
+
+.haswolf-primary-cta {
+  background: linear-gradient(180deg, #ffe083 0%, #e6aa37 52%, #bd7916 100%) !important;
+  color: #090704 !important;
+  box-shadow: 0 12px 34px rgba(205, 125, 15, .34), inset 0 1px 0 rgba(255,255,255,.55) !important;
+}
+
+.haswolf-secondary-cta {
+  border-color: #c28b29 !important;
+  color: #f3cf7d !important;
+  background: linear-gradient(180deg, rgba(21,16,8,.92), rgba(4,4,4,.9)) !important;
+}
+
+.haswolf-bottom-nav {
+  grid-template-columns: repeat(4, 82px) !important;
+  width: fit-content !important;
+  max-width: calc(100vw - 20px) !important;
+  padding: 6px !important;
+  gap: 4px !important;
+}
+
+.haswolf-bottom-nav a,
+.haswolf-bottom-nav button {
+  width: 82px !important;
+  min-width: 82px !important;
+  min-height: 56px !important;
+  padding-inline: 4px !important;
+}
+
+@media (max-width: 380px) {
+  .haswolf-bottom-nav {
+    grid-template-columns: repeat(4, minmax(68px, 1fr)) !important;
+    width: calc(100vw - 16px) !important;
+  }
+  .haswolf-bottom-nav a,
+  .haswolf-bottom-nav button {
+    width: auto !important;
+    min-width: 0 !important;
+  }
+}
+
+/* HASWOLF KATMAN 6 - CANLI UST MENÜ VE NAVİGASYON */
+.haswolf-header {
+  background:
+    radial-gradient(circle at 52% -30%, rgba(247, 183, 52, .10), transparent 36%),
+    linear-gradient(180deg, rgba(3,3,3,.99), rgba(0,0,0,.98)) !important;
+  border-bottom-color: rgba(224, 163, 43, .52) !important;
+  box-shadow: 0 10px 34px rgba(0,0,0,.72), 0 1px 0 rgba(245,187,69,.08) !important;
+}
+
+.haswolf-topbar {
+  border-bottom: 1px solid rgba(217,170,74,.18);
+}
+
+.haswolf-header-social {
+  border: 1px solid transparent;
+  border-radius: .8rem !important;
+  background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.008));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+  color: #fff !important;
+  transition: transform .22s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease !important;
+}
+
+.haswolf-header-social:hover {
+  transform: translateY(-2px);
+  border-color: rgba(237,180,66,.68);
+  background: linear-gradient(180deg, rgba(217,170,74,.14), rgba(217,170,74,.035));
+  box-shadow: 0 8px 24px rgba(0,0,0,.38), 0 0 18px rgba(217,170,74,.12);
+  color: #ffd66f !important;
+}
+
+.haswolf-header-social strong {
+  color: #fff;
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba(255,255,255,.12);
+}
+
+.haswolf-header-social small {
+  color: #b6b8bd !important;
+}
+
+.social-brand {
+  box-shadow: 0 6px 16px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.28);
+  filter: saturate(1.28) brightness(1.08);
+}
+
+.social-brand--youtube {
+  background: linear-gradient(145deg, #ff2537, #d80012) !important;
+  box-shadow: 0 0 18px rgba(255,25,45,.28), inset 0 1px 0 rgba(255,255,255,.3);
+}
+
+.social-brand--instagram {
+  background: radial-gradient(circle at 30% 105%, #ffd45a 0 18%, #ff365f 40%, #d62976 62%, #6f35db 100%) !important;
+  box-shadow: 0 0 18px rgba(222,44,126,.28), inset 0 1px 0 rgba(255,255,255,.32);
+}
+
+.social-brand--tiktok {
+  background: #050505 !important;
+  border: 1px solid rgba(255,255,255,.16);
+  text-shadow: -2px 0 #25f4ee, 2px 0 #fe2c55 !important;
+  box-shadow: -4px 0 14px rgba(37,244,238,.12), 4px 0 14px rgba(254,44,85,.12);
+}
+
+.social-brand--discord {
+  background: linear-gradient(145deg, #7289ff, #5865f2) !important;
+  box-shadow: 0 0 18px rgba(88,101,242,.3), inset 0 1px 0 rgba(255,255,255,.28);
+}
+
+.haswolf-download-button,
+.haswolf-menu-button {
+  border-color: rgba(240,180,55,.86) !important;
+  background:
+    linear-gradient(180deg, rgba(39,27,8,.96), rgba(8,7,5,.98)) !important;
+  color: #ffd35f !important;
+  box-shadow:
+    0 0 0 1px rgba(255,203,99,.05),
+    0 9px 22px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,225,151,.12),
+    inset 0 0 20px rgba(206,135,21,.08) !important;
+}
+
+.haswolf-download-button strong {
+  color: #ffd35f;
+  text-shadow: 0 0 14px rgba(255,193,63,.26);
+}
+
+.haswolf-download-button small {
+  color: #c7b181 !important;
+}
+
+.haswolf-download-button:hover,
+.haswolf-menu-button:hover {
+  background: linear-gradient(180deg, #ffd66f, #c88a22) !important;
+  border-color: #ffe28d !important;
+  color: #050505 !important;
+  filter: brightness(1.08);
+  box-shadow: 0 0 28px rgba(230,162,39,.34), 0 10px 24px rgba(0,0,0,.55) !important;
+}
+
+.haswolf-main-nav {
+  border-top-color: rgba(224,163,43,.22) !important;
+  border-bottom: 1px solid rgba(224,163,43,.28);
+  padding-block: .78rem !important;
+}
+
+.haswolf-main-nav a,
+.haswolf-main-nav button {
+  border-color: rgba(217,170,74,.34) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,220,137,.07), transparent 55%),
+    linear-gradient(180deg, #171715 0%, #0b0c0c 58%, #070707 100%) !important;
+  color: #f3f3f3 !important;
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.065),
+    inset 0 0 18px rgba(217,170,74,.025);
+  text-shadow: 0 1px 1px #000;
+  transition: transform .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease, background .2s ease !important;
+}
+
+.haswolf-main-nav a > span:first-child,
+.haswolf-main-nav button > span:first-child,
+.haswolf-main-nav button > svg {
+  color: #f0b73e;
+  filter: drop-shadow(0 0 7px rgba(228,160,38,.28));
+}
+
+.haswolf-main-nav a:hover,
+.haswolf-main-nav button:hover {
+  transform: translateY(-2px);
+  border-color: #e6ac3d !important;
+  color: #ffd66f !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,215,120,.16), transparent 58%),
+    linear-gradient(180deg, #241a0a 0%, #11100d 62%, #080808 100%) !important;
+  box-shadow: 0 12px 26px rgba(0,0,0,.52), 0 0 22px rgba(217,152,36,.12), inset 0 1px 0 rgba(255,230,164,.1) !important;
+}
+
+.haswolf-main-nav .haswolf-whatsapp-nav {
+  border-color: rgba(28,210,101,.72) !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(98,255,159,.12), transparent 60%),
+    linear-gradient(180deg, #07371c 0%, #032411 100%) !important;
+  color: #8ff7b5 !important;
+  box-shadow: 0 0 22px rgba(25,190,88,.12), inset 0 1px 0 rgba(147,255,187,.12) !important;
+}
+
+.haswolf-main-nav .haswolf-whatsapp-nav:hover {
+  border-color: #3bea83 !important;
+  background: linear-gradient(180deg, #0b542a, #07351c) !important;
+  color: #d9ffe7 !important;
+  box-shadow: 0 0 28px rgba(27,212,99,.22), 0 12px 26px rgba(0,0,0,.5) !important;
+}
+
+@media (max-width: 1279px) {
+  .haswolf-main-nav a,
+  .haswolf-main-nav button {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.055), 0 6px 14px rgba(0,0,0,.28);
+  }
+}
+
+/* KATMAN 6 KONTROL İMZASI: CANLI UST MENU */
+
+/* HASWOLF KATMAN 6.1 - ULTRA CANLI ÜST MENÜ */
+.haswolf-topbar {
+  min-height: 5.25rem;
+  background:
+    radial-gradient(circle at 62% 0%, rgba(255, 184, 50, .09), transparent 35%),
+    linear-gradient(180deg, rgba(4,4,4,.98), rgba(0,0,0,.99));
+}
+
+.haswolf-social-strip {
+  gap: .45rem !important;
+}
+
+.haswolf-header-social {
+  padding: .58rem .72rem !important;
+  border-color: rgba(255,255,255,.08) !important;
+  background:
+    radial-gradient(circle at 22% 0%, rgba(255,255,255,.11), transparent 38%),
+    linear-gradient(180deg, #171717 0%, #090909 100%) !important;
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.48),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -1px 0 rgba(255,183,48,.08) !important;
+}
+
+.haswolf-header-social strong {
+  font-size: .8rem !important;
+  color: #ffffff !important;
+  letter-spacing: .01em;
+}
+
+.haswolf-header-social small {
+  color: #d7d7d9 !important;
+  font-size: .62rem !important;
+}
+
+.social-brand {
+  width: 2rem !important;
+  height: 2rem !important;
+  min-width: 2rem !important;
+  border-radius: .65rem !important;
+  font-size: .9rem !important;
+  filter: saturate(1.55) brightness(1.18) contrast(1.05) !important;
+}
+
+.haswolf-download-button {
+  min-height: 3.25rem !important;
+  padding-inline: 1rem !important;
+  border-width: 1px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,222,128,.16), transparent 55%),
+    linear-gradient(180deg, #2b1d08 0%, #100d07 55%, #060606 100%) !important;
+  box-shadow:
+    0 0 24px rgba(224,154,35,.20),
+    0 11px 25px rgba(0,0,0,.52),
+    inset 0 1px 0 rgba(255,235,176,.18),
+    inset 0 0 24px rgba(226,157,36,.10) !important;
+}
+
+.haswolf-download-button > span:first-child {
+  color: #ffcb4f;
+  font-size: 1.35rem;
+  filter: drop-shadow(0 0 9px rgba(255,190,54,.42));
+}
+
+.haswolf-main-nav {
+  gap: .7rem !important;
+  padding-block: .82rem !important;
+}
+
+.haswolf-main-nav a,
+.haswolf-main-nav button {
+  min-height: 3.35rem !important;
+  border-color: rgba(218,164,59,.46) !important;
+  border-radius: .78rem !important;
+  background:
+    radial-gradient(circle at 50% -20%, rgba(255,217,122,.14), transparent 52%),
+    linear-gradient(180deg, #1d1d1b 0%, #101110 55%, #080808 100%) !important;
+  color: #fff !important;
+  font-size: .88rem !important;
+  font-weight: 800 !important;
+  box-shadow:
+    0 10px 26px rgba(0,0,0,.50),
+    0 0 0 1px rgba(255,205,94,.025),
+    inset 0 1px 0 rgba(255,255,255,.11),
+    inset 0 -1px 0 rgba(217,170,74,.10) !important;
+}
+
+.haswolf-main-nav a > span:first-child,
+.haswolf-main-nav button > span:first-child,
+.haswolf-main-nav button > svg {
+  color: #ffc84b !important;
+  filter: saturate(1.35) drop-shadow(0 0 9px rgba(242,173,45,.48)) !important;
+}
+
+.haswolf-main-nav a:hover,
+.haswolf-main-nav button:hover {
+  border-color: #ffc95c !important;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(255,226,143,.25), transparent 58%),
+    linear-gradient(180deg, #342309 0%, #17130d 58%, #090909 100%) !important;
+  color: #ffe28a !important;
+  box-shadow:
+    0 14px 32px rgba(0,0,0,.56),
+    0 0 28px rgba(235,168,46,.21),
+    inset 0 1px 0 rgba(255,239,190,.16) !important;
+}
+
+.haswolf-main-nav .haswolf-whatsapp-nav {
+  border-color: rgba(34,227,111,.82) !important;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(128,255,176,.21), transparent 60%),
+    linear-gradient(180deg, #0b4f29 0%, #04371b 54%, #022612 100%) !important;
+  color: #b7ffd0 !important;
+  box-shadow:
+    0 0 28px rgba(25,205,91,.20),
+    0 10px 24px rgba(0,0,0,.44),
+    inset 0 1px 0 rgba(176,255,206,.18) !important;
+}
+
+.haswolf-main-nav .haswolf-whatsapp-nav > span:first-child {
+  color: #b9ffd1 !important;
+  filter: drop-shadow(0 0 9px rgba(64,244,133,.50)) !important;
+}
+
+/* Masaüstünde hamburger gizli, mobil ve tablette görünür */
+@media (min-width: 1024px) {
+  .haswolf-menu-button {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .haswolf-menu-button {
+    display: inline-flex !important;
+  }
+}
+
+/* Eski footer sosyal ikonları artık gösterilmez */
+.haswolf-footer .haswolf-social {
+  display: none !important;
+}
+
+/* KATMAN 6.1 KONTROL İMZASI: ULTRA CANLI MENU */
+
+/* HASWOLF HEADER HOTFIX V2 */
+.haswolf-auth-top {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+.haswolf-auth-top button,
+.haswolf-auth-top a {
+  min-height: 3rem;
+  border: 1px solid rgba(217,170,74,.55);
+  border-radius: .75rem;
+  padding: .65rem .9rem;
+  background: rgba(255,255,255,.035);
+  color: #efc76b;
+  white-space: nowrap;
+}
+.haswolf-chat-before-admin {
+  margin-left: auto;
+}
+@media (max-width: 639px) {
+  .haswolf-auth-top button,
+  .haswolf-auth-top a {
+    min-height: 3rem;
+    padding: .55rem .7rem;
+    font-size: .75rem;
+  }
+}
+
+
+/* HASWOLF FINAL MOBILE/TABLET POLISH */
+@media (max-width: 767px) {
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .haswolf-container {
+    width: 100%;
+    padding-inline: .85rem !important;
+  }
+
+  .haswolf-hero {
+    min-height: 0 !important;
+  }
+
+  .haswolf-hero .haswolf-container {
+    min-height: 0 !important;
+    padding-top: .9rem !important;
+    padding-bottom: .55rem !important;
+    gap: .5rem !important;
+  }
+
+  .haswolf-hero__title {
+    margin-top: .45rem !important;
+    font-size: 2.15rem !important;
+  }
+
+  .haswolf-hero h2 {
+    margin-top: .45rem !important;
+  }
+
+  .haswolf-hero p {
+    margin-top: .65rem !important;
+    line-height: 1.55 !important;
+  }
+
+  .haswolf-hero .mt-5 {
+    margin-top: .85rem !important;
+  }
+
+  .haswolf-hero + section {
+    padding-top: .35rem !important;
+  }
+
+  .mobile-swipe-row {
+    scroll-padding-inline: .75rem;
+  }
+
+  .haswolf-bottom-nav {
+    left: .65rem !important;
+    right: .65rem !important;
+    bottom: calc(.65rem + env(safe-area-inset-bottom)) !important;
+    width: auto !important;
+  }
+
+  .haswolf-legal-card {
+    border-radius: 1rem;
+  }
+
+  .haswolf-policy-hero .haswolf-container {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .haswolf-hero .haswolf-container {
+    min-height: 280px !important;
+    padding-block: 1.4rem !important;
+  }
+
+  .haswolf-main-nav {
+    overflow-x: auto !important;
+  }
+}
+
+.haswolf-policy-hero {
+  border-bottom: 1px solid rgba(140,100,30,.38);
+  background:
+    radial-gradient(circle at 85% 10%, rgba(217,170,74,.18), transparent 30%),
+    linear-gradient(180deg,#0d0c08,#050606);
+}
+
+
+/* HASWOLF HEADER + COMPACT YANG FINAL */
+.haswolf-header-account {
+  display: flex;
+  min-width: max-content;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.haswolf-header-account > * {
+  flex: 0 0 auto;
+}
+
+.haswolf-hero .haswolf-download-button {
+  display: inline-flex;
+  min-height: 2.85rem;
+  width: 100%;
+  max-width: 24rem;
+  margin-left: 0 !important;
+  justify-content: center;
+}
+
+.haswolf-yang-server-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .85rem;
+}
+
+.haswolf-yang-server-column {
+  min-width: 0;
+  border: 1px solid color-mix(in srgb, var(--server-color) 48%, transparent);
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--server-color) 8%, transparent), transparent 22%),
+    rgba(4, 6, 6, .82);
+  padding: .85rem;
+}
+
+.haswolf-yang-server-heading {
+  display: flex;
+  min-height: 3.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: .65rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--server-color) 34%, transparent);
+  padding: 0 .15rem .65rem;
+}
+
+.haswolf-yang-server-heading p {
+  margin: 0;
+  color: #71717a;
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.haswolf-yang-server-heading h3 {
+  margin-top: .18rem;
+  color: var(--server-color);
+  font-size: 1.15rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.haswolf-yang-server-heading > span {
+  flex: 0 0 auto;
+  border: 1px solid color-mix(in srgb, var(--server-color) 58%, transparent);
+  border-radius: 999px;
+  padding: .24rem .5rem;
+  color: var(--server-color);
+  font-size: .65rem;
+}
+
+.haswolf-yang-list {
+  display: grid;
+  gap: .55rem;
+  margin-top: .65rem;
+}
+
+.haswolf-yang-card {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  min-height: 5.4rem;
+  gap: .7rem;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: .75rem;
+  background: linear-gradient(135deg, rgba(24, 22, 15, .96), rgba(8, 9, 9, .98));
+  padding: .55rem;
+  transition: transform .2s ease, border-color .2s ease, background .2s ease;
+}
+
+.haswolf-yang-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--server-color) 55%, transparent);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--server-color) 10%, #18160f), #080909);
+}
+
+.haswolf-yang-card__media {
+  display: flex;
+  width: 4rem;
+  height: 4rem;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: .6rem;
+  background: rgba(0, 0, 0, .35);
+  font-size: 2rem;
+}
+
+.haswolf-yang-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.haswolf-yang-card__content {
+  min-width: 0;
+}
+
+.haswolf-yang-card__title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .55rem;
+}
+
+.haswolf-yang-card__title-row h4 {
+  min-width: 0;
+  overflow: hidden;
+  color: #efc76b;
+  font-size: .88rem;
+  font-weight: 900;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.haswolf-yang-card__title-row strong {
+  flex: 0 0 auto;
+  color: white;
+  font-size: .82rem;
+  white-space: nowrap;
+}
+
+.haswolf-yang-card__description {
+  display: -webkit-box;
+  overflow: hidden;
+  margin-top: .3rem;
+  color: #34d399;
+  font-size: .68rem;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.haswolf-yang-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .55rem;
+  margin-top: .45rem;
+}
+
+.haswolf-yang-card__meta span {
+  color: #71717a;
+  font-size: .66rem;
+}
+
+.haswolf-yang-card__meta button {
+  border: 1px solid rgba(34, 197, 94, .5);
+  border-radius: .45rem;
+  background: rgba(21, 128, 61, .23);
+  padding: .3rem .5rem;
+  color: #86efac;
+  font-size: .65rem;
+  font-weight: 800;
+}
+
+.haswolf-yang-empty {
+  border: 1px dashed rgba(255, 255, 255, .1);
+  border-radius: .75rem;
+  padding: 1.25rem .75rem;
+  color: #71717a;
+  font-size: .75rem;
+  text-align: center;
+}
+
+@media (max-width: 1023px) {
+  .haswolf-yang-server-grid {
+    grid-template-columns: repeat(3, minmax(16rem, 1fr));
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: .35rem;
+  }
+
+  .haswolf-yang-server-column {
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 767px) {
+  .haswolf-topbar__actions {
+    gap: .45rem !important;
+  }
+
+  .haswolf-header-account button {
+    min-height: 2.65rem;
+    padding-inline: .75rem !important;
+    font-size: .72rem !important;
+  }
+
+  .haswolf-hero .haswolf-download-button {
+    max-width: none;
+  }
+
+  .haswolf-yang-server-grid {
+    grid-template-columns: repeat(3, minmax(84vw, 1fr));
+    margin-inline: -.1rem;
+  }
+
+  .haswolf-yang-server-column {
+    padding: .7rem;
+  }
+
+  .haswolf-yang-card {
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    min-height: 4.8rem;
+  }
+
+  .haswolf-yang-card__media {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+}
+
+
+/* HASWOLF MOBILE / TABLET PROFESSIONAL FINAL */
+@media (max-width: 1023px) {
+  .haswolf-main-nav {
+    display: none !important;
+  }
+
+  .haswolf-mobile-drawer {
+    border-top: 1px solid rgba(140, 100, 30, .34);
+    border-bottom: 1px solid rgba(140, 100, 30, .34);
+    background:
+      radial-gradient(circle at 90% 0%, rgba(217,170,74,.08), transparent 36%),
+      rgba(3,4,4,.985);
+    box-shadow: 0 20px 44px rgba(0,0,0,.34);
+  }
+
+  .haswolf-mobile-drawer__links {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .38rem;
+  }
+
+  .haswolf-mobile-drawer__links > a,
+  .haswolf-mobile-drawer__links > button {
+    display: flex;
+    min-height: 2.35rem;
+    align-items: center;
+    gap: .6rem;
+    border: 1px solid rgba(140,100,30,.34);
+    border-radius: .65rem;
+    background: linear-gradient(180deg,rgba(21,22,21,.96),rgba(9,10,10,.97));
+    padding: .45rem .7rem;
+    color: #ece7dc;
+    font-size: .78rem;
+    font-weight: 750;
+    text-align: left;
+  }
+
+  .haswolf-mobile-drawer__links > a span:first-child,
+  .haswolf-mobile-drawer__links > button span:first-child {
+    display: inline-flex;
+    width: 1.45rem;
+    height: 1.45rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: .45rem;
+    background: rgba(217,170,74,.12);
+    color: #e6b958;
+    font-size: .78rem;
+  }
+
+  .haswolf-mobile-socials {
+    margin-top: .45rem;
+    border: 1px solid rgba(140,100,30,.34);
+    border-radius: .65rem;
+    background: rgba(10,11,11,.94);
+  }
+
+  .haswolf-mobile-socials summary {
+    display: grid;
+    grid-template-columns: 1.45rem 1fr auto;
+    min-height: 2.35rem;
+    cursor: pointer;
+    list-style: none;
+    align-items: center;
+    gap: .6rem;
+    padding: .45rem .7rem;
+    color: #e8c36a;
+    font-size: .78rem;
+    font-weight: 800;
+  }
+
+  .haswolf-mobile-socials summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .haswolf-mobile-socials > div {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: .38rem;
+    border-top: 1px solid rgba(255,255,255,.06);
+    padding: .45rem;
+  }
+
+  .haswolf-mobile-socials > div a {
+    display: flex;
+    min-height: 2rem;
+    align-items: center;
+    gap: .4rem;
+    border-radius: .5rem;
+    background: rgba(255,255,255,.045);
+    padding: .35rem .5rem;
+    color: #d4d4d8;
+    font-size: .7rem;
+  }
+
+  .haswolf-mobile-drawer__auth {
+    margin-top: .45rem;
+  }
+
+  .mobile-swipe-row {
+    display: grid !important;
+    grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+    gap: .42rem !important;
+    overflow: visible !important;
+    margin-inline: 0 !important;
+    padding: 0 !important;
+  }
+
+  .mobile-swipe-row > button {
+    min-width: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+    min-height: 5.1rem !important;
+    padding: .58rem .38rem !important;
+    border-radius: .72rem !important;
+    text-align: center !important;
+    transform: none !important;
+  }
+
+  .mobile-swipe-row > button > div {
+    justify-content: center !important;
+  }
+
+  .mobile-swipe-row > button span,
+  .mobile-swipe-row > button p {
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+  }
+
+  .mobile-swipe-row > button .text-2xl,
+  .mobile-swipe-row > button .sm\:text-3xl {
+    font-size: .9rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .mobile-swipe-row > button .text-sm,
+  .mobile-swipe-row > button .sm\:text-base {
+    font-size: .6rem !important;
+  }
+
+  .haswolf-yang-server-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: .7rem !important;
+    overflow: visible !important;
+  }
+
+  .haswolf-yang-server-column {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: .65rem !important;
+  }
+
+  .haswolf-yang-card {
+    grid-template-columns: 3rem minmax(0,1fr) !important;
+    min-height: 4.15rem !important;
+    gap: .55rem !important;
+    padding: .45rem !important;
+  }
+
+  .haswolf-yang-card__media {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+
+  .haswolf-yang-card__title-row h4 {
+    font-size: .76rem !important;
+  }
+
+  .haswolf-yang-card__title-row strong {
+    font-size: .72rem !important;
+  }
+
+  .haswolf-yang-card__description,
+  .haswolf-yang-card__meta span,
+  .haswolf-yang-card__meta button {
+    font-size: .6rem !important;
+  }
+}
+
+@media (max-width: 767px) {
+  html,body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden !important;
+  }
+
+  .haswolf-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-inline: .7rem !important;
+  }
+
+  .haswolf-bottom-nav {
+    left: 50% !important;
+    right: auto !important;
+    width: min(calc(100% - 1.2rem), 23rem) !important;
+    transform: translateX(-50%) !important;
+    grid-template-columns: repeat(4,minmax(0,1fr)) !important;
+    border-radius: 1.15rem !important;
+  }
+
+  .haswolf-bottom-nav > * {
+    min-width: 0 !important;
+  }
+
+  .haswolf-bottom-nav span:last-child {
+    font-size: .62rem !important;
+  }
+
+  .haswolf-legal-card,
+  .haswolf-raffle-admin,
+  .haswolf-raffle-participants {
+    background:
+      linear-gradient(180deg,rgba(28,22,12,.92),rgba(8,9,9,.98)) !important;
+    border-color: rgba(217,170,74,.38) !important;
+    box-shadow: inset 0 1px 0 rgba(255,226,150,.035),0 14px 36px rgba(0,0,0,.28) !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .haswolf-mobile-drawer {
+    display: none !important;
+  }
+
+  .haswolf-yang-server-grid {
+    grid-template-columns: repeat(3,minmax(0,1fr)) !important;
+  }
+}
+
+
+/* HASWOLF MOBILE LAYOUT REPAIR — scoped, no desktop regression */
+.haswolf-server-grid {
+  width: 100%;
+}
+
+.haswolf-market-tabs > button {
+  min-width: 0;
+}
+
+.haswolf-category-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Raffle: stronger black/gold contrast without leaving brand palette */
+.haswolf-raffle-hero {
+  border-color: rgba(221, 180, 91, .52) !important;
+  background:
+    radial-gradient(circle at 88% 10%, rgba(217,170,74,.19), transparent 32%),
+    linear-gradient(145deg, rgba(24,19,10,.98), rgba(7,8,8,.99) 58%) !important;
+  box-shadow: inset 0 1px 0 rgba(255,224,142,.06), 0 20px 55px rgba(0,0,0,.38) !important;
+}
+
+.haswolf-raffle-step,
+.haswolf-raffle-card,
+.haswolf-raffle-admin,
+.haswolf-raffle-info {
+  border-color: rgba(184, 135, 45, .46) !important;
+  background:
+    linear-gradient(180deg, rgba(25,21,13,.97), rgba(8,9,9,.99)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,224,142,.045), 0 13px 34px rgba(0,0,0,.3) !important;
+}
+
+.haswolf-raffle-card {
+  overflow: hidden;
+}
+
+.haswolf-raffle-stat {
+  border: 1px solid rgba(221,180,91,.42);
+  background: linear-gradient(145deg, rgba(43,31,12,.86), rgba(9,10,10,.93));
+  box-shadow: inset 0 1px 0 rgba(255,232,168,.06);
+}
+
+.haswolf-raffle-mini {
+  border: 1px solid rgba(221,180,91,.24);
+  background: rgba(5,6,6,.58);
+}
+
+.haswolf-raffle-admin .haswolf-form-input {
+  border-color: rgba(221,180,91,.38);
+  background: rgba(4,5,5,.84);
+  color: #f3efe5;
+}
+
+.haswolf-raffle-admin .haswolf-form-input::placeholder {
+  color: #77736a;
+}
+
+.haswolf-raffle-admin label,
+.haswolf-raffle-admin p,
+.haswolf-raffle-card p,
+.haswolf-raffle-info p {
+  color: #aaa69d;
+}
+
+@media (max-width: 767px) {
+  /* Sunucu cards: three fully visible, no overlap */
+  .haswolf-server-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: .42rem !important;
+    overflow: visible !important;
+    margin-inline: 0 !important;
+    padding: 0 !important;
+  }
+
+  .haswolf-server-grid > button {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    min-height: 6rem !important;
+    padding: .55rem .25rem !important;
+    border-radius: .75rem !important;
+    text-align: center !important;
+    transform: none !important;
+  }
+
+  .haswolf-server-grid > button > div {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: .38rem !important;
+  }
+
+  .haswolf-server-grid > button > div > div:first-child {
+    width: 2.45rem !important;
+    height: 2.45rem !important;
+    margin-inline: auto !important;
+    font-size: .9rem !important;
+  }
+
+  .haswolf-server-grid h3 {
+    max-width: 100% !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    font-size: .68rem !important;
+    line-height: 1.05 !important;
+    letter-spacing: -.015em !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .haswolf-server-grid p {
+    margin-top: .18rem !important;
+    font-size: .54rem !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+  }
+
+  /* Item / Yang / Account: all 3 visible, no horizontal scroll */
+  .haswolf-market-tabs {
+    width: 100% !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: .35rem !important;
+    overflow: hidden !important;
+    padding: .38rem !important;
+  }
+
+  .haswolf-market-tabs > button {
+    min-width: 0 !important;
+    width: 100% !important;
+    min-height: 3.15rem !important;
+    padding: .55rem .2rem !important;
+    overflow: hidden !important;
+    border-radius: .58rem !important;
+    font-size: .61rem !important;
+    line-height: 1.12 !important;
+    text-overflow: ellipsis !important;
+    white-space: normal !important;
+  }
+
+  /* Categories: readable 2-column grid, no broken words */
+  .haswolf-category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: .48rem !important;
+    overflow: visible !important;
+  }
+
+  .haswolf-category-grid > button {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 3.55rem !important;
+    justify-content: flex-start !important;
+    gap: .45rem !important;
+    padding: .65rem .6rem !important;
+    border-radius: .72rem !important;
+    font-size: .72rem !important;
+  }
+
+  .haswolf-category-grid > button span:last-child {
+    min-width: 0 !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+    line-height: 1.22 !important;
+  }
+
+  .haswolf-category-grid > button span:first-child {
+    width: 1.55rem !important;
+    flex: 0 0 1.55rem !important;
+    font-size: .92rem !important;
+  }
+
+  /* Raffle mobile readability */
+  .haswolf-raffle-hero,
+  .haswolf-raffle-admin,
+  .haswolf-raffle-card,
+  .haswolf-raffle-step,
+  .haswolf-raffle-info {
+    border-radius: 1rem !important;
+  }
+
+  .haswolf-raffle-hero {
+    padding: 1.2rem !important;
+  }
+
+  .haswolf-raffle-hero h1 {
+    font-size: 2rem !important;
+    line-height: 1.08 !important;
+  }
+
+  .haswolf-raffle-hero p {
+    font-size: .82rem !important;
+    line-height: 1.65 !important;
+  }
+
+  .haswolf-raffle-stat {
+    padding: .85rem !important;
+  }
+
+  .haswolf-raffle-stat p:first-child {
+    font-size: 1.35rem !important;
+  }
+
+  .haswolf-raffle-step {
+    padding: 1rem !important;
+  }
+
+  .haswolf-raffle-card .p-6 {
+    padding: 1rem !important;
+  }
+
+  .haswolf-raffle-admin {
+    padding: 1rem !important;
+  }
+
+  .haswolf-raffle-admin h2 {
+    color: #f0c96d;
+  }
+}
+
+@media (min-width: 768px) {
+  .haswolf-server-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .haswolf-category-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .haswolf-category-grid {
+    display: block !important;
+  }
+}
+
+
+/* HASWOLF WhatsApp + satış aksiyonları */
+.haswolf-floating-whatsapp { position: fixed; right: max(1rem, env(safe-area-inset-right)); bottom: max(1rem, env(safe-area-inset-bottom)); z-index: 100; display: inline-flex; align-items: center; gap: .55rem; min-height: 3.25rem; border: 1px solid rgba(74,222,128,.7); border-radius: 999px; background: linear-gradient(135deg,#15803d,#075e32); padding: .78rem 1rem; color: white; font-size: .82rem; font-weight: 900; box-shadow: 0 10px 35px rgba(34,197,94,.28); isolation: isolate; animation: haswolf-whatsapp-float 3.2s ease-in-out infinite; }
+.haswolf-floating-whatsapp:hover { filter: brightness(1.18); transform: translateY(-2px); }
+.haswolf-floating-whatsapp__glow { position:absolute; inset:-5px; z-index:-1; border-radius:inherit; border:2px solid rgba(74,222,128,.55); opacity:0; animation:haswolf-whatsapp-glow 4.5s ease-out infinite; }
+.haswolf-sell-button { border:1px solid rgba(74,222,128,.55); border-radius:.6rem; background:rgba(20,83,45,.45); padding:.45rem .75rem; color:#86efac; font-size:.72rem; font-weight:900; transition:.2s ease; }
+.haswolf-sell-button:hover { background:rgba(22,101,52,.75); color:#fff; }
+@keyframes haswolf-whatsapp-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+@keyframes haswolf-whatsapp-glow { 0%,68%{opacity:0;transform:scale(.92)} 74%{opacity:.9} 100%{opacity:0;transform:scale(1.28)} }
+@media (max-width: 640px) { .haswolf-floating-whatsapp { bottom: calc(5.25rem + env(safe-area-inset-bottom)); right:.75rem; padding:.75rem; } .haswolf-floating-whatsapp span:last-child { display:none; } }
+@media (prefers-reduced-motion: reduce) { .haswolf-floating-whatsapp,.haswolf-floating-whatsapp__glow { animation:none; } }
+
+/* HASWOLF v2 Premium additions */
+.haswolf-sell-button{position:relative;overflow:hidden;border:1px solid #f2c45e;background:linear-gradient(135deg,#5a3505,#d6a43c 48%,#fff0a4 52%,#9a650f);color:#140d02;box-shadow:0 0 18px rgba(217,170,74,.35);transition:.25s transform,.25s filter}
+.haswolf-sell-button:hover{transform:translateY(-2px) scale(1.015);filter:brightness(1.18);box-shadow:0 0 34px rgba(255,196,69,.62)}
+.haswolf-sell-button::after{content:"$  $  $";position:absolute;left:50%;bottom:-2rem;opacity:0;font-size:1.2rem;letter-spacing:1rem;pointer-events:none}
+.haswolf-sell-button:active::after{animation:haswolf-money-fly 1.1s ease-out}
+@keyframes haswolf-money-fly{0%{transform:translate(-50%,0) rotate(0);opacity:0}15%{opacity:1}100%{transform:translate(-50%,-8rem) rotate(16deg);opacity:0}}
+.haswolf-floating-whatsapp{position:fixed;right:max(20px,env(safe-area-inset-right));bottom:max(24px,calc(env(safe-area-inset-bottom) + 18px));z-index:80;display:flex;align-items:center;gap:11px;min-height:62px;padding:11px 18px;border:1px solid #6dff9a;border-radius:999px;background:linear-gradient(135deg,#075e2e,#20bf61);color:#fff;box-shadow:0 8px 30px rgba(0,0,0,.55),0 0 0 0 rgba(40,220,105,.55);animation:haswolf-wa-pulse 3.6s infinite;text-decoration:none}
+.haswolf-floating-whatsapp__icon{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#fff;color:#159447;font-size:21px;font-weight:900}.haswolf-floating-whatsapp strong,.haswolf-floating-whatsapp small{display:block}.haswolf-floating-whatsapp small{font-size:11px;opacity:.85}
+@keyframes haswolf-wa-pulse{0%,72%,100%{box-shadow:0 8px 30px rgba(0,0,0,.55),0 0 0 0 rgba(40,220,105,.5)}82%{box-shadow:0 8px 30px rgba(0,0,0,.55),0 0 0 14px rgba(40,220,105,0)}}
+.haswolf-price-display{display:inline-flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:7px}.haswolf-price-display del{color:#8d8d93;font-size:.78em}.haswolf-price-display strong{color:#f0c55f}.haswolf-price-display em{border-radius:999px;background:#b91c1c;padding:3px 7px;color:#fff;font-size:10px;font-style:normal;font-weight:900}
+.haswolf-sale-toast{position:fixed;right:18px;top:30%;z-index:75;width:min(350px,calc(100vw - 36px));transform:translateX(calc(100% + 40px));opacity:0;border:1px solid rgba(255,91,56,.7);border-radius:18px;background:radial-gradient(circle at 90% 100%,rgba(255,56,20,.5),transparent 42%),linear-gradient(135deg,#230606,#070707);padding:18px 20px;box-shadow:0 20px 65px rgba(0,0,0,.65),0 0 28px rgba(255,65,30,.22);transition:.55s cubic-bezier(.2,.8,.2,1)}.haswolf-sale-toast.is-visible{transform:none;opacity:1}.haswolf-sale-toast>button{position:absolute;right:10px;top:8px;color:#aaa;font-size:22px}.haswolf-sale-toast__eyebrow{display:block;color:#ff765d;font-size:16px;font-weight:1000}.haswolf-sale-toast>strong,.haswolf-sale-toast>small{display:block;margin-top:8px}.haswolf-sale-toast>small{color:#999}.haswolf-sale-toast>div{display:flex;align-items:center;gap:10px;margin-top:12px}.haswolf-sale-toast del{color:#999}.haswolf-sale-toast b{color:#65ef9a;font-size:20px}.haswolf-sale-toast em{margin-left:auto;background:#dc2626;border-radius:8px;padding:6px;color:white;font-style:normal;font-weight:900}
+.haswolf-bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+@media(max-width:640px){.haswolf-floating-whatsapp{right:12px;bottom:calc(78px + env(safe-area-inset-bottom));min-height:54px;padding:8px 13px}.haswolf-floating-whatsapp__icon{width:34px;height:34px}.haswolf-sale-toast{top:auto;bottom:145px;right:10px;width:calc(100vw - 20px)}.haswolf-price-display{justify-content:flex-start}.haswolf-bottom-nav a,.haswolf-bottom-nav button{font-size:9px!important;padding-inline:2px!important}}
+@media(min-width:641px) and (max-width:1024px){.haswolf-floating-whatsapp{bottom:28px}.haswolf-sale-toast{top:auto;bottom:110px}}
+
+/* HASWOLF v4 Premium */
+.haswolf-trade-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.75rem; }
+.haswolf-trade-card { position:relative; display:grid; grid-template-columns:auto 1fr; gap:.65rem; align-items:center; min-height:5.4rem; overflow:hidden; border:1px solid rgba(217,170,74,.48); border-radius:1rem; padding:.8rem 1rem; text-align:left; transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease; }
+.haswolf-trade-card::after { content:""; position:absolute; inset:-80% auto auto -30%; width:55%; height:260%; transform:rotate(24deg); background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent); transition:transform .7s ease; }
+.haswolf-trade-card:hover { transform:translateY(-2px); border-color:#f2ca70; box-shadow:0 14px 40px rgba(0,0,0,.38),0 0 28px rgba(217,170,74,.13); }
+.haswolf-trade-card:hover::after { transform:translateX(380%) rotate(24deg); }
+.haswolf-trade-card--buy { background:linear-gradient(145deg,#1c431f,#07110a 60%); border-color:rgba(69,214,107,.5); }
+.haswolf-trade-card--sell { background:linear-gradient(145deg,#5f3b08,#171005 62%); }
+.haswolf-trade-card__icon { display:grid; place-items:center; width:2.7rem; height:2.7rem; border-radius:.8rem; background:rgba(255,255,255,.08); font-size:1.35rem; }
+.haswolf-trade-card strong,.haswolf-trade-card small { display:block; }
+.haswolf-trade-card strong { color:#fff; font-size:.95rem; }
+.haswolf-trade-card small { margin-top:.15rem; color:#aeb3b3; font-size:.67rem; line-height:1.35; }
+.haswolf-trade-card b { grid-column:2; color:#edc66e; font-size:.72rem; }
+.haswolf-trade-card--buy b { color:#77eb98; }
+.haswolf-trade-actions__raffle { grid-column:1/-1; min-height:2.8rem; justify-content:center; }
+
+.haswolf-notification-trigger { position:relative; }
+.haswolf-notification-trigger__icon { font-size:1rem; filter:drop-shadow(0 0 8px rgba(255,196,81,.5)); }
+.haswolf-notification-trigger b { display:grid; place-items:center; min-width:1.15rem; height:1.15rem; border-radius:999px; background:#ef2f39; color:#fff; font-size:.62rem; box-shadow:0 0 0 3px #080808; }
+.haswolf-notification-panel { position:fixed; z-index:95; top:5.5rem; right:max(1rem,calc((100vw - 1500px)/2)); width:min(24rem,calc(100vw - 1.25rem)); max-height:min(34rem,70vh); overflow:hidden; border:1px solid rgba(217,170,74,.48); border-radius:1.15rem; background:rgba(7,9,9,.98); box-shadow:0 28px 90px rgba(0,0,0,.75),0 0 45px rgba(217,170,74,.1); backdrop-filter:blur(24px); }
+.haswolf-notification-panel header { display:flex; justify-content:space-between; align-items:center; padding:1rem 1.1rem; border-bottom:1px solid rgba(217,170,74,.22); background:linear-gradient(120deg,rgba(217,170,74,.13),transparent); }
+.haswolf-notification-panel header small { color:#d9aa4a; letter-spacing:.2em; font-size:.58rem; }
+.haswolf-notification-panel h2 { margin-top:.15rem; font-size:1rem; font-weight:900; }
+.haswolf-notification-panel header button { width:2rem; height:2rem; border-radius:.55rem; background:rgba(255,255,255,.06); color:#aaa; }
+.haswolf-notification-list { max-height:28rem; overflow:auto; padding:.55rem; }
+.haswolf-notification-list>button { position:relative; display:grid; grid-template-columns:auto 1fr auto; gap:.7rem; width:100%; padding:.8rem; border-radius:.8rem; text-align:left; color:#ddd; }
+.haswolf-notification-list>button:hover,.haswolf-notification-list>button.is-unread { background:rgba(217,170,74,.08); }
+.haswolf-notification-list__flame { font-size:1.25rem; }
+.haswolf-notification-list strong,.haswolf-notification-list small,.haswolf-notification-list span span { display:block; }
+.haswolf-notification-list small { margin:.16rem 0 .35rem; color:#8f9494; font-size:.68rem; }
+.haswolf-notification-list del { color:#777; margin-right:.35rem; }
+.haswolf-notification-list b { color:#61e98b; }
+.haswolf-notification-list i { width:.48rem; height:.48rem; margin-top:.25rem; border-radius:50%; background:#ef3340; box-shadow:0 0 12px #ef3340; }
+.haswolf-notification-empty { padding:2rem 1rem; text-align:center; color:#777; font-size:.82rem; }
+.haswolf-sale-toast p { margin-top:.65rem; color:#9d8585; font-size:.64rem; }
+
+.haswolf-language-selector { display:inline-flex; align-items:center; gap:.25rem; min-height:3rem; padding:0 .55rem; border:1px solid rgba(255,255,255,.11); border-radius:.65rem; background:rgba(255,255,255,.035); }
+.haswolf-language-selector select { appearance:none; border:0; background:transparent; color:#e7e7e7; font-size:.72rem; font-weight:800; outline:0; }
+.haswolf-language-selector option { background:#0b0d0d; color:#fff; }
+
+.haswolf-category-summary { display:flex; justify-content:space-between; align-items:center; cursor:pointer; list-style:none; padding:.9rem 1rem; border-radius:.75rem; color:#ddb45b; font-weight:900; background:linear-gradient(180deg,rgba(217,170,74,.08),rgba(255,255,255,.02)); }
+.haswolf-category-summary::-webkit-details-marker { display:none; }
+.haswolf-category-summary__chevron { transition:transform .25s ease; }
+.haswolf-category-drawer[open] .haswolf-category-summary__chevron { transform:rotate(180deg); }
+.haswolf-upcoming-games { margin-top:1rem; padding-top:1rem; border-top:1px solid rgba(217,170,74,.2); }
+.haswolf-upcoming-games h3 { margin-bottom:.65rem; color:#e4ba61; font-size:.78rem; font-weight:900; letter-spacing:.08em; }
+.haswolf-upcoming-games>div { display:flex; justify-content:space-between; gap:.6rem; padding:.55rem .65rem; border-radius:.55rem; color:#999; font-size:.72rem; }
+.haswolf-upcoming-games>div:nth-child(even) { background:rgba(255,255,255,.025); }
+.haswolf-upcoming-games b { color:#d59c35; font-size:.58rem; letter-spacing:.08em; }
+
+.haswolf-bottom-nav__icon { display:grid; place-items:center; width:1.85rem; height:1.85rem; border-radius:.62rem; color:#d5a53f; background:radial-gradient(circle at 40% 25%,rgba(245,210,122,.27),rgba(217,170,74,.05) 55%,transparent); filter:drop-shadow(0 0 8px rgba(217,170,74,.25)); }
+.haswolf-bottom-nav__icon svg { width:1.18rem; height:1.18rem; }
+.haswolf-bottom-nav__icon--dc { color:#3edaf5; background:radial-gradient(circle at 40% 25%,rgba(88,229,255,.27),rgba(50,150,255,.05) 55%,transparent); filter:drop-shadow(0 0 8px rgba(52,205,255,.35)); }
+
+@media (max-width: 760px) {
+  .haswolf-trade-actions { grid-template-columns:1fr; }
+  .haswolf-trade-actions__raffle { grid-column:auto; }
+  .haswolf-notification-trigger span:not(.haswolf-notification-trigger__icon) { display:none; }
+  .haswolf-notification-panel { top:4.7rem; right:.6rem; }
+  .haswolf-language-selector { min-height:2.75rem; }
+}
+
+/* HASWOLF V4 SPRINT 1 PREMIUM OVERRIDES */
+.haswolf-topbar { gap: 1rem; }
+.haswolf-header-trade { display:none;align-items:stretch;gap:.55rem;margin-inline:auto; }
+.haswolf-header-trade button {
+  display:flex;align-items:center;gap:.65rem;min-width:10.75rem;min-height:3.35rem;
+  padding:.65rem .85rem;border-radius:.9rem;border:1px solid rgba(217,170,74,.34);
+  background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
+  color:#f2f2f2;text-align:left;box-shadow:0 10px 30px rgba(0,0,0,.22);
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+.haswolf-header-trade button:hover { transform:translateY(-2px);border-color:rgba(239,198,104,.75);box-shadow:0 14px 38px rgba(0,0,0,.38),0 0 24px rgba(217,170,74,.08); }
+.haswolf-header-trade button>span:first-child{font-size:1.3rem}
+.haswolf-header-trade strong,.haswolf-header-trade small{display:block}
+.haswolf-header-trade strong{font-size:.76rem;color:#efc668}
+.haswolf-header-trade small{margin-top:.12rem;font-size:.62rem;color:#929696}
+.haswolf-header-trade__buy{border-color:rgba(44,190,103,.42)!important;background:linear-gradient(180deg,rgba(14,83,43,.35),rgba(4,25,14,.38))!important}
+.haswolf-header-trade__sell{background:linear-gradient(180deg,rgba(141,91,15,.26),rgba(35,22,5,.5))!important}
+
+.haswolf-hero-quick-links{display:flex;flex-wrap:wrap;gap:.65rem}
+.haswolf-hero-quick-links button,.haswolf-hero-quick-links a{min-height:2.85rem;display:inline-flex;align-items:center;justify-content:center;border-radius:.75rem;padding:.65rem 1rem;font-weight:800;font-size:.78rem}
+.haswolf-hero-quick-links button{background:linear-gradient(135deg,#e6b951,#9b6818);color:#080808}
+.haswolf-hero-quick-links a{border:1px solid rgba(217,170,74,.52);color:#e9bf68;background:rgba(0,0,0,.28)}
+
+.haswolf-server-actions{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}
+.haswolf-server-actions button{min-height:2.65rem;border-radius:.7rem;padding:.55rem .65rem;font-size:.7rem;font-weight:950;transition:transform .2s ease,filter .2s ease,box-shadow .2s ease}
+.haswolf-server-actions button:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.haswolf-buy-button{border:1px solid rgba(48,197,105,.6);color:#d9ffe7;background:linear-gradient(135deg,#106b36,#063a1d);box-shadow:0 8px 24px rgba(20,155,74,.14)}
+
+.haswolf-language-menu,.haswolf-notification-root{position:relative}
+.haswolf-language-menu__trigger{min-height:3rem;display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.55rem .72rem;border:1px solid rgba(217,170,74,.34);border-radius:.8rem;background:rgba(255,255,255,.035);color:#f1cf85;font-size:.75rem}
+.haswolf-language-menu__panel{position:absolute;z-index:120;top:calc(100% + .65rem);right:0;width:min(21rem,calc(100vw - 1rem));padding:.75rem;border:1px solid rgba(217,170,74,.42);border-radius:1rem;background:rgba(7,9,9,.98);box-shadow:0 24px 80px rgba(0,0,0,.72);backdrop-filter:blur(24px)}
+.haswolf-language-menu__panel header{padding:.35rem .35rem .7rem;border-bottom:1px solid rgba(255,255,255,.08)}
+.haswolf-language-menu__panel header strong,.haswolf-language-menu__panel header small{display:block}
+.haswolf-language-menu__panel header small{margin-top:.2rem;color:#858989;font-size:.68rem}
+.haswolf-language-menu__panel>div{display:grid;grid-template-columns:1fr 1fr;gap:.35rem;margin-top:.6rem}
+.haswolf-language-menu__panel button{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.5rem;padding:.65rem;border-radius:.7rem;color:#d5d7d7;text-align:left;font-size:.73rem}
+.haswolf-language-menu__panel button:hover,.haswolf-language-menu__panel button.is-active{background:rgba(217,170,74,.13);color:#f1c96f}
+.haswolf-language-menu__panel button b{color:#777;font-size:.62rem}
+
+.haswolf-notification-panel{position:absolute!important;top:calc(100% + .65rem)!important;right:0!important;left:auto!important;width:min(23rem,calc(100vw - 1rem))!important;max-height:min(30rem,72vh)!important;border-radius:1rem!important;overflow:hidden!important}
+.haswolf-notification-panel header{padding:.85rem 1rem!important}
+.haswolf-notification-panel header h2{font-size:.95rem!important}
+.haswolf-notification-list{max-height:23rem!important;overflow:auto!important;padding:.5rem!important}
+.haswolf-notification-list>button{min-height:auto!important;padding:.7rem!important;border-radius:.75rem!important}
+.haswolf-sale-toast{max-width:min(20rem,calc(100vw - 1rem))!important}
+
+@media(min-width:1180px){.haswolf-header-trade{display:flex}}
+@media(max-width:640px){.haswolf-server-actions{grid-template-columns:1fr}.haswolf-language-menu__panel>div{grid-template-columns:1fr}}
+
+/* HASWOLF V4 MEGA SPRINT */
+.haswolf-smart-search{position:relative;z-index:35}
+.haswolf-smart-search__box{display:flex;align-items:center;gap:.75rem;border:1px solid rgba(217,170,74,.38);border-radius:1rem;background:linear-gradient(180deg,#111414,#080a0a);padding:.8rem 1rem;box-shadow:0 16px 50px rgba(0,0,0,.28)}
+.haswolf-smart-search__box>span{font-size:1.4rem;color:#e5b64e}.haswolf-smart-search__box input{flex:1;background:transparent;outline:none;color:white}.haswolf-smart-search__box input::placeholder{color:#686d6d}
+.haswolf-smart-search__results{position:absolute;top:calc(100% + .55rem);left:0;right:0;max-height:28rem;overflow:auto;border:1px solid rgba(217,170,74,.35);border-radius:1rem;background:rgba(7,9,9,.98);box-shadow:0 28px 90px rgba(0,0,0,.72);padding:.6rem}
+.haswolf-smart-search__results header{display:flex;justify-content:space-between;padding:.6rem .7rem;color:#dcb45e}.haswolf-smart-search__results header small{color:#777}
+.haswolf-smart-search__results>button{width:100%;display:flex;justify-content:space-between;gap:1rem;padding:.75rem;border-radius:.75rem;text-align:left}.haswolf-smart-search__results>button:hover{background:rgba(217,170,74,.1)}
+.haswolf-smart-search__results strong,.haswolf-smart-search__results small{display:block}.haswolf-smart-search__results small{margin-top:.2rem;color:#777}.haswolf-smart-search__results b{color:#efc668}
+.haswolf-search-empty{padding:1.2rem;text-align:center;color:#999}.haswolf-search-empty>*{display:block}.haswolf-search-empty b{color:#eee}.haswolf-search-empty button{margin:.8rem auto 0;border:1px solid #8b672d;border-radius:.65rem;padding:.55rem .8rem;color:#e7bd67}
+
+.haswolf-product-xp{margin-top:.75rem}.haswolf-product-xp__meta{display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem}.haswolf-product-xp__meta span{border:1px solid rgba(255,255,255,.08);border-radius:999px;background:rgba(255,255,255,.035);padding:.28rem .5rem;font-size:.62rem;color:#aeb2b2}.haswolf-product-xp__meta .is-low-stock{color:#ffb56b;border-color:rgba(255,135,55,.35);animation:haswolf-stock-pulse 1.8s infinite}
+.haswolf-product-xp__actions{display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem;margin-top:.55rem}.haswolf-product-xp__actions button{min-height:2.25rem;border:1px solid rgba(255,255,255,.09);border-radius:.6rem;background:#111414;color:#aeb2b2;font-size:.62rem;font-weight:700;transition:.2s}.haswolf-product-xp__actions button:hover,.haswolf-product-xp__actions button.is-active{transform:translateY(-2px);border-color:rgba(217,170,74,.55);color:#efc668;background:rgba(217,170,74,.08)}
+.haswolf-buy-confirm{width:100%;min-height:2.7rem;margin-top:.55rem;border-radius:.7rem;background:linear-gradient(135deg,#15944b,#075b2b);font-weight:900;color:white;transition:.2s}.haswolf-buy-confirm:hover{filter:brightness(1.15);transform:translateY(-1px)}.haswolf-product-xp.is-compact{margin-top:.45rem}.haswolf-product-xp.is-compact .haswolf-buy-confirm{display:none}
+
+.haswolf-compare-dock{position:fixed;z-index:85;left:50%;bottom:6rem;transform:translateX(-50%);display:flex;align-items:center;gap:.5rem;border:1px solid rgba(217,170,74,.4);border-radius:999px;background:rgba(7,9,9,.96);padding:.5rem .7rem;box-shadow:0 20px 70px rgba(0,0,0,.7);backdrop-filter:blur(20px)}.haswolf-compare-dock span{font-size:.72rem;color:#bbb}.haswolf-compare-dock span b{display:inline-grid;place-items:center;width:1.3rem;height:1.3rem;border-radius:50%;background:#d9aa4a;color:#111}.haswolf-compare-dock button{border-radius:999px;padding:.48rem .75rem;font-size:.68rem;font-weight:800}.haswolf-compare-dock button:first-of-type{background:#d9aa4a;color:#111}.haswolf-compare-dock button:last-child{color:#888}
+.haswolf-compare-modal{position:fixed;z-index:150;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.78);padding:1rem;backdrop-filter:blur(8px)}.haswolf-compare-modal>div{width:min(60rem,100%);max-height:85vh;overflow:auto;border:1px solid rgba(217,170,74,.4);border-radius:1.2rem;background:#080a0a;box-shadow:0 30px 100px #000}.haswolf-compare-modal header{display:flex;justify-content:space-between;padding:1rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.08)}.haswolf-compare-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:.8rem;padding:1rem}.haswolf-compare-grid article{border:1px solid rgba(255,255,255,.09);border-radius:1rem;padding:1rem;background:#101313}.haswolf-compare-grid h3{color:#e9bd65}.haswolf-compare-grid dl div{display:flex;justify-content:space-between;border-bottom:1px dashed rgba(255,255,255,.08);padding:.6rem 0;font-size:.75rem}.haswolf-compare-grid dt{color:#777}
+
+.haswolf-admin-analytics{margin-bottom:2rem;border:1px solid rgba(58,166,255,.28);border-radius:1rem;background:linear-gradient(180deg,rgba(8,28,42,.35),#0a0d0d);padding:1rem}.haswolf-admin-analytics>header{display:flex;justify-content:space-between;align-items:center}.haswolf-admin-analytics header small{color:#65bfff}.haswolf-admin-analytics header h2{font-size:1.2rem;font-weight:900}.haswolf-admin-analytics__grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-top:1rem}.haswolf-admin-analytics__grid>div{border:1px solid rgba(255,255,255,.08);border-radius:.8rem;padding:.8rem;background:rgba(0,0,0,.24)}.haswolf-admin-analytics__grid h3{margin-bottom:.6rem;color:#dcb45e}.haswolf-admin-analytics__grid p{display:grid;grid-template-columns:1.5rem 1fr auto;gap:.5rem;padding:.48rem;border-radius:.5rem}.haswolf-admin-analytics__grid p:hover{background:rgba(255,255,255,.035)}.haswolf-admin-analytics__grid p b{color:#5fbaff}.haswolf-admin-analytics__grid p em{font-style:normal;color:#888}
+
+.haswolf-account-page,.haswolf-account-loading{min-height:100vh;background:#050707;color:white}.haswolf-account-loading{display:grid;place-items:center}.haswolf-account-shell{display:grid;grid-template-columns:18rem 1fr;min-height:100vh}.haswolf-account-shell>aside{border-right:1px solid rgba(217,170,74,.22);background:#080a0a;padding:1.2rem}.haswolf-account-brand{display:block;color:#d9aa4a;font-size:1.5rem;font-weight:950;letter-spacing:.18em}.haswolf-account-brand small{display:block;margin-top:.25rem;color:#666;font-size:.55rem}.haswolf-account-user{display:flex;gap:.7rem;align-items:center;margin:1.3rem 0;padding:.8rem;border:1px solid rgba(255,255,255,.08);border-radius:.8rem}.haswolf-account-user>span{display:grid;place-items:center;width:2.4rem;height:2.4rem;border-radius:50%;background:#d9aa4a;color:#111;font-weight:900}.haswolf-account-user strong,.haswolf-account-user small{display:block}.haswolf-account-user small{color:#777;font-size:.65rem}.haswolf-account-shell nav{display:grid;gap:.3rem}.haswolf-account-shell nav button{display:flex;gap:.7rem;align-items:center;padding:.75rem;border-radius:.65rem;color:#999;text-align:left}.haswolf-account-shell nav button:hover,.haswolf-account-shell nav button.is-active{background:rgba(217,170,74,.1);color:#efc668}.haswolf-account-logout{margin-top:1rem;width:100%;border:1px solid rgba(255,70,70,.3);border-radius:.65rem;padding:.7rem;color:#ff9b9b}.haswolf-account-shell>section{padding:1.5rem}.haswolf-account-shell>section>header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}.haswolf-account-shell>section>header small{color:#d9aa4a}.haswolf-account-shell>section>header h1{font-size:1.8rem;font-weight:950}.haswolf-panel-card,.haswolf-panel-empty{border:1px solid rgba(255,255,255,.08);border-radius:1rem;background:#0b0e0e;padding:1.2rem}.haswolf-panel-card label,.haswolf-panel-card article{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.07);padding:.8rem 0}.haswolf-panel-card button{display:block;width:100%;margin-top:.5rem;border:1px solid rgba(217,170,74,.25);border-radius:.65rem;padding:.75rem;text-align:left}.haswolf-panel-empty{text-align:center;padding:4rem 1rem}.haswolf-panel-empty>span{font-size:3rem;color:#d9aa4a}.haswolf-panel-empty a{display:inline-block;margin-top:1rem;border-radius:.7rem;background:#d9aa4a;padding:.7rem 1rem;color:#111;font-weight:900}
+
+@keyframes haswolf-stock-pulse{50%{box-shadow:0 0 18px rgba(255,135,55,.25)}}@keyframes haswolf-skeleton{to{background-position:-200% 0}}
+.haswolf-skeleton{background:linear-gradient(90deg,#101313 25%,#1a1e1e 37%,#101313 63%);background-size:200% 100%;animation:haswolf-skeleton 1.4s infinite}
+
+@media(max-width:760px){.haswolf-admin-analytics__grid{grid-template-columns:1fr}.haswolf-account-shell{grid-template-columns:1fr}.haswolf-account-shell>aside{border-right:0;border-bottom:1px solid rgba(217,170,74,.22)}.haswolf-account-shell nav{grid-template-columns:repeat(2,1fr)}.haswolf-product-xp__actions{grid-template-columns:1fr}.haswolf-compare-dock{bottom:5.4rem;width:calc(100% - 1rem);justify-content:center}.haswolf-smart-search__results{position:fixed;left:.5rem;right:.5rem;top:7rem}}

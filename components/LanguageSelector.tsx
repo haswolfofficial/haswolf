@@ -1,39 +1,50 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const languages = [
-  ["tr", "TR"], ["en", "EN"], ["de", "DE"], ["fr", "FR"], ["es", "ES"],
-  ["pt", "PT"], ["ru", "RU"], ["ar", "AR"], ["it", "IT"], ["pl", "PL"],
+  ["tr","TR","🇹🇷","Türkçe"],["en","EN","🇬🇧","English"],
+  ["de","DE","🇩🇪","Deutsch"],["fr","FR","🇫🇷","Français"],
+  ["es","ES","🇪🇸","Español"],["pt","PT","🇵🇹","Português"],
+  ["ru","RU","🇷🇺","Русский"],["ar","AR","🇸🇦","العربية"],
+  ["it","IT","🇮🇹","Italiano"],["pl","PL","🇵🇱","Polski"],
 ] as const;
+type Code=(typeof languages)[number][0];
+const STORAGE_KEY="haswolf_language";
 
-export default function LanguageSelector() {
-  const [value, setValue] = useState("tr");
-  useEffect(() => {
-    const saved = localStorage.getItem("haswolf_language");
-    const detected = (saved || navigator.languages?.[0] || navigator.language || "tr").split("-")[0];
-    setValue(languages.some(([code]) => code === detected) ? detected : "tr");
-  }, []);
+export default function LanguageSelector(){
+  const [value,setValue]=useState<Code>("tr");
+  const [open,setOpen]=useState(false);
+  const ref=useRef<HTMLDivElement>(null);
 
-  function changeLanguage(language: string) {
-    localStorage.setItem("haswolf_language", language);
-    if (language === "tr") {
-      document.cookie = "googtrans=;Max-Age=0;path=/";
-      location.reload();
-      return;
-    }
-    const cookie = `/tr/${language}`;
-    document.cookie = `googtrans=${cookie};path=/`;
-    document.cookie = `googtrans=${cookie};path=/;domain=${location.hostname}`;
-    location.reload();
+  useEffect(()=>{
+    const saved=localStorage.getItem(STORAGE_KEY) as Code|null;
+    const detected=(navigator.languages?.[0]||navigator.language||"tr").split("-")[0] as Code;
+    const initial=languages.some(x=>x[0]===(saved||detected))?(saved||detected):"tr";
+    setValue(initial as Code);
+    const close=(e:PointerEvent)=>{if(!ref.current?.contains(e.target as Node))setOpen(false)};
+    document.addEventListener("pointerdown",close);
+    return()=>document.removeEventListener("pointerdown",close);
+  },[]);
+
+  function select(code:Code){
+    localStorage.setItem(STORAGE_KEY,code);
+    document.documentElement.lang=code;
+    document.documentElement.dir=code==="ar"?"rtl":"ltr";
+    setValue(code); setOpen(false); location.reload();
   }
+  const active=languages.find(x=>x[0]===value)||languages[0];
 
-  return (
-    <label className="haswolf-language-selector" aria-label="Site dili">
-      <span aria-hidden="true">🌐</span>
-      <select value={value} onChange={(event) => changeLanguage(event.target.value)}>
-        {languages.map(([code, label]) => <option key={code} value={code}>{label}</option>)}
-      </select>
-    </label>
-  );
+  return <div className="haswolf-language-compact" ref={ref}>
+    <button type="button" onClick={()=>setOpen(x=>!x)} aria-expanded={open}>
+      <span>{active[2]}</span><b>{active[1]}</b><i>⌄</i>
+    </button>
+    {open&&<div className="haswolf-language-compact__menu">
+      {languages.map(([code,short,flag,label])=><button
+        type="button" key={code} className={code===value?"is-active":""}
+        onClick={()=>select(code)}>
+        <span>{flag}</span><span>{label}</span><b>{short}</b>
+      </button>)}
+    </div>}
+  </div>;
 }

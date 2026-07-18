@@ -7,6 +7,10 @@ import FloatingWhatsApp from "../components/FloatingWhatsApp";
 import NotificationCenter from "../components/NotificationCenter";
 import AutoTranslate from "../components/AutoTranslate";
 import LanguageSelector from "../components/LanguageSelector";
+import ProductExperience from "../components/ProductExperience";
+import SmartSearch from "../components/SmartSearch";
+import CompareDock from "../components/CompareDock";
+import AdminLiveVisitors from "../components/AdminLiveVisitors";
 import InstallAppButton from "./components/InstallAppButton";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../lib/supabase";
@@ -27,6 +31,12 @@ type Product = {
   stock: number;
   is_active: boolean;
   created_at?: string;
+  delivery_time?: string | null;
+  view_count?: number | null;
+  favorite_count?: number | null;
+  is_daily_favorite?: boolean | null;
+  is_best_price?: boolean | null;
+  low_stock_alert?: boolean | null;
 };
 
 function formatPrice(price: number, unit: "TL" | "M" = "TL") {
@@ -171,7 +181,7 @@ export default function Home() {
     async function loadProducts() {
       const { data, error } = await supabase
         .from("products")
-        .select("id,name,category,item_category,server,price,old_price,description,image_url,stock,is_active,created_at")
+        .select("id,name,category,item_category,server,price,old_price,description,image_url,stock,is_active,created_at,delivery_time,view_count,favorite_count,is_daily_favorite,is_best_price,low_stock_alert")
         .eq("is_active", true)
         .gt("stock", 0)
         .order("created_at", { ascending: false });
@@ -329,9 +339,7 @@ export default function Home() {
       <header className="haswolf-header sticky top-0 z-50 border-b border-[#8c641e]/40 bg-black/95 backdrop-blur-2xl">
         <div className="haswolf-container">
           <div className="haswolf-topbar">
-            <WolfLogo />
-
-            <div className="haswolf-topbar__actions">
+            <WolfLogo /><div className="haswolf-topbar__actions">
               <div className="haswolf-social-strip">
               {headerSocials.map((social) => (
                 <a
@@ -368,7 +376,7 @@ export default function Home() {
             </a>
             {isAdmin && <a href="/admin"><span aria-hidden="true">🛡</span><span>Admin</span></a>}
             <LanguageSelector />
-            <NotificationCenter deals={products.map(({id,name,price,old_price,server,category})=>({id,name,price,old_price,server,category}))} />
+            <NotificationCenter deals={products.map(({id,name,price,old_price,server,category,created_at,stock,is_daily_favorite,is_best_price,low_stock_alert})=>({id,name,price,old_price,server,category,created_at,stock,is_daily_favorite:Boolean(is_daily_favorite),is_best_price:Boolean(is_best_price),low_stock_alert:Boolean(low_stock_alert)}))} />
           </nav>
         </div>
 
@@ -431,19 +439,10 @@ export default function Home() {
             </p>
 
             <div className="mt-5 max-w-xl">
-              <div className="haswolf-trade-actions">
-                <button type="button" onClick={() => goToMarket("item")} className="haswolf-trade-card haswolf-trade-card--buy">
-                  <span className="haswolf-trade-card__icon" aria-hidden="true">🛒</span>
-                  <span><strong>Bizden Satın Al</strong><small>Item, Yang ve DC ürünlerini incele</small></span>
-                  <b>Alışverişe Başla →</b>
-                </button>
-                <button type="button" onClick={() => openWhatsApp("Merhaba Haswolf, Item, Yang veya DC satmak istiyorum. Teklif almak istiyorum.")} className="haswolf-trade-card haswolf-trade-card--sell">
-                  <span className="haswolf-trade-card__icon" aria-hidden="true">💰</span>
-                  <span><strong>Bize Sat</strong><small>Hızlı değerlendirme ve WhatsApp desteği</small></span>
-                  <b>Teklif Al →</b>
-                </button>
-                <a href="/cekilis" className="haswolf-secondary-cta haswolf-trade-actions__raffle"><span aria-hidden="true">★</span><span>Çekiliş Merkezi</span></a>
-              </div>
+              <div className="haswolf-hero-quick-links">
+                  <button type="button" onClick={() => goToMarket("item")}>Markete Git</button>
+                  <a href="/cekilis">★ Çekiliş Merkezi</a>
+                </div>
 
               <div className="mt-2 sm:mt-3">
                 <InstallAppButton />
@@ -517,18 +516,35 @@ export default function Home() {
                     </div>
                   </div>
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => openWhatsApp(`Merhaba Haswolf, ${server.name} sunucusunda Yang veya oyun içi varlık satmak istiyorum.`)}
-                    className="haswolf-sell-button mt-4 w-full rounded-lg px-4 py-2.5 text-sm font-black"
-                  >
-                    BİZE SAT
-                  </button>
+                  <div className="haswolf-server-actions mt-4">
+                    <button
+                      type="button"
+                      onClick={() => openWhatsApp(`Merhaba Haswolf, ${server.name} sunucusundan Yang, DC veya ürün satın almak istiyorum.`)}
+                      className="haswolf-buy-button"
+                    >
+                      BİZDEN SATIN AL
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => openWhatsApp(`Merhaba Haswolf, ${server.name} sunucusunda Yang veya oyun içi varlık satmak istiyorum.`)}
+                      className="haswolf-sell-button"
+                    >
+                      BİZE SAT
+                    </button>
+                  </div>
                 </div>
               );
             })}
           </div>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-[1500px] px-3 pb-4 sm:px-6">
+        <SmartSearch products={products} onPick={(product) => {
+          setMarket(product.category as MarketType);
+          setSelectedServer(product.server);
+          window.setTimeout(() => document.getElementById("market")?.scrollIntoView({ behavior: "smooth" }), 0);
+        }} />
       </section>
 
       <section id="market" className="scroll-mt-20 mx-auto max-w-[1500px] px-4 pb-6 sm:px-6">
@@ -600,7 +616,7 @@ export default function Home() {
           <aside>
             <details className="haswolf-category-drawer rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-3">
               <summary className="haswolf-category-summary">
-                <span>✣ KATEGORİLER</span><span className="haswolf-category-summary__chevron">⌄</span>
+                <span>✣ KATEGORİLER</span><span className="haswolf-category-summary__hint">Dokun ve Aç</span><span className="haswolf-category-summary__chevron">▼</span>
               </summary>
 
               <div className="haswolf-category-grid mt-3 grid gap-2 lg:block lg:space-y-2">
@@ -685,9 +701,7 @@ export default function Home() {
                         <PriceDisplay price={product.price} oldPrice={product.old_price} />
                       </div>
 
-                      <p className="mt-2 text-center text-xs text-zinc-500">
-                        Stok: {product.stock}
-                      </p>
+                      <ProductExperience product={product} />
 
                       <WhatsAppButton
                         message={`Merhaba Haswolf, ${selectedServer} sunucusundaki ${product.name} ürünü hakkında bilgi almak istiyorum.`}
@@ -772,6 +786,7 @@ export default function Home() {
                               </p>
                             )}
 
+                            <ProductExperience product={pack} compact />
                             <div className="haswolf-yang-card__meta">
                               <span>Stok: {pack.stock}</span>
                               <button
@@ -781,9 +796,7 @@ export default function Home() {
                                     `Merhaba Haswolf, ${group.name} sunucusu için ${pack.name} ilanı hakkında bilgi almak istiyorum.`,
                                   )
                                 }
-                              >
-                                WhatsApp
-                              </button>
+                              >WhatsApp ile Satın Al</button>
                             </div>
                           </div>
                         </article>
@@ -825,9 +838,10 @@ export default function Home() {
                         <div className="haswolf-yang-card__content">
                           <div className="haswolf-yang-card__title-row"><h4>{pack.name}</h4><PriceDisplay price={pack.price} oldPrice={pack.old_price} unit="M" /></div>
                           {pack.description && <p className="haswolf-yang-card__description">{descriptionLines(pack.description).slice(0, 2).join(" · ")}</p>}
-                          <div className="haswolf-yang-card__meta">
+                          <ProductExperience product={pack} compact />
+                            <div className="haswolf-yang-card__meta">
                             <span>Stok: {pack.stock}</span>
-                            <button type="button" onClick={() => openWhatsApp(`Merhaba Haswolf, ${group.name} sunucusu için ${pack.name} DC ilanını satın almak istiyorum.`)}>WhatsApp</button>
+                            <button type="button" onClick={() => openWhatsApp(`Merhaba Haswolf, ${group.name} sunucusu için ${pack.name} DC ilanını satın almak istiyorum.`)}>WhatsApp ile Satın Al</button>
                           </div>
                         </div>
                       </article>
@@ -889,9 +903,7 @@ export default function Home() {
                       <PriceDisplay price={account.price} oldPrice={account.old_price} />
                     </div>
 
-                    <p className="mt-2 text-center text-xs text-zinc-500">
-                      Stok: {account.stock}
-                    </p>
+                    <ProductExperience product={account} />
 
                     <WhatsAppButton
                       message={`Merhaba Haswolf, ${selectedServer} sunucusundaki ${account.name} hesabı hakkında bilgi almak istiyorum.`}
@@ -967,6 +979,8 @@ export default function Home() {
       <SiteFooter />
       <AutoTranslate />
       <FloatingWhatsApp />
+      <AdminLiveVisitors enabled={isAdmin} />
+      <CompareDock />
       <MobileBottomNav activeMarket={market} onMarketChange={goToMarket} />
     </main>
   );

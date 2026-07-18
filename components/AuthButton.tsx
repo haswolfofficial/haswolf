@@ -76,17 +76,14 @@ export default function AuthButton() {
   const label = nickname || (user.is_anonymous ? "Misafir" : user.email || "Hesap");
 
   return (
-    <div className="haswolf-auth-user flex items-center gap-2">
-      <button
-        type="button"
-        onClick={logout}
-        className="rounded-lg border border-[#8c641e]/60 bg-white/5 px-3 py-2 text-sm text-[#e8bd67] transition hover:bg-white/10"
-      >
-        Çıkış Yap
+    <div className="haswolf-auth-user">
+      <button type="button" onClick={() => router.push("/hesabim")} className="haswolf-auth-action">
+        <span>👤</span><span>Hesabım</span>
       </button>
-      <span className="haswolf-auth-email max-w-[220px] truncate text-xs text-zinc-400" title={label}>
-        {label}
-      </span>
+      <button type="button" onClick={logout} className="haswolf-auth-action haswolf-auth-action--logout">
+        <span>↪</span><span>Çıkış Yap</span>
+      </button>
+      <span className="haswolf-auth-email" title={label}>{label}</span>
     </div>
   );
 }

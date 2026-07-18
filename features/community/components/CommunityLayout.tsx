@@ -7,7 +7,7 @@ import MessageBubble from "./MessageBubble";
 import VoiceRoom from "./VoiceRoom";
 import { supabase } from "@/lib/supabase";
 import type { ChatMessage, ChatRoom } from "../../../types/chat";
-import { rooms } from "../constants/rooms";
+import CommunityAdminTools from "./CommunityAdminTools";
 
 type CommunityLayoutProps = {
   nickname: string;
@@ -29,6 +29,14 @@ type ProfileRow = {
   nickname: string | null;
 };
 
+const fallbackRooms: ChatRoom[] = [
+  {id:"news",name:"Duyurular",slug:"news",icon:"📢"},
+  {id:"genel",name:"Genel",slug:"genel",icon:"💬"},
+  {id:"ephesus",name:"Ephesus",slug:"ephesus",icon:"⚔️"},
+  {id:"pergamon",name:"Pergamon",slug:"pergamon",icon:"🛡️"},
+  {id:"teos",name:"Teos",slug:"teos",icon:"🔥"},
+  {id:"trade",name:"Alım Satım",slug:"trade",icon:"💰"},
+];
 let sharedAudioContext: AudioContext | null = null;
 
 async function getMessageAudioContext() {
@@ -88,7 +96,9 @@ export default function CommunityLayout({
   canManageMembers,
   canChangeNicknames,
 }: CommunityLayoutProps) {
-  const [selectedRoom, setSelectedRoom] = useState(rooms[0]);
+  const [availableRooms,setAvailableRooms]=useState<ChatRoom[]>(fallbackRooms);
+  const [selectedRoom, setSelectedRoom] = useState(fallbackRooms[0]);
+  const [adminToolsOpen,setAdminToolsOpen]=useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [selectedRoomId, setSelectedRoomId] = useState("");
@@ -108,6 +118,24 @@ export default function CommunityLayout({
   const isAnnouncementRoom = selectedRoom.slug === "news";
   const announcementLocked = isAnnouncementRoom && !canManageMembers;
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  async function loadCommunityRooms(){
+    const {data}=await supabase.from("chat_rooms").select("id,name,slug,icon,kind,category,guild_name,is_active,sort_order").order("sort_order");
+    const next=(data||[]).map((row:any)=>({...row,icon:row.icon||"💬"})) as ChatRoom[];
+    if(next.length)setAvailableRooms(next);
+  }
+  useEffect(()=>{
+    void loadCommunityRooms();
+    const channel=supabase.channel("community-rooms-live").on("postgres_changes",{event:"*",schema:"public",table:"chat_rooms"},()=>void loadCommunityRooms()).subscribe();
+    return()=>{void supabase.removeChannel(channel)};
+  },[]);
+  useEffect(()=>{
+    const channel=supabase.channel(`forced-room-${currentUserId}`).on("postgres_changes",{event:"UPDATE",schema:"public",table:"profiles",filter:`id=eq.${currentUserId}`},(payload)=>{
+      const slug=String((payload.new as any).forced_room_slug||"");
+      const room=availableRooms.find(item=>item.slug===slug);if(room)selectRoom(room);
+    }).subscribe();
+    return()=>{void supabase.removeChannel(channel)};
+  },[currentUserId,availableRooms]);
 
   function selectRoom(room: ChatRoom) {
     setSelectedRoom(room);
@@ -567,11 +595,7 @@ export default function CommunityLayout({
   return (
     <main className="flex h-[100dvh] min-h-0 overflow-hidden bg-[#050607] text-white">
       <div className="hidden shrink-0 md:block">
-        <ChannelSidebar
-          rooms={rooms}
-          selectedRoom={selectedRoom}
-          onSelectRoom={selectRoom}
-        />
+        <ChannelSidebar rooms={availableRooms} selectedRoom={selectedRoom} onSelectRoom={selectRoom} canManageRooms={canManageMembers} onManageRooms={() => setAdminToolsOpen(true)} />
       </div>
 
       {(mobileChannelsOpen || mobileMembersOpen) && (
@@ -591,11 +615,7 @@ export default function CommunityLayout({
           mobileChannelsOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <ChannelSidebar
-          rooms={rooms}
-          selectedRoom={selectedRoom}
-          onSelectRoom={selectRoom}
-        />
+        <ChannelSidebar rooms={availableRooms} selectedRoom={selectedRoom} onSelectRoom={selectRoom} canManageRooms={canManageMembers} onManageRooms={() => setAdminToolsOpen(true)} />
       </div>
 
       <section className="flex min-w-0 flex-1 flex-col">
@@ -627,7 +647,7 @@ export default function CommunityLayout({
 
               {roomMenuOpen && (
                 <div className="absolute left-0 top-full z-50 mt-3 w-56 overflow-hidden rounded-xl border border-[#765625] bg-[#111315] p-2 shadow-2xl">
-                  {rooms.map((room) => (
+                  {availableRooms.map((room) => (
                     <button
                       key={room.id}
                       type="button"
@@ -648,6 +668,7 @@ export default function CommunityLayout({
           </div>
 
           <div className="flex shrink-0 items-center gap-2">
+            {canManageMembers && <button type="button" onClick={() => setAdminToolsOpen(true)} className="haswolf-room-admin-trigger">⚙ Odalar</button>}
             {!isVoiceRoom && (
               <button
                 type="button"
@@ -828,6 +849,8 @@ export default function CommunityLayout({
           <MemberSidebar currentUserId={currentUserId} canManageMembers={canManageMembers} canChangeNicknames={canChangeNicknames} onlineUserIds={onlineUserIds} />
         </div>
       </div>
+
+      {adminToolsOpen && canManageMembers && <CommunityAdminTools rooms={availableRooms} onRoomsChanged={loadCommunityRooms} onForceCurrentRoom={(room) => { selectRoom(room); setAdminToolsOpen(false); }} />}
 
       {wolfVisible && (
         <div

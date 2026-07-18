@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type Deal = {
   id: number;
@@ -9,114 +9,132 @@ type Deal = {
   old_price: number | null;
   server: string;
   category: "item" | "yang" | "dc" | "account";
+  created_at?: string;
+  stock?: number;
+  is_daily_favorite?: boolean;
+  is_best_price?: boolean;
+  low_stock_alert?: boolean;
 };
 
-const STORAGE_KEY = "haswolf_seen_discount_ids_v1";
+const KEY = "haswolf_seen_discount_ids_v3";
+
+function dealUrl(deal: Deal) {
+  const params = new URLSearchParams({
+    market: deal.category,
+    server: deal.server,
+    product: String(deal.id),
+  });
+  return `/?${params.toString()}#market`;
+}
 
 export default function NotificationCenter({ deals }: { deals: Deal[] }) {
-  const eligible = useMemo(
-    () => deals.filter((deal) => deal.old_price && deal.old_price > deal.price),
+  const discounted = useMemo(
+    () => deals.filter((deal) =>
+      Boolean(deal.old_price && deal.old_price > deal.price) ||
+      deal.is_daily_favorite || deal.is_best_price || deal.low_stock_alert
+    ),
     [deals],
   );
   const [open, setOpen] = useState(false);
-  const [toastVisible, setToastVisible] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [seenIds, setSeenIds] = useState<number[]>([]);
+  const [seen, setSeen] = useState<number[]>([]);
+  const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
-      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-      if (Array.isArray(parsed)) setSeenIds(parsed.filter(Number.isFinite));
+      const value = JSON.parse(localStorage.getItem(KEY) || "[]");
+      if (Array.isArray(value)) setSeen(value);
     } catch {}
   }, []);
 
   useEffect(() => {
-    if (!eligible.length) return;
-    const unseenIndex = eligible.findIndex((deal) => !seenIds.includes(deal.id));
-    if (unseenIndex < 0) return;
-    setActiveIndex(unseenIndex);
-    const timer = window.setTimeout(() => setToastVisible(true), 1800);
-    return () => window.clearTimeout(timer);
-  }, [eligible, seenIds]);
+    const close = (event: PointerEvent) => {
+      if (!root.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", close);
+    return () => document.removeEventListener("pointerdown", close);
+  }, []);
 
-  function markSeen(id: number) {
-    setSeenIds((current) => {
-      if (current.includes(id)) return current;
-      const next = [...current, id];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+  function mark(id: number) {
+    setSeen((current) => {
+      const next = current.includes(id) ? current : [...current, id];
+      localStorage.setItem(KEY, JSON.stringify(next));
       return next;
     });
   }
 
-  function closeToast() {
-    const deal = eligible[activeIndex];
-    if (deal) markSeen(deal.id);
-    setToastVisible(false);
+  useEffect(() => {
+    if (!discounted.length) return;
+    const newest=discounted[0];
+    if(seen.includes(newest.id))return;
+    try{
+      const context=new AudioContext();
+      const osc=context.createOscillator();const gain=context.createGain();
+      osc.frequency.value=880;gain.gain.value=.035;osc.connect(gain);gain.connect(context.destination);
+      osc.start();osc.stop(context.currentTime+.12);
+    }catch{}
+  },[discounted,seen]);
+
+  function openDeal(deal: Deal) {
+    mark(deal.id);
+    setOpen(false);
+    window.location.href = dealUrl(deal);
   }
 
-  const unreadCount = eligible.filter((deal) => !seenIds.includes(deal.id)).length;
-  const activeDeal = eligible[activeIndex];
+  const unread = discounted.filter((item) => !seen.includes(item.id)).length;
 
   return (
-    <>
+    <div ref={root} className="haswolf-notification-root">
       <button
         type="button"
         className="haswolf-notification-trigger"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
-        aria-controls="haswolf-notification-panel"
       >
-        <span className="haswolf-notification-trigger__icon" aria-hidden="true">🔔</span>
+        <span aria-hidden="true">🔔</span>
         <span>Bildirimler</span>
-        {unreadCount > 0 && <b>{unreadCount > 9 ? "9+" : unreadCount}</b>}
+        {unread > 0 && <b>{unread > 9 ? "9+" : unread}</b>}
       </button>
 
       {open && (
-        <aside id="haswolf-notification-panel" className="haswolf-notification-panel">
+        <aside className="haswolf-notification-panel">
           <header>
-            <div>
-              <small>HASWOLF</small>
-              <h2>Bildirim Merkezi</h2>
-            </div>
-            <button type="button" onClick={() => setOpen(false)} aria-label="Bildirim merkezini kapat">×</button>
+            <div><small>HASWOLF</small><h2>Bildirim Merkezi</h2></div>
+            <button type="button" onClick={() => setOpen(false)}>×</button>
           </header>
           <div className="haswolf-notification-list">
-            {eligible.length ? eligible.map((deal) => {
+            {discounted.length ? discounted.map((deal) => {
               const unit = deal.category === "dc" ? "M" : "TL";
-              const pct = Math.round(((deal.old_price! - deal.price) / deal.old_price!) * 100);
-              const unread = !seenIds.includes(deal.id);
+              const percent = Math.round(((deal.old_price! - deal.price) / deal.old_price!) * 100);
               return (
-                <button key={deal.id} type="button" className={unread ? "is-unread" : ""} onClick={() => markSeen(deal.id)}>
-                  <span className="haswolf-notification-list__flame">🔥</span>
+                <button
+                  key={deal.id}
+                  type="button"
+                  className={!seen.includes(deal.id) ? "is-unread" : ""}
+                  onClick={() => openDeal(deal)}
+                >
+                  <span className="haswolf-notification-icon">🔥</span>
                   <span>
                     <strong>{deal.name}</strong>
-                    <small>{deal.server} • %{pct} indirim</small>
-                    <span><del>{deal.old_price!.toLocaleString("tr-TR")} {unit}</del> <b>{deal.price.toLocaleString("tr-TR")} {unit}</b></span>
+                    <small>{deal.server} · {deal.category.toUpperCase()}</small>
+                    <span className="haswolf-notification-price">
+                      {deal.old_price && deal.old_price > deal.price && <del>{deal.old_price.toLocaleString("tr-TR")} {unit}</del>}
+                      <b>{deal.price.toLocaleString("tr-TR")} {unit}</b>
+                    </span>
+                    <span className="haswolf-notification-tags">
+                      {percent>0&&<em>%{percent} indirim</em>}
+                      {deal.is_daily_favorite&&<em>Bugünün Favorisi</em>}
+                      {deal.is_best_price&&<em>En Uygun Fiyat</em>}
+                      {deal.low_stock_alert&&<em>Stok Azalıyor · {deal.stock ?? "Az"}</em>}
+                    </span>
+                    <time>{new Date(deal.created_at || Date.now()).toLocaleString("tr-TR",{dateStyle:"short",timeStyle:"short"})}</time>
                   </span>
-                  {unread && <i />}
+                  <i>›</i>
                 </button>
               );
-            }) : (
-              <div className="haswolf-notification-empty">Şu anda yeni bir indirim bildirimi yok.</div>
-            )}
+            }) : <p className="haswolf-notification-empty">Yeni bildirimin bulunmuyor.</p>}
           </div>
         </aside>
       )}
-
-      {activeDeal && (
-        <aside className={`haswolf-sale-toast ${toastVisible ? "is-visible" : ""}`} aria-live="polite">
-          <button onClick={closeToast} aria-label="Bildirimi kapat">×</button>
-          <span className="haswolf-sale-toast__eyebrow">YENİ İNDİRİM 🔥</span>
-          <strong>{activeDeal.name}</strong>
-          <small>{activeDeal.server}</small>
-          <div>
-            <del>{activeDeal.old_price!.toLocaleString("tr-TR")} {activeDeal.category === "dc" ? "M" : "TL"}</del>
-            <b>{activeDeal.price.toLocaleString("tr-TR")} {activeDeal.category === "dc" ? "M" : "TL"}</b>
-            <em>%{Math.round(((activeDeal.old_price! - activeDeal.price) / activeDeal.old_price!) * 100)}</em>
-          </div>
-          <p>Kapatınca Bildirimler bölümünde kalır.</p>
-        </aside>
-      )}
-    </>
+    </div>
   );
 }

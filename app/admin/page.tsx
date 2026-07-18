@@ -3,6 +3,9 @@
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../lib/supabase";
+import AdminSearchAnalytics from "../../components/AdminSearchAnalytics";
+import AdminNav from "../../components/AdminNav";
+import ProductPresetPicker, { autoPreset } from "../../components/ProductPresetPicker";
 
 type Product = {
   id: number;
@@ -17,6 +20,10 @@ type Product = {
   image_url: string | null;
   stock: number;
   is_active: boolean;
+  delivery_time?: string | null;
+  is_daily_favorite?: boolean | null;
+  is_best_price?: boolean | null;
+  low_stock_alert?: boolean | null;
 };
 
 const ADMIN_EMAIL = "haswolf666@gmail.com";
@@ -64,6 +71,11 @@ export default function AdminPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState("");
   const [stock, setStock] = useState("1");
+  const [deliveryTime, setDeliveryTime] = useState("1 saat");
+  const [presetImage,setPresetImage]=useState("");
+  const [dailyFavorite,setDailyFavorite]=useState(false);
+  const [bestPrice,setBestPrice]=useState(false);
+  const [lowStockAlert,setLowStockAlert]=useState(false);
   const [quickYangPrices, setQuickYangPrices] = useState<Record<number, string>>({});
   const [quickDcPrices, setQuickDcPrices] = useState<Record<number, string>>({});
   const [quickSavingId, setQuickSavingId] = useState<number | null>(null);
@@ -98,7 +110,7 @@ export default function AdminPage() {
   async function loadProducts() {
     const { data, error } = await supabase
       .from("products")
-      .select("id,name,category,item_category,server,price,old_price,admin_note,description,image_url,stock,is_active")
+      .select("id,name,category,item_category,server,price,old_price,admin_note,description,image_url,stock,is_active,delivery_time,is_daily_favorite,is_best_price,low_stock_alert")
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -126,6 +138,11 @@ export default function AdminPage() {
     setImageFile(null);
     setImagePreview("");
     setStock("1");
+    setDeliveryTime("1 saat");
+    setPresetImage("");
+    setDailyFavorite(false);
+    setBestPrice(false);
+    setLowStockAlert(false);
   }
 
   function startEditing(product: Product) {
@@ -142,6 +159,11 @@ export default function AdminPage() {
     setImageFile(null);
     setImagePreview(product.image_url ?? "");
     setStock(String(product.stock));
+    setDeliveryTime(product.delivery_time || "1 saat");
+    setPresetImage(product.image_url?.startsWith("/images/product-presets/") ? product.image_url : "");
+    setDailyFavorite(Boolean(product.is_daily_favorite));
+    setBestPrice(Boolean(product.is_best_price));
+    setLowStockAlert(Boolean(product.low_stock_alert));
     setMessage("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -173,7 +195,7 @@ export default function AdminPage() {
   }
 
   async function uploadSelectedImage() {
-    if (!imageFile) return imageUrl.trim() || null;
+    if (!imageFile) return imageUrl.trim() || presetImage || autoPreset(category,name.trim());
 
     const extension = imageFile.name.split(".").pop()?.toLowerCase() || "jpg";
     const safeExtension = extension.replace(/[^a-z0-9]/g, "") || "jpg";
@@ -211,6 +233,10 @@ export default function AdminPage() {
         description: description.trim() || null,
         image_url: uploadedImageUrl,
         stock: Number(stock),
+        delivery_time: deliveryTime,
+        is_daily_favorite: dailyFavorite,
+        is_best_price: bestPrice,
+        low_stock_alert: lowStockAlert,
       };
 
       if (!payload.name || Number.isNaN(payload.price) || payload.price < 0) {
@@ -332,7 +358,7 @@ export default function AdminPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#050707] px-4 py-8 text-white sm:px-6">
+    <main className="haswolf-admin-v5"><AdminNav/><section className="haswolf-admin-v5__content">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
@@ -348,6 +374,8 @@ export default function AdminPage() {
             Siteye Dön
           </button>
         </div>
+
+        <AdminSearchAnalytics />
 
         <section className="mb-8 rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-5">
           <div className="mb-4">
@@ -457,7 +485,25 @@ export default function AdminPage() {
             <option value="TEOS">TEOS</option>
           </select>
 
+          <select value={deliveryTime} onChange={(e) => setDeliveryTime(e.target.value)} className="rounded-lg border border-cyan-500/30 bg-black px-4 py-3">
+            <option value="30 dakika">Teslimat: 30 dakika</option>
+            <option value="1 saat">Teslimat: 1 saat</option>
+            <option value="2 saat">Teslimat: 2 saat</option>
+            <option value="12 saat">Teslimat: 12 saat</option>
+            <option value="24 saat">Teslimat: 24 saat</option>
+          </select>
+
           <input type="number" min="0" value={stock} onChange={(e) => setStock(e.target.value)} placeholder="Stok" className="rounded-lg border border-white/10 bg-black px-4 py-3" />
+
+          <div className="md:col-span-2">
+            <ProductPresetPicker category={category} value={presetImage} onChange={(value) => { setPresetImage(value); setImageFile(null); setImagePreview(value); }} />
+          </div>
+
+          <div className="grid gap-3 md:col-span-2 sm:grid-cols-3">
+            <label className="haswolf-admin-toggle"><input type="checkbox" checked={dailyFavorite} onChange={(e)=>setDailyFavorite(e.target.checked)}/><span>⭐ Bugünün Favorisi</span></label>
+            <label className="haswolf-admin-toggle"><input type="checkbox" checked={bestPrice} onChange={(e)=>setBestPrice(e.target.checked)}/><span>🏆 En Uygun Fiyat</span></label>
+            <label className="haswolf-admin-toggle"><input type="checkbox" checked={lowStockAlert} onChange={(e)=>setLowStockAlert(e.target.checked)}/><span>🔥 Stok Azalıyor</span></label>
+          </div>
 
           <label className="rounded-lg border border-dashed border-[#8c641e] bg-black px-4 py-3">
             <span className="mb-2 block text-sm font-semibold text-[#e3b653]">Bilgisayardan görsel seç</span>
@@ -548,6 +594,6 @@ export default function AdminPage() {
           </table>
         </div>
       </div>
-    </main>
+    </section></main>
   );
 }
