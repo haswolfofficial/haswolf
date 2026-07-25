@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect } from "react";
 import { usePersistentVoice } from "@/components/PersistentVoiceProvider";
@@ -22,37 +22,37 @@ export default function VoiceRoom({
         <div className="rounded-2xl border border-zinc-800 bg-[#111315] p-5 sm:p-7">
           <div>
             <h2 className="text-2xl font-black text-[#d9aa4a]">
-              🔊 {roomName}
+              ğŸ”Š {roomName}
             </h2>
             <p className="mt-2 text-sm text-zinc-500">
-              {nickname} olarak bağlandın. Ana sayfaya veya markete
-              geçtiğinde ses bağlantısı küçük panelde devam eder.
+              {nickname} olarak baÄŸlandÄ±n. Ana sayfaya veya markete
+              geÃ§tiÄŸinde ses baÄŸlantÄ±sÄ± kÃ¼Ã§Ã¼k panelde devam eder.
             </p>
           </div>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             <Info
-              title="Bağlantı"
+              title="BaÄŸlantÄ±"
               value={
                 voice.connecting
-                  ? "Bağlanıyor"
+                  ? "BaÄŸlanÄ±yor"
                   : voice.connected
-                    ? "Bağlı"
-                    : "Kapalı"
+                    ? "BaÄŸlÄ±"
+                    : "KapalÄ±"
               }
             />
             <Info
-              title="Katılımcı"
+              title="KatÄ±lÄ±mcÄ±"
               value={String(voice.participantCount)}
             />
             <Info
-              title="Konuşma sırası"
+              title="KonuÅŸma sÄ±rasÄ±"
               value={
-                voice.blockedBySpeaker
-                  ? voice.activeSpeaker || "Başka kullanıcı"
+                Boolean(voice.activeSpeaker)
+                  ? voice.activeSpeaker || "BaÅŸka kullanÄ±cÄ±"
                   : voice.microphoneEnabled
                     ? "Sende"
-                    : "Boş"
+                    : "BoÅŸ"
               }
             />
           </div>
@@ -70,11 +70,11 @@ export default function VoiceRoom({
                   : "bg-[#d9aa4a] text-black"
               }`}
             >
-              {voice.blockedBySpeaker
-                ? `⏳ ${voice.activeSpeaker || "Bir kullanıcı"} konuşuyor`
+              {Boolean(voice.activeSpeaker)
+                ? `â³ ${voice.activeSpeaker || "Bir kullanÄ±cÄ±"} konuÅŸuyor`
                 : voice.microphoneEnabled
-                  ? "🟢 Mikrofon Açık"
-                  : "🎤 Konuşmayı Aç"}
+                  ? "ğŸŸ¢ Mikrofon AÃ§Ä±k"
+                  : "ğŸ¤ KonuÅŸmayÄ± AÃ§"}
             </button>
 
             <div className="haswolf-voice-room-actions">
@@ -84,7 +84,7 @@ export default function VoiceRoom({
                   voice.setOutput(!voice.outputEnabled)
                 }
               >
-                {voice.outputEnabled ? "🔊 Sesi kapat" : "🔇 Sesi aç"}
+                {voice.outputEnabled ? "ğŸ”Š Sesi kapat" : "ğŸ”‡ Sesi aÃ§"}
               </button>
 
               <button
@@ -92,13 +92,13 @@ export default function VoiceRoom({
                 className="is-danger"
                 onClick={() => void voice.disconnectVoice()}
               >
-                Ses odasından çık
+                Ses odasÄ±ndan Ã§Ä±k
               </button>
             </div>
 
             <p className="mt-4 max-w-xl text-center text-sm text-zinc-500">
-              Başka biri konuşurken mikrofonun otomatik susturulur.
-              Konuşma bitince sıra sana geri gelir.
+              BaÅŸka biri konuÅŸurken mikrofonun otomatik susturulur.
+              KonuÅŸma bitince sÄ±ra sana geri gelir.
             </p>
 
             {voice.error && (
@@ -127,3 +127,5 @@ function Info({
     </div>
   );
 }
+
+

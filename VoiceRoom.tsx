@@ -48,7 +48,7 @@ export default function VoiceRoom({
             <Info
               title="KonuÅŸma sÄ±rasÄ±"
               value={
-                voice.blockedBySpeaker
+                Boolean(voice.activeSpeaker)
                   ? voice.activeSpeaker || "BaÅŸka kullanÄ±cÄ±"
                   : voice.microphoneEnabled
                     ? "Sende"
@@ -70,7 +70,7 @@ export default function VoiceRoom({
                   : "bg-[#d9aa4a] text-black"
               }`}
             >
-              {voice.blockedBySpeaker
+              {Boolean(voice.activeSpeaker)
                 ? `â³ ${voice.activeSpeaker || "Bir kullanÄ±cÄ±"} konuÅŸuyor`
                 : voice.microphoneEnabled
                   ? "ğŸŸ¢ Mikrofon AÃ§Ä±k"
@@ -127,4 +127,5 @@ function Info({
     </div>
   );
 }
+
 
