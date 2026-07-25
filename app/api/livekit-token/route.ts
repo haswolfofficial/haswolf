@@ -1,17 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AccessToken } from "livekit-server-sdk";
+import { createServiceClient } from "@/lib/server-supabase";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-
     const roomName = String(body.roomName || "").trim();
     const participantName = String(body.participantName || "").trim();
+    const userId = String(body.userId || "").trim();
 
     if (!roomName || !participantName) {
       return NextResponse.json(
-        { error: "Oda adı ve mahlas zorunludur." },
-        { status: 400 }
+        { error: "Oda adÄ± ve mahlas zorunludur." },
+        { status: 400 },
       );
     }
 
@@ -21,14 +22,27 @@ export async function POST(request: NextRequest) {
 
     if (!apiKey || !apiSecret || !livekitUrl) {
       return NextResponse.json(
-        { error: "LiveKit ayarları eksik." },
-        { status: 500 }
+        { error: "LiveKit ayarlarÄ± eksik." },
+        { status: 500 },
       );
     }
 
+    let isGuest = false;
+    if (userId) {
+      const supabase = createServiceClient();
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("is_guest")
+        .eq("id", userId)
+        .maybeSingle();
+      isGuest = Boolean(profile?.is_guest);
+    }
+
+    const identity = userId || `guest-${crypto.randomUUID()}`;
     const accessToken = new AccessToken(apiKey, apiSecret, {
-      identity: `${participantName}-${crypto.randomUUID()}`,
+      identity,
       name: participantName,
+      metadata: JSON.stringify({ userId: identity, isGuest }),
       ttl: "2h",
     });
 
@@ -44,11 +58,10 @@ export async function POST(request: NextRequest) {
       serverUrl: livekitUrl,
     });
   } catch (error) {
-    console.error("LiveKit token hatası:", error);
-
+    console.error("LiveKit token hatasÄ±:", error);
     return NextResponse.json(
-      { error: "Ses odası bağlantısı oluşturulamadı." },
-      { status: 500 }
+      { error: "Ses odasÄ± baÄŸlantÄ±sÄ± oluÅŸturulamadÄ±." },
+      { status: 500 },
     );
   }
 }

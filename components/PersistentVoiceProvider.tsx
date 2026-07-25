@@ -14,13 +14,24 @@ import {
   Room,
   RoomEvent,
   Track,
+  type RemoteParticipant,
   type RemoteTrack,
   type RemoteTrackPublication,
 } from "livekit-client";
 
+export type VoiceParticipant = {
+  identity: string;
+  userId: string;
+  name: string;
+  isGuest: boolean;
+  isLocal: boolean;
+  isSpeaking: boolean;
+};
+
 type PersistedVoice = {
   roomName: string;
   nickname: string;
+  userId: string;
   microphoneWanted: boolean;
   outputEnabled: boolean;
 };
@@ -28,14 +39,16 @@ type PersistedVoice = {
 type VoiceContextValue = {
   roomName: string;
   nickname: string;
+  userId: string;
   connected: boolean;
   connecting: boolean;
   microphoneEnabled: boolean;
   outputEnabled: boolean;
   activeSpeaker: string;
   participantCount: number;
+  participants: VoiceParticipant[];
   error: string;
-  connectVoice: (roomName: string, nickname: string) => Promise<void>;
+  connectVoice: (roomName: string, nickname: string, userId?: string) => Promise<void>;
   disconnectVoice: () => Promise<void>;
   setMicrophone: (enabled: boolean) => Promise<void>;
   setOutput: (enabled: boolean) => void;
@@ -46,26 +59,59 @@ const STORAGE_KEY = "haswolf_active_voice_room";
 const initialState = {
   roomName: "",
   nickname: "",
+  userId: "",
   connected: false,
   connecting: false,
   microphoneEnabled: false,
   outputEnabled: true,
   activeSpeaker: "",
   participantCount: 0,
+  participants: [] as VoiceParticipant[],
   error: "",
 };
 
 const VoiceContext = createContext<VoiceContextValue | null>(null);
 
-function getParticipantCount(room: Room) {
-  const identities = new Set<string>();
-  identities.add(room.localParticipant.identity || "local");
+function parseMetadata(metadata?: string) {
+  try {
+    const parsed = JSON.parse(metadata || "{}") as {
+      userId?: string;
+      isGuest?: boolean;
+    };
+    return {
+      userId: String(parsed.userId || ""),
+      isGuest: Boolean(parsed.isGuest),
+    };
+  } catch {
+    return { userId: "", isGuest: false };
+  }
+}
+
+function participantToItem(
+  participant: RemoteParticipant | Room["localParticipant"],
+  isLocal: boolean,
+): VoiceParticipant {
+  const metadata = parseMetadata(participant.metadata);
+  return {
+    identity: participant.identity,
+    userId: metadata.userId || participant.identity,
+    name: participant.name || participant.identity || "KatÄ±lÄ±mcÄ±",
+    isGuest: metadata.isGuest,
+    isLocal,
+    isSpeaking: participant.isSpeaking,
+  };
+}
+
+function getParticipants(room: Room) {
+  const items: VoiceParticipant[] = [
+    participantToItem(room.localParticipant, true),
+  ];
 
   room.remoteParticipants.forEach((participant) => {
-    identities.add(participant.identity);
+    items.push(participantToItem(participant, false));
   });
 
-  return identities.size;
+  return items;
 }
 
 export function PersistentVoiceProvider({
@@ -74,82 +120,81 @@ export function PersistentVoiceProvider({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-
   const roomRef = useRef<Room | null>(null);
   const wantedMicRef = useRef(false);
   const connectingRef = useRef(false);
   const outputEnabledRef = useRef(true);
-  const audioElementsRef = useRef(new Set<HTMLMediaElement>());
-
+  const audioByTrackRef = useRef(new Map<string, HTMLMediaElement>());
   const [state, setState] = useState(initialState);
 
   const persist = useCallback(
     (
-      roomName = state.roomName,
-      nickname = state.nickname,
-      microphoneWanted = wantedMicRef.current,
-      outputEnabled = outputEnabledRef.current,
+      roomName: string,
+      nickname: string,
+      userId: string,
+      microphoneWanted: boolean,
+      outputEnabled: boolean,
     ) => {
       if (!roomName || !nickname) return;
-
       sessionStorage.setItem(
         STORAGE_KEY,
         JSON.stringify({
           roomName,
           nickname,
+          userId,
           microphoneWanted,
           outputEnabled,
         } satisfies PersistedVoice),
       );
     },
-    [state.nickname, state.roomName],
+    [],
   );
 
-  const updateParticipantCount = useCallback(() => {
+  const refreshParticipants = useCallback(() => {
     const room = roomRef.current;
     if (!room) return;
 
+    const participants = getParticipants(room);
+    const active =
+      participants.find((participant) => participant.isSpeaking)?.name || "";
+
     setState((current) => ({
       ...current,
-      participantCount: getParticipantCount(room),
+      participants,
+      participantCount: participants.length,
+      activeSpeaker: active,
     }));
   }, []);
 
-  const updateActiveSpeaker = useCallback(() => {
-    const room = roomRef.current;
-    if (!room) return;
+  const clearAudio = useCallback(() => {
+    audioByTrackRef.current.forEach((element) => {
+      element.pause();
+      element.srcObject = null;
+      element.remove();
+    });
+    audioByTrackRef.current.clear();
 
-    const speaker = [...room.remoteParticipants.values()].find(
-      (participant) => participant.isSpeaking,
-    );
-
-    setState((current) => ({
-      ...current,
-      activeSpeaker:
-        speaker?.name ||
-        speaker?.identity ||
-        (room.localParticipant.isSpeaking
-          ? current.nickname
-          : ""),
-    }));
+    document
+      .querySelectorAll<HTMLMediaElement>("audio[data-haswolf-voice-track]")
+      .forEach((element) => {
+        element.pause();
+        element.srcObject = null;
+        element.remove();
+      });
   }, []);
 
   const setOutput = useCallback((enabled: boolean) => {
     outputEnabledRef.current = enabled;
 
-    audioElementsRef.current.forEach((element) => {
+    audioByTrackRef.current.forEach((element) => {
       element.muted = !enabled;
       element.volume = enabled ? 1 : 0;
     });
 
-    setState((current) => ({
-      ...current,
-      outputEnabled: enabled,
-    }));
+    setState((current) => ({ ...current, outputEnabled: enabled }));
 
     const raw = sessionStorage.getItem(STORAGE_KEY);
     if (!raw) return;
-
     try {
       const saved = JSON.parse(raw) as PersistedVoice;
       sessionStorage.setItem(
@@ -157,7 +202,7 @@ export function PersistentVoiceProvider({
         JSON.stringify({ ...saved, outputEnabled: enabled }),
       );
     } catch {
-      // Eski kayıt göz ardı edilir.
+      sessionStorage.removeItem(STORAGE_KEY);
     }
   }, []);
 
@@ -165,12 +210,7 @@ export function PersistentVoiceProvider({
     sessionStorage.removeItem(STORAGE_KEY);
     wantedMicRef.current = false;
     connectingRef.current = false;
-
-    audioElementsRef.current.forEach((element) => {
-      element.pause();
-      element.remove();
-    });
-    audioElementsRef.current.clear();
+    clearAudio();
 
     const room = roomRef.current;
     roomRef.current = null;
@@ -183,7 +223,7 @@ export function PersistentVoiceProvider({
     }
 
     setState(initialState);
-  }, []);
+  }, [clearAudio]);
 
   const setMicrophone = useCallback(
     async (enabled: boolean) => {
@@ -193,7 +233,7 @@ export function PersistentVoiceProvider({
         setState((current) => ({
           ...current,
           microphoneEnabled: false,
-          error: "Ses odası bağlantısı hazır değil.",
+          error: "Ses odasÄ± baÄŸlantÄ±sÄ± hazÄ±r deÄŸil.",
         }));
         return;
       }
@@ -209,55 +249,49 @@ export function PersistentVoiceProvider({
           channelCount: 1,
         });
 
-        const publication =
-          room.localParticipant.getTrackPublication(
-            Track.Source.Microphone,
-          );
-
-        const active =
-          Boolean(publication) &&
-          !publication?.isMuted &&
-          enabled;
-
-        setState((current) => ({
-          ...current,
-          microphoneEnabled: active,
-          error:
-            enabled && !active
-              ? "Mikrofon yayını başlatılamadı. Tarayıcı mikrofon iznini kontrol et."
-              : "",
-        }));
-
-        persist(
-          state.roomName,
-          state.nickname,
-          enabled,
-          outputEnabledRef.current,
+        const publication = room.localParticipant.getTrackPublication(
+          Track.Source.Microphone,
         );
+        const active = Boolean(publication) && !publication?.isMuted && enabled;
+
+        setState((current) => {
+          persist(
+            current.roomName,
+            current.nickname,
+            current.userId,
+            enabled,
+            outputEnabledRef.current,
+          );
+          return {
+            ...current,
+            microphoneEnabled: active,
+            error:
+              enabled && !active
+                ? "Mikrofon yayÄ±nÄ± baÅŸlatÄ±lamadÄ±. TarayÄ±cÄ± mikrofon iznini kontrol et."
+                : "",
+          };
+        });
+
+        refreshParticipants();
       } catch (error) {
         wantedMicRef.current = false;
-
         setState((current) => ({
           ...current,
           microphoneEnabled: false,
           error:
-            error instanceof Error
-              ? error.message
-              : "Mikrofon açılamadı.",
+            error instanceof Error ? error.message : "Mikrofon aÃ§Ä±lamadÄ±.",
         }));
       }
     },
-    [persist, state.nickname, state.roomName],
+    [persist, refreshParticipants],
   );
 
   const connectVoice = useCallback(
-    async (roomName: string, nickname: string) => {
+    async (roomName: string, nickname: string, userId = "") => {
       const existing = roomRef.current;
 
-      if (
-        existing?.state === "connected" &&
-        existing.name === roomName
-      ) {
+      if (existing?.state === "connected" && existing.name === roomName) {
+        refreshParticipants();
         return;
       }
 
@@ -265,6 +299,7 @@ export function PersistentVoiceProvider({
       connectingRef.current = true;
 
       if (existing) {
+        clearAudio();
         await existing.disconnect().catch(() => undefined);
         roomRef.current = null;
       }
@@ -273,8 +308,10 @@ export function PersistentVoiceProvider({
         ...current,
         roomName,
         nickname,
+        userId,
         connected: false,
         connecting: true,
+        participants: [],
         participantCount: 0,
         error: "",
       }));
@@ -286,6 +323,7 @@ export function PersistentVoiceProvider({
           body: JSON.stringify({
             roomName,
             participantName: nickname,
+            userId,
           }),
         });
 
@@ -296,7 +334,7 @@ export function PersistentVoiceProvider({
         };
 
         if (!response.ok || !data.token || !data.serverUrl) {
-          throw new Error(data.error || "Ses odasına bağlanılamadı.");
+          throw new Error(data.error || "Ses odasÄ±na baÄŸlanÄ±lamadÄ±.");
         }
 
         const room = new Room({
@@ -311,76 +349,116 @@ export function PersistentVoiceProvider({
           RoomEvent.TrackSubscribed,
           (
             track: RemoteTrack,
-            _publication: RemoteTrackPublication,
+            publication: RemoteTrackPublication,
           ) => {
             if (track.kind !== Track.Kind.Audio) return;
 
-            const element = track.attach();
+            const trackKey = publication.trackSid || track.sid || `audio-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+            const previous = audioByTrackRef.current.get(trackKey);
+            if (previous) {
+              previous.pause();
+              previous.srcObject = null;
+              previous.remove();
+              audioByTrackRef.current.delete(trackKey);
+            }
+
+            document
+              .querySelectorAll<HTMLMediaElement>(
+                `audio[data-haswolf-voice-track="${trackKey}"]`,
+              )
+              .forEach((duplicate) => duplicate.remove());
+
+            track.detach().forEach((element) => element.remove());
+            const element = track.attach() as HTMLMediaElement;
             element.autoplay = true;
+            element.playsInline = true;
             element.muted = !outputEnabledRef.current;
             element.volume = outputEnabledRef.current ? 1 : 0;
-            element.dataset.haswolfVoice = "true";
+            element.dataset.haswolfVoiceTrack = trackKey;
             document.body.appendChild(element);
-            audioElementsRef.current.add(element);
+            audioByTrackRef.current.set(trackKey, element);
+            void element.play().catch(() => undefined);
           },
         );
 
-        room.on(RoomEvent.TrackUnsubscribed, (track: RemoteTrack) => {
-          track.detach().forEach((element) => {
-            audioElementsRef.current.delete(element);
-            element.remove();
-          });
-        });
+        room.on(
+          RoomEvent.TrackUnsubscribed,
+          (
+            track: RemoteTrack,
+            publication: RemoteTrackPublication,
+          ) => {
+            const trackKey = publication.trackSid || track.sid;
 
-        room.on(RoomEvent.ActiveSpeakersChanged, updateActiveSpeaker);
-        room.on(RoomEvent.ParticipantConnected, updateParticipantCount);
-        room.on(RoomEvent.ParticipantDisconnected, updateParticipantCount);
-        room.on(RoomEvent.Reconnected, updateParticipantCount);
+            if (trackKey) {
+              const element = audioByTrackRef.current.get(trackKey);
+              if (element) {
+                element.pause();
+                element.srcObject = null;
+                element.remove();
+                audioByTrackRef.current.delete(trackKey);
+              }
+            }
+
+            track.detach().forEach((element) => {
+              element.pause();
+              element.srcObject = null;
+              element.remove();
+            });
+          },
+        );
+
+        room.on(RoomEvent.ActiveSpeakersChanged, refreshParticipants);
+        room.on(RoomEvent.ParticipantConnected, refreshParticipants);
+        room.on(RoomEvent.ParticipantDisconnected, refreshParticipants);
+        room.on(RoomEvent.ParticipantMetadataChanged, refreshParticipants);
+        room.on(RoomEvent.Reconnected, refreshParticipants);
 
         await room.connect(data.serverUrl, data.token);
 
+        const participants = getParticipants(room);
         setState((current) => ({
           ...current,
           connected: true,
           connecting: false,
-          participantCount: getParticipantCount(room),
+          participants,
+          participantCount: participants.length,
           error: "",
         }));
 
         persist(
           roomName,
           nickname,
+          userId,
           wantedMicRef.current,
           outputEnabledRef.current,
         );
 
         if (wantedMicRef.current) {
-          window.setTimeout(() => {
-            void setMicrophone(true);
-          }, 450);
+          window.setTimeout(() => void setMicrophone(true), 350);
         }
       } catch (error) {
         roomRef.current = null;
-
+        clearAudio();
         setState((current) => ({
           ...current,
           connected: false,
           connecting: false,
+          participants: [],
           participantCount: 0,
           error:
             error instanceof Error
               ? error.message
-              : "Ses odasına bağlanılamadı.",
+              : "Ses odasÄ±na baÄŸlanÄ±lamadÄ±.",
         }));
       } finally {
         connectingRef.current = false;
       }
     },
     [
+      clearAudio,
       persist,
+      refreshParticipants,
       setMicrophone,
-      updateActiveSpeaker,
-      updateParticipantCount,
     ],
   );
 
@@ -392,7 +470,6 @@ export function PersistentVoiceProvider({
 
     try {
       const saved = JSON.parse(raw) as PersistedVoice;
-
       if (!saved.roomName || !saved.nickname) {
         sessionStorage.removeItem(STORAGE_KEY);
         return;
@@ -400,15 +477,14 @@ export function PersistentVoiceProvider({
 
       wantedMicRef.current = Boolean(saved.microphoneWanted);
       outputEnabledRef.current = saved.outputEnabled !== false;
-
       setState((current) => ({
         ...current,
         roomName: saved.roomName,
         nickname: saved.nickname,
+        userId: saved.userId || "",
         outputEnabled: outputEnabledRef.current,
       }));
-
-      void connectVoice(saved.roomName, saved.nickname);
+      void connectVoice(saved.roomName, saved.nickname, saved.userId || "");
     } catch {
       sessionStorage.removeItem(STORAGE_KEY);
     }
@@ -416,18 +492,11 @@ export function PersistentVoiceProvider({
 
   useEffect(() => {
     if (!state.connected) return;
-
-    const timer = window.setInterval(() => {
-      updateParticipantCount();
-      updateActiveSpeaker();
-    }, 1000);
-
+    const timer = window.setInterval(refreshParticipants, 750);
     return () => window.clearInterval(timer);
-  }, [
-    state.connected,
-    updateActiveSpeaker,
-    updateParticipantCount,
-  ]);
+  }, [refreshParticipants, state.connected]);
+
+  useEffect(() => () => clearAudio(), [clearAudio]);
 
   const value = useMemo<VoiceContextValue>(
     () => ({
@@ -437,13 +506,7 @@ export function PersistentVoiceProvider({
       setMicrophone,
       setOutput,
     }),
-    [
-      connectVoice,
-      disconnectVoice,
-      setMicrophone,
-      setOutput,
-      state,
-    ],
+    [connectVoice, disconnectVoice, setMicrophone, setOutput, state],
   );
 
   const isCommunityPage = pathname?.startsWith("/topluluk");
@@ -459,17 +522,16 @@ export function PersistentVoiceProvider({
               className={state.microphoneEnabled ? "is-live" : ""}
               aria-hidden="true"
             >
-              ●
+              â—
             </span>
-
             <div className="haswolf-persistent-voice__summary">
               <strong>{state.roomName}</strong>
               <small>
                 {state.activeSpeaker
-                  ? `${state.activeSpeaker} konuşuyor`
+                  ? `${state.activeSpeaker} konuÅŸuyor`
                   : state.microphoneEnabled
-                    ? `${state.nickname} mikrofonu açık`
-                    : "Ses odası arka planda aktif"}
+                    ? `${state.nickname} mikrofonu aÃ§Ä±k`
+                    : "Ses odasÄ± arka planda aktif"}
               </small>
             </div>
           </div>
@@ -478,38 +540,34 @@ export function PersistentVoiceProvider({
             <button
               type="button"
               onClick={() => setOutput(!state.outputEnabled)}
-              title={state.outputEnabled ? "Oda sesini kapat" : "Oda sesini aç"}
+              title={state.outputEnabled ? "Oda sesini kapat" : "Oda sesini aÃ§"}
             >
-              {state.outputEnabled ? "🔊" : "🔇"}
+              {state.outputEnabled ? "ğŸ”Š" : "ğŸ”‡"}
             </button>
-
             <button
               type="button"
               className={state.microphoneEnabled ? "is-active" : ""}
-              onClick={() =>
-                void setMicrophone(!state.microphoneEnabled)
+              onClick={() => void setMicrophone(!state.microphoneEnabled)}
+              title={
+                state.microphoneEnabled ? "Mikrofonu sustur" : "Mikrofonu aÃ§"
               }
-              title={state.microphoneEnabled ? "Mikrofonu sustur" : "Mikrofonu aç"}
             >
-              {state.microphoneEnabled ? "🎙️" : "🎤"}
+              {state.microphoneEnabled ? "ğŸ™ï¸" : "ğŸ¤"}
             </button>
-
             <button
               type="button"
               className="is-danger"
               onClick={() => void disconnectVoice()}
-              title="Ses odasından çık"
+              title="Ses odasÄ±ndan Ã§Ä±k"
             >
-              ✕
+              âœ•
             </button>
           </div>
         </div>
       )}
 
       {state.error && !isCommunityPage && (
-        <div className="haswolf-voice-error">
-          {state.error}
-        </div>
+        <div className="haswolf-voice-error">{state.error}</div>
       )}
     </VoiceContext.Provider>
   );
@@ -517,10 +575,6 @@ export function PersistentVoiceProvider({
 
 export function usePersistentVoice() {
   const value = useContext(VoiceContext);
-
-  if (!value) {
-    throw new Error("PersistentVoiceProvider eksik.");
-  }
-
+  if (!value) throw new Error("PersistentVoiceProvider eksik.");
   return value;
 }
