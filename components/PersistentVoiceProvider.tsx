@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   createContext,
@@ -95,7 +95,7 @@ function participantToItem(
   return {
     identity: participant.identity,
     userId: metadata.userId || participant.identity,
-    name: participant.name || participant.identity || "KatÄ±lÄ±mcÄ±",
+    name: participant.name || participant.identity || "KatÃ„Â±lÃ„Â±mcÃ„Â±",
     isGuest: metadata.isGuest,
     isLocal,
     isSpeaking: participant.isSpeaking,
@@ -233,7 +233,7 @@ export function PersistentVoiceProvider({
         setState((current) => ({
           ...current,
           microphoneEnabled: false,
-          error: "Ses odasÄ± baÄŸlantÄ±sÄ± hazÄ±r deÄŸil.",
+          error: "Ses odasÃ„Â± baÃ„Å¸lantÃ„Â±sÃ„Â± hazÃ„Â±r deÃ„Å¸il.",
         }));
         return;
       }
@@ -267,7 +267,7 @@ export function PersistentVoiceProvider({
             microphoneEnabled: active,
             error:
               enabled && !active
-                ? "Mikrofon yayÄ±nÄ± baÅŸlatÄ±lamadÄ±. TarayÄ±cÄ± mikrofon iznini kontrol et."
+                ? "Mikrofon yayÃ„Â±nÃ„Â± baÃ…Å¸latÃ„Â±lamadÃ„Â±. TarayÃ„Â±cÃ„Â± mikrofon iznini kontrol et."
                 : "",
           };
         });
@@ -279,7 +279,7 @@ export function PersistentVoiceProvider({
           ...current,
           microphoneEnabled: false,
           error:
-            error instanceof Error ? error.message : "Mikrofon aÃ§Ä±lamadÄ±.",
+            error instanceof Error ? error.message : "Mikrofon aÃƒÂ§Ã„Â±lamadÃ„Â±.",
         }));
       }
     },
@@ -334,7 +334,7 @@ export function PersistentVoiceProvider({
         };
 
         if (!response.ok || !data.token || !data.serverUrl) {
-          throw new Error(data.error || "Ses odasÄ±na baÄŸlanÄ±lamadÄ±.");
+          throw new Error(data.error || "Ses odasÃ„Â±na baÃ„Å¸lanÃ„Â±lamadÃ„Â±.");
         }
 
         const room = new Room({
@@ -371,8 +371,7 @@ export function PersistentVoiceProvider({
             track.detach().forEach((element) => element.remove());
             const element = track.attach() as HTMLMediaElement;
             element.autoplay = true;
-            element.playsInline = true;
-            element.muted = !outputEnabledRef.current;
+element.muted = !outputEnabledRef.current;
             element.volume = outputEnabledRef.current ? 1 : 0;
             element.dataset.haswolfVoiceTrack = trackKey;
             document.body.appendChild(element);
@@ -448,7 +447,7 @@ export function PersistentVoiceProvider({
           error:
             error instanceof Error
               ? error.message
-              : "Ses odasÄ±na baÄŸlanÄ±lamadÄ±.",
+              : "Ses odasÃ„Â±na baÃ„Å¸lanÃ„Â±lamadÃ„Â±.",
         }));
       } finally {
         connectingRef.current = false;
@@ -522,16 +521,16 @@ export function PersistentVoiceProvider({
               className={state.microphoneEnabled ? "is-live" : ""}
               aria-hidden="true"
             >
-              â—
+              Ã¢â€”Â
             </span>
             <div className="haswolf-persistent-voice__summary">
               <strong>{state.roomName}</strong>
               <small>
                 {state.activeSpeaker
-                  ? `${state.activeSpeaker} konuÅŸuyor`
+                  ? `${state.activeSpeaker} konuÃ…Å¸uyor`
                   : state.microphoneEnabled
-                    ? `${state.nickname} mikrofonu aÃ§Ä±k`
-                    : "Ses odasÄ± arka planda aktif"}
+                    ? `${state.nickname} mikrofonu aÃƒÂ§Ã„Â±k`
+                    : "Ses odasÃ„Â± arka planda aktif"}
               </small>
             </div>
           </div>
@@ -540,27 +539,27 @@ export function PersistentVoiceProvider({
             <button
               type="button"
               onClick={() => setOutput(!state.outputEnabled)}
-              title={state.outputEnabled ? "Oda sesini kapat" : "Oda sesini aÃ§"}
+              title={state.outputEnabled ? "Oda sesini kapat" : "Oda sesini aÃƒÂ§"}
             >
-              {state.outputEnabled ? "ğŸ”Š" : "ğŸ”‡"}
+              {state.outputEnabled ? "ÄŸÅ¸â€Å " : "ÄŸÅ¸â€â€¡"}
             </button>
             <button
               type="button"
               className={state.microphoneEnabled ? "is-active" : ""}
               onClick={() => void setMicrophone(!state.microphoneEnabled)}
               title={
-                state.microphoneEnabled ? "Mikrofonu sustur" : "Mikrofonu aÃ§"
+                state.microphoneEnabled ? "Mikrofonu sustur" : "Mikrofonu aÃƒÂ§"
               }
             >
-              {state.microphoneEnabled ? "ğŸ™ï¸" : "ğŸ¤"}
+              {state.microphoneEnabled ? "ÄŸÅ¸Ââ„¢Ã¯Â¸Â" : "ÄŸÅ¸ÂÂ¤"}
             </button>
             <button
               type="button"
               className="is-danger"
               onClick={() => void disconnectVoice()}
-              title="Ses odasÄ±ndan Ã§Ä±k"
+              title="Ses odasÃ„Â±ndan ÃƒÂ§Ã„Â±k"
             >
-              âœ•
+              Ã¢Å“â€¢
             </button>
           </div>
         </div>
@@ -578,3 +577,4 @@ export function usePersistentVoice() {
   if (!value) throw new Error("PersistentVoiceProvider eksik.");
   return value;
 }
+
