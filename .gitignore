@@ -42,3 +42,7 @@ next-env.d.ts
 
 .vercel
 .env*
+
+.haswolf-backup-*
+apply-haswolf-*.ps1
+globals-v6.css
