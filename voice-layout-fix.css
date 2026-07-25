@@ -1,0 +1,169 @@
+
+/* HASWOLF V6 voice/layout stabilization */
+.haswolf-voice-room-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .65rem;
+  margin-top: 1rem;
+}
+
+.haswolf-voice-room-actions button {
+  min-height: 2.85rem;
+  border: 1px solid rgba(217,170,74,.45);
+  border-radius: .8rem;
+  background: #12110d;
+  padding: .65rem 1rem;
+  color: #e7bd62;
+  font-size: .78rem;
+  font-weight: 900;
+}
+
+.haswolf-voice-room-actions button.is-danger {
+  border-color: rgba(239,68,68,.5);
+  background: rgba(90,16,16,.18);
+  color: #ff9696;
+}
+
+.haswolf-persistent-voice {
+  position: fixed;
+  z-index: 2147482000;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: calc(5.8rem + env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-columns: auto minmax(8rem,1fr) auto auto auto;
+  align-items: center;
+  gap: .5rem;
+  width: min(38rem, calc(100vw - 2rem));
+  border: 1px solid rgba(217,170,74,.55);
+  border-radius: 1rem;
+  background: rgba(7,9,9,.96);
+  box-shadow: 0 18px 60px rgba(0,0,0,.58);
+  padding: .65rem;
+  backdrop-filter: blur(14px);
+}
+
+.haswolf-persistent-voice > span {
+  color: #737373;
+}
+
+.haswolf-persistent-voice > span.is-live {
+  color: #35dc69;
+  filter: drop-shadow(0 0 6px #35dc69);
+}
+
+.haswolf-persistent-voice__summary {
+  min-width: 0;
+}
+
+.haswolf-persistent-voice strong,
+.haswolf-persistent-voice small {
+  display: block;
+}
+
+.haswolf-persistent-voice strong {
+  overflow: hidden;
+  color: #e4b956;
+  font-size: .72rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.haswolf-persistent-voice small {
+  margin-top: .12rem;
+  color: #999;
+  font-size: .58rem;
+}
+
+.haswolf-persistent-voice button {
+  border: 1px solid #51401f;
+  border-radius: .65rem;
+  background: #17140d;
+  padding: .48rem .62rem;
+  color: #f1ca75;
+  font-size: .62rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.haswolf-persistent-voice button.is-danger {
+  border-color: rgba(239,68,68,.45);
+  color: #ff9898;
+}
+
+.haswolf-delete-guest {
+  display: grid;
+  gap: .35rem;
+  margin-top: .65rem;
+}
+
+.haswolf-delete-guest button {
+  width: 100%;
+  min-height: 2.7rem;
+  border: 1px solid rgba(239,68,68,.55);
+  border-radius: .7rem;
+  background: rgba(100,18,18,.2);
+  color: #ff9a9a;
+  font-size: .75rem;
+  font-weight: 900;
+}
+
+.haswolf-delete-guest small {
+  color: #f87171;
+  font-size: .65rem;
+}
+
+/* Masaüstünde Premium, Bildirimler ve Dil çakışmasını engeller. */
+@media (min-width: 1280px) {
+  .haswolf-main-nav {
+    display: grid !important;
+    grid-template-columns:
+      minmax(8.2rem,1fr)
+      minmax(7rem,.9fr)
+      minmax(6.5rem,.8fr)
+      minmax(7rem,.9fr)
+      minmax(8rem,1fr)
+      minmax(8rem,1fr)
+      minmax(7rem,.85fr)
+      minmax(8rem,1fr)
+      minmax(9rem,1.1fr)
+      minmax(6.5rem,.75fr) !important;
+    align-items: stretch !important;
+    gap: .45rem !important;
+    overflow: visible !important;
+  }
+
+  .haswolf-main-nav > a,
+  .haswolf-main-nav > button,
+  .haswolf-main-nav > div {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+
+  .haswolf-main-nav > div > button {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 3rem !important;
+    padding-inline: .55rem !important;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1450px) {
+  .haswolf-main-nav {
+    grid-template-columns: repeat(5,minmax(0,1fr)) !important;
+  }
+}
+
+@media (max-width: 639px) {
+  .haswolf-persistent-voice {
+    right: .5rem;
+    bottom: calc(5.35rem + env(safe-area-inset-bottom));
+    grid-template-columns: auto minmax(0,1fr) auto auto;
+    width: calc(100vw - 1rem);
+  }
+
+  .haswolf-persistent-voice button:first-of-type {
+    display: none;
+  }
+}

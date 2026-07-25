@@ -1,0 +1,26 @@
+
+/* HASWOLF V6 microphone recovery */
+.haswolf-voice-error {
+  position: fixed;
+  z-index: 2147482001;
+  right: 1rem;
+  bottom: calc(9.5rem + env(safe-area-inset-bottom));
+  max-width: min(28rem, calc(100vw - 2rem));
+  border: 1px solid rgba(239,68,68,.55);
+  border-radius: .8rem;
+  background: rgba(45,8,8,.96);
+  padding: .65rem .85rem;
+  color: #ffaaaa;
+  font-size: .68rem;
+  font-weight: 800;
+  box-shadow: 0 14px 40px rgba(0,0,0,.4);
+}
+
+@media (max-width: 767px) {
+  .haswolf-voice-error {
+    left: .5rem;
+    right: .5rem;
+    bottom: calc(8.9rem + env(safe-area-inset-bottom));
+    max-width: none;
+  }
+}

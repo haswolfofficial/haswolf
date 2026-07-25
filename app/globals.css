@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 :root {
   --background: #050707;
@@ -169,7 +169,7 @@ textarea:disabled {
   }
 }
 
-/* Sprint 1 / Katman 2: görünür UI sistemi */
+/* Sprint 1 / Katman 2: gÃ¶rÃ¼nÃ¼r UI sistemi */
 .haswolf-header {
   box-shadow: 0 12px 42px rgba(0, 0, 0, 0.38);
 }
@@ -254,7 +254,7 @@ textarea:disabled {
   main { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
 }
 
-/* Sprint 1 / Katman 3: üst sosyal alan, tek satır menü ve APK indirme */
+/* Sprint 1 / Katman 3: Ã¼st sosyal alan, tek satÄ±r menÃ¼ ve APK indirme */
 .haswolf-header-social {
   display: flex;
   align-items: center;
@@ -302,7 +302,7 @@ textarea:disabled {
   .haswolf-bottom-nav button { font-size: .55rem; }
 }
 
-/* Sprint 1 / Katman 4: sıkışmayan masaüstü üst alan */
+/* Sprint 1 / Katman 4: sÄ±kÄ±ÅŸmayan masaÃ¼stÃ¼ Ã¼st alan */
 .haswolf-topbar {
   min-height: 88px;
   display: flex;
@@ -380,7 +380,7 @@ textarea:disabled {
   .haswolf-main-nav button { padding-inline: .85rem; font-size: .8rem; }
 }
 
-/* Sprint 1 / Katman 5: canlı altın tonlar ve dengeli mobil hızlı menü */
+/* Sprint 1 / Katman 5: canlÄ± altÄ±n tonlar ve dengeli mobil hÄ±zlÄ± menÃ¼ */
 .haswolf-hero {
   isolation: isolate;
   background: #050505;
@@ -447,7 +447,7 @@ textarea:disabled {
   background: rgba(217,170,74,.08);
 }
 
-/* Katman 3'te kalan 6 kolon genişlik kuralını kesin olarak geçersiz kılar. */
+/* Katman 3'te kalan 6 kolon geniÅŸlik kuralÄ±nÄ± kesin olarak geÃ§ersiz kÄ±lar. */
 .haswolf-bottom-nav {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   width: min(calc(100% - 1rem), 25rem);
@@ -549,7 +549,7 @@ textarea:disabled {
   }
 }
 
-/* HASWOLF KATMAN 6 - CANLI UST MENÜ VE NAVİGASYON */
+/* HASWOLF KATMAN 6 - CANLI UST MENÃœ VE NAVÄ°GASYON */
 .haswolf-header {
   background:
     radial-gradient(circle at 52% -30%, rgba(247, 183, 52, .10), transparent 36%),
@@ -709,9 +709,9 @@ textarea:disabled {
   }
 }
 
-/* KATMAN 6 KONTROL İMZASI: CANLI UST MENU */
+/* KATMAN 6 KONTROL Ä°MZASI: CANLI UST MENU */
 
-/* HASWOLF KATMAN 6.1 - ULTRA CANLI ÜST MENÜ */
+/* HASWOLF KATMAN 6.1 - ULTRA CANLI ÃœST MENÃœ */
 .haswolf-topbar {
   min-height: 5.25rem;
   background:
@@ -835,7 +835,7 @@ textarea:disabled {
   filter: drop-shadow(0 0 9px rgba(64,244,133,.50)) !important;
 }
 
-/* Masaüstünde hamburger gizli, mobil ve tablette görünür */
+/* MasaÃ¼stÃ¼nde hamburger gizli, mobil ve tablette gÃ¶rÃ¼nÃ¼r */
 @media (min-width: 1024px) {
   .haswolf-menu-button {
     display: none !important;
@@ -848,12 +848,12 @@ textarea:disabled {
   }
 }
 
-/* Eski footer sosyal ikonları artık gösterilmez */
+/* Eski footer sosyal ikonlarÄ± artÄ±k gÃ¶sterilmez */
 .haswolf-footer .haswolf-social {
   display: none !important;
 }
 
-/* KATMAN 6.1 KONTROL İMZASI: ULTRA CANLI MENU */
+/* KATMAN 6.1 KONTROL Ä°MZASI: ULTRA CANLI MENU */
 
 /* HASWOLF HEADER HOTFIX V2 */
 .haswolf-auth-top {
@@ -1439,7 +1439,7 @@ textarea:disabled {
 }
 
 
-/* HASWOLF MOBILE LAYOUT REPAIR — scoped, no desktop regression */
+/* HASWOLF MOBILE LAYOUT REPAIR â€” scoped, no desktop regression */
 .haswolf-server-grid {
   width: 100%;
 }
@@ -1677,7 +1677,7 @@ textarea:disabled {
 }
 
 
-/* HASWOLF WhatsApp + satış aksiyonları */
+/* HASWOLF WhatsApp + satÄ±ÅŸ aksiyonlarÄ± */
 .haswolf-floating-whatsapp { position: fixed; right: max(1rem, env(safe-area-inset-right)); bottom: max(1rem, env(safe-area-inset-bottom)); z-index: 100; display: inline-flex; align-items: center; gap: .55rem; min-height: 3.25rem; border: 1px solid rgba(74,222,128,.7); border-radius: 999px; background: linear-gradient(135deg,#15803d,#075e32); padding: .78rem 1rem; color: white; font-size: .82rem; font-weight: 900; box-shadow: 0 10px 35px rgba(34,197,94,.28); isolation: isolate; animation: haswolf-whatsapp-float 3.2s ease-in-out infinite; }
 .haswolf-floating-whatsapp:hover { filter: brightness(1.18); transform: translateY(-2px); }
 .haswolf-floating-whatsapp__glow { position:absolute; inset:-5px; z-index:-1; border-radius:inherit; border:2px solid rgba(74,222,128,.55); opacity:0; animation:haswolf-whatsapp-glow 4.5s ease-out infinite; }
@@ -1904,7 +1904,7 @@ body>.skiptranslate{display:none!important}
 
 /* HASWOLF V5.1 ACTIVE PROFESSIONAL PANELS */
 .haswolf-premium-root{position:relative}.haswolf-premium-trigger{display:flex;align-items:center;gap:.4rem;min-height:3.1rem;border:1px solid rgba(217,170,74,.35);border-radius:.8rem;background:#0c0d0d;padding:.65rem .8rem;color:#e8c06c;font-size:.72rem}.haswolf-premium-trigger em{border-radius:999px;background:#7b230d;padding:.18rem .38rem;color:#ffd5a5;font-size:.5rem;font-style:normal}.haswolf-premium-trigger.is-premium{animation:haswolf-premium-fire 2.2s infinite;background:linear-gradient(135deg,#351006,#160804 55%,#4b1907);box-shadow:0 0 22px rgba(255,91,20,.26)}
-.haswolf-premium-panel{position:absolute;z-index:150;right:0;top:calc(100% + .65rem);width:min(23rem,calc(100vw - 1rem));overflow:hidden;border:1px solid rgba(255,119,32,.42);border-radius:1rem;background:linear-gradient(160deg,#160b06,#080a0a 48%,#211006);box-shadow:0 35px 100px #000;padding:1rem}.haswolf-premium-panel header{display:flex;justify-content:space-between}.haswolf-premium-panel header small{color:#ff8f3d;font-size:.55rem;letter-spacing:.2em}.haswolf-premium-panel h2{font-size:1.25rem;font-weight:950}.haswolf-premium-panel header button{width:2rem;height:2rem;border:1px solid #57301d;border-radius:.6rem}.haswolf-premium-hero{display:flex;align-items:center;gap:.8rem;margin:1rem 0;border:1px solid rgba(255,113,24,.2);border-radius:.8rem;background:rgba(255,80,0,.08);padding:.8rem}.haswolf-premium-hero>span{font-size:2rem;filter:drop-shadow(0 0 12px #ff5a18)}.haswolf-premium-hero strong,.haswolf-premium-hero small{display:block}.haswolf-premium-hero small{color:#9c8173;font-size:.65rem}.haswolf-premium-panel ul{display:grid;gap:.45rem;color:#d8d0cb;font-size:.72rem}.haswolf-premium-panel li:before{content:'✓';margin-right:.45rem;color:#ff9d49}.haswolf-premium-panel>a{display:block;margin-top:1rem;border-radius:.7rem;background:linear-gradient(90deg,#c44b10,#ff9a31);padding:.7rem;text-align:center;color:#160702;font-weight:900}
+.haswolf-premium-panel{position:absolute;z-index:150;right:0;top:calc(100% + .65rem);width:min(23rem,calc(100vw - 1rem));overflow:hidden;border:1px solid rgba(255,119,32,.42);border-radius:1rem;background:linear-gradient(160deg,#160b06,#080a0a 48%,#211006);box-shadow:0 35px 100px #000;padding:1rem}.haswolf-premium-panel header{display:flex;justify-content:space-between}.haswolf-premium-panel header small{color:#ff8f3d;font-size:.55rem;letter-spacing:.2em}.haswolf-premium-panel h2{font-size:1.25rem;font-weight:950}.haswolf-premium-panel header button{width:2rem;height:2rem;border:1px solid #57301d;border-radius:.6rem}.haswolf-premium-hero{display:flex;align-items:center;gap:.8rem;margin:1rem 0;border:1px solid rgba(255,113,24,.2);border-radius:.8rem;background:rgba(255,80,0,.08);padding:.8rem}.haswolf-premium-hero>span{font-size:2rem;filter:drop-shadow(0 0 12px #ff5a18)}.haswolf-premium-hero strong,.haswolf-premium-hero small{display:block}.haswolf-premium-hero small{color:#9c8173;font-size:.65rem}.haswolf-premium-panel ul{display:grid;gap:.45rem;color:#d8d0cb;font-size:.72rem}.haswolf-premium-panel li:before{content:'âœ“';margin-right:.45rem;color:#ff9d49}.haswolf-premium-panel>a{display:block;margin-top:1rem;border-radius:.7rem;background:linear-gradient(90deg,#c44b10,#ff9a31);padding:.7rem;text-align:center;color:#160702;font-weight:900}
 .haswolf-auth-user.is-premium .haswolf-auth-action:first-child{border-color:#ff7a24;background:linear-gradient(135deg,#411104,#160604);color:#ffd099;box-shadow:0 0 18px rgba(255,90,20,.2)}
 @keyframes haswolf-premium-fire{0%,100%{filter:brightness(1)}50%{filter:brightness(1.2);box-shadow:0 0 34px rgba(255,91,20,.4)}}
 .haswolf-admin-toolbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem;border:1px solid rgba(255,112,28,.2);border-radius:1rem;background:linear-gradient(90deg,rgba(75,24,4,.32),rgba(217,170,74,.05));padding:1rem}.haswolf-admin-toolbar b,.haswolf-admin-toolbar small{display:block}.haswolf-admin-toolbar small{color:#8e8179;font-size:.65rem}.haswolf-admin-toolbar input{width:min(25rem,100%);border:1px solid #333;border-radius:.65rem;background:#070909;padding:.75rem;color:#fff}.haswolf-admin-message{margin:.7rem 0;border:1px solid rgba(217,170,74,.28);border-radius:.7rem;background:rgba(217,170,74,.08);padding:.75rem;color:#f0ca78;font-size:.72rem}.haswolf-admin-action-list article{align-items:center}.haswolf-admin-action-list article.is-premium{border-color:rgba(255,104,24,.42);background:linear-gradient(100deg,rgba(82,24,4,.2),#0d1111)}.haswolf-admin-action-list article small{display:block;margin-top:.2rem;color:#687070;font-size:.56rem;word-break:break-all}.haswolf-admin-actions{display:flex!important;align-items:center;flex-wrap:wrap;gap:.35rem}.haswolf-admin-actions>span{width:100%}.haswolf-admin-actions button,.haswolf-admin-actions a{border:1px solid rgba(217,170,74,.35);border-radius:.5rem;background:rgba(217,170,74,.08);padding:.42rem .58rem;color:#e9c26e;font-size:.58rem;font-weight:800}.haswolf-admin-actions .is-danger,.haswolf-admin-room-list .is-danger{border-color:rgba(255,77,77,.3);color:#ff9393;background:rgba(255,0,0,.06)}
@@ -1924,7 +1924,7 @@ body>.skiptranslate{display:none!important}
 @media(max-width:680px){.haswolf-category-drawer{padding:.55rem!important}.haswolf-category-summary{padding:.65rem!important}.haswolf-category-summary>span:first-child{font-size:.76rem}.haswolf-category-summary__hint{max-width:5.2rem;font-size:.46rem!important;padding:.25rem .4rem!important}.haswolf-games-drawer summary{grid-template-columns:minmax(0,1fr) auto auto}.haswolf-games-drawer summary small{display:none}.haswolf-founder-card{align-items:flex-start;flex-direction:column}.haswolf-admin-action-list article{grid-template-columns:1fr!important}.haswolf-admin-action-list article>div{grid-column:1/-1}.haswolf-admin-actions button,.haswolf-admin-actions a{min-height:2.5rem}.haswolf-admin-nav__brand{position:sticky;left:0}}
 
 
-/* HASWOLF V5.3 - Kategoriler/Oyunlar eşit panel düzeltmesi */
+/* HASWOLF V5.3 - Kategoriler/Oyunlar eÅŸit panel dÃ¼zeltmesi */
 .haswolf-category-drawer{overflow:hidden;width:100%;padding:0!important}
 .haswolf-category-summary{width:100%;min-height:3.45rem!important;border:0!important;border-radius:.8rem!important;padding:.75rem!important;box-sizing:border-box}
 .haswolf-category-summary>span:first-child{white-space:nowrap!important;font-size:.82rem!important;letter-spacing:.02em}
@@ -1965,7 +1965,7 @@ body>.skiptranslate{display:none!important}
 .haswolf-guild-admin-top{align-items:start}.haswolf-guild-invite-grid{grid-template-columns:1fr 1.35fr auto!important}.haswolf-guild-member-list article{grid-template-columns:minmax(10rem,1fr) 9rem auto!important}.haswolf-guild-invite-row{display:grid!important;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:.55rem;border:1px solid #202626;border-radius:.7rem;background:#0d1111;padding:.7rem}.haswolf-guild-invite-row b,.haswolf-guild-invite-row small{display:block}.haswolf-guild-invite-row small,.haswolf-guild-invite-row time{color:#737d7d;font-size:.55rem}.haswolf-guild-invite-row button{border:1px solid #704040;border-radius:.45rem;padding:.42rem .6rem;color:#ffaaaa;font-size:.58rem}
 @media(max-width:900px){.haswolf-guild-invite-grid{grid-template-columns:1fr!important}.haswolf-guild-member-list article{grid-template-columns:1fr auto!important}.haswolf-guild-member-list article>div{grid-column:1/-1}.haswolf-guild-invite-row{grid-template-columns:1fr auto}.haswolf-guild-invite-row time{grid-column:1/-1}}
 
-/* HASWOLF V5.7 — profesyonel panel kapatma düğmeleri */
+/* HASWOLF V5.7 â€” profesyonel panel kapatma dÃ¼ÄŸmeleri */
 .haswolf-panel-close,
 .haswolf-notification-panel header .haswolf-panel-close,
 .haswolf-premium-panel header .haswolf-panel-close {
@@ -2005,7 +2005,7 @@ body>.skiptranslate{display:none!important}
   }
 }
 
-/* HASWOLF V5.8 — mobile/tablet tam üst menü ve sosyal ray */
+/* HASWOLF V5.8 â€” mobile/tablet tam Ã¼st menÃ¼ ve sosyal ray */
 .haswolf-mobile-social-rail { display: none; }
 
 @media (max-width: 1023px) {
@@ -2034,7 +2034,7 @@ body>.skiptranslate{display:none!important}
     border-radius: .55rem !important;
   }
 
-  /* Önceden mobilde tamamen gizlenen ana menüyü iki kompakt satırda göster. */
+  /* Ã–nceden mobilde tamamen gizlenen ana menÃ¼yÃ¼ iki kompakt satÄ±rda gÃ¶ster. */
   .haswolf-main-nav {
     display: grid !important;
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -2178,7 +2178,7 @@ body>.skiptranslate{display:none!important}
     font-size: .7rem;
   }
 
-  /* Üst menü görünür olduğu için hero ve içerik daha dengeli başlasın. */
+  /* Ãœst menÃ¼ gÃ¶rÃ¼nÃ¼r olduÄŸu iÃ§in hero ve iÃ§erik daha dengeli baÅŸlasÄ±n. */
   .haswolf-hero .haswolf-container {
     min-height: 285px !important;
     padding-top: 1.15rem !important;
@@ -2212,15 +2212,15 @@ body>.skiptranslate{display:none!important}
   }
 }
 /* =========================================================
-   HASWOLF V6 — MOBILE / TABLET / WEB UI REPAIR
-   Menü, bildirim paneli, sosyal ray, oyunlar ve sunucu kartları
+   HASWOLF V6 â€” MOBILE / TABLET / WEB UI REPAIR
+   MenÃ¼, bildirim paneli, sosyal ray, oyunlar ve sunucu kartlarÄ±
    ========================================================= */
 
 :root {
   --haswolf-mobile-header-gap: .24rem;
 }
 
-/* Açılır paneller sayfayı itmez; viewport içinde sabit kalır. */
+/* AÃ§Ä±lÄ±r paneller sayfayÄ± itmez; viewport iÃ§inde sabit kalÄ±r. */
 .haswolf-notification-root,
 .haswolf-premium-root,
 .haswolf-language-compact,
@@ -2235,7 +2235,7 @@ body>.skiptranslate{display:none!important}
   scrollbar-gutter: stable;
 }
 
-/* Sağ rayda sosyal medya + WhatsApp tek sistem. */
+/* SaÄŸ rayda sosyal medya + WhatsApp tek sistem. */
 .haswolf-mobile-social-rail__panel a.haswolf-mobile-social-rail__whatsapp {
   border: 1px solid rgba(74, 222, 128, .42);
   background: linear-gradient(135deg, rgba(21,128,61,.42), rgba(7,94,50,.78));
@@ -2256,7 +2256,7 @@ body>.skiptranslate{display:none!important}
   box-shadow: 0 0 14px rgba(34,197,94,.25);
 }
 
-/* Ana oyun alanı */
+/* Ana oyun alanÄ± */
 .haswolf-games-primary {
   width: min(100% - 1.5rem, 1500px);
   margin: .75rem auto 0;
@@ -2338,7 +2338,7 @@ body>.skiptranslate{display:none!important}
   font-weight: 900;
 }
 
-/* Masaüstü menüde bütün düğmeler eşit yükseklik ve kontrollü genişlik. */
+/* MasaÃ¼stÃ¼ menÃ¼de bÃ¼tÃ¼n dÃ¼ÄŸmeler eÅŸit yÃ¼kseklik ve kontrollÃ¼ geniÅŸlik. */
 @media (min-width: 1024px) {
   .haswolf-main-nav {
     display: grid !important;
@@ -2375,7 +2375,7 @@ body>.skiptranslate{display:none!important}
   }
 }
 
-/* Tablet ve mobil üst menü: iki düzgün satır, kayma yok. */
+/* Tablet ve mobil Ã¼st menÃ¼: iki dÃ¼zgÃ¼n satÄ±r, kayma yok. */
 @media (max-width: 1023px) {
   .haswolf-header {
     contain: layout paint;
@@ -2472,7 +2472,7 @@ body>.skiptranslate{display:none!important}
     max-height: calc(100dvh - 6rem) !important;
   }
 
-  /* Sunucu kartları artık viewport genişliğini aşmaz. */
+  /* Sunucu kartlarÄ± artÄ±k viewport geniÅŸliÄŸini aÅŸmaz. */
   .haswolf-server-grid {
     display: grid !important;
     grid-template-columns: repeat(3, minmax(0,1fr)) !important;
@@ -2529,7 +2529,7 @@ body>.skiptranslate{display:none!important}
     font-size: .51rem !important;
   }
 
-  /* Market sekmeleri dört adet, ekrana tam oturur. */
+  /* Market sekmeleri dÃ¶rt adet, ekrana tam oturur. */
   .haswolf-market-tabs {
     grid-template-columns: repeat(4,minmax(0,1fr)) !important;
     gap: .28rem !important;
@@ -2547,7 +2547,7 @@ body>.skiptranslate{display:none!important}
     white-space: normal !important;
   }
 
-  /* DOM sırası da değiştirilir; bu CSS yedek güvence sağlar. */
+  /* DOM sÄ±rasÄ± da deÄŸiÅŸtirilir; bu CSS yedek gÃ¼vence saÄŸlar. */
   .haswolf-market-tabs > button:nth-child(1) { order: 3; }
   .haswolf-market-tabs > button:nth-child(2) { order: 1; }
   .haswolf-market-tabs > button:nth-child(3) { order: 2; }
@@ -2557,7 +2557,7 @@ body>.skiptranslate{display:none!important}
     z-index: 120 !important;
   }
 
-  /* Ayrı yüzen WhatsApp mobilde kapatılır; rayın içinde gösterilir. */
+  /* AyrÄ± yÃ¼zen WhatsApp mobilde kapatÄ±lÄ±r; rayÄ±n iÃ§inde gÃ¶sterilir. */
   .haswolf-floating-whatsapp {
     display: none !important;
   }
@@ -2611,7 +2611,7 @@ body>.skiptranslate{display:none!important}
   }
 }
 
-/* Dokunma sesini CSS üretmez; istemsiz tıklama/aktif animasyonlarını azalt. */
+/* Dokunma sesini CSS Ã¼retmez; istemsiz tÄ±klama/aktif animasyonlarÄ±nÄ± azalt. */
 button,
 a,
 summary {
@@ -2625,3 +2625,376 @@ summary {
     transform: none !important;
   }
 }
+
+/* HASWOLF V6 Sprint UI + persistent voice */
+@media(min-width:1280px){.haswolf-main-nav{display:flex!important;flex-wrap:nowrap!important;align-items:stretch!important;gap:.5rem!important}.haswolf-main-nav>a,.haswolf-main-nav>button,.haswolf-main-nav>div{flex:1 1 0!important;min-width:0!important;width:auto!important;margin:0!important}.haswolf-main-nav>div>button{width:100%!important;min-height:3rem!important}}
+@media(min-width:1024px) and (max-width:1279px){.haswolf-main-nav{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
+.haswolf-language-portal{position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;padding:1rem}.haswolf-language-portal__backdrop{position:absolute;inset:0;width:100%;height:100%;border:0;background:rgba(0,0,0,.76);backdrop-filter:blur(8px)}.haswolf-language-portal__panel{position:relative;z-index:1;width:min(32rem,100%);max-height:calc(100dvh - 2rem);overflow:auto;border:1px solid rgba(217,170,74,.52);border-radius:1.25rem;background:#080a0a;box-shadow:0 24px 90px rgba(0,0,0,.75);padding:1rem}.haswolf-language-portal__panel header{display:flex;align-items:center;justify-content:space-between;margin:-1rem -1rem .75rem;padding:1rem;border-bottom:1px solid rgba(217,170,74,.22);background:#080a0a}.haswolf-language-portal__panel>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}.haswolf-language-portal__panel>div>button{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.65rem;min-height:3.25rem;border:1px solid #292721;border-radius:.8rem;background:#111313;padding:.65rem .8rem;color:#ddd;text-align:left}.haswolf-language-portal__panel>div>button.is-active{border-color:#d9aa4a;background:rgba(217,170,74,.12);color:#f2cb78}
+.haswolf-persistent-voice{position:fixed;z-index:2147482000;right:1rem;bottom:5.8rem;display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:.6rem;width:min(27rem,calc(100vw - 2rem));border:1px solid rgba(217,170,74,.55);border-radius:1rem;background:rgba(7,9,9,.94);box-shadow:0 18px 60px rgba(0,0,0,.58);padding:.65rem;backdrop-filter:blur(14px)}.haswolf-persistent-voice>span{color:#737373}.haswolf-persistent-voice>span.is-live{color:#35dc69}.haswolf-persistent-voice strong,.haswolf-persistent-voice small{display:block}.haswolf-persistent-voice strong{color:#e4b956;font-size:.72rem}.haswolf-persistent-voice small{color:#999;font-size:.58rem}.haswolf-persistent-voice button{border:1px solid #51401f;border-radius:.65rem;background:#17140d;padding:.48rem .62rem;color:#f1ca75;font-size:.62rem;font-weight:900}@media(max-width:639px){.haswolf-language-portal__panel>div{grid-template-columns:1fr}.haswolf-persistent-voice{right:.5rem;bottom:5.4rem;width:calc(100vw - 1rem)}}
+
+
+/* HASWOLF V6 voice/layout stabilization */
+.haswolf-voice-room-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .65rem;
+  margin-top: 1rem;
+}
+
+.haswolf-voice-room-actions button {
+  min-height: 2.85rem;
+  border: 1px solid rgba(217,170,74,.45);
+  border-radius: .8rem;
+  background: #12110d;
+  padding: .65rem 1rem;
+  color: #e7bd62;
+  font-size: .78rem;
+  font-weight: 900;
+}
+
+.haswolf-voice-room-actions button.is-danger {
+  border-color: rgba(239,68,68,.5);
+  background: rgba(90,16,16,.18);
+  color: #ff9696;
+}
+
+.haswolf-persistent-voice {
+  position: fixed;
+  z-index: 2147482000;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: calc(5.8rem + env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-columns: auto minmax(8rem,1fr) auto auto auto;
+  align-items: center;
+  gap: .5rem;
+  width: min(38rem, calc(100vw - 2rem));
+  border: 1px solid rgba(217,170,74,.55);
+  border-radius: 1rem;
+  background: rgba(7,9,9,.96);
+  box-shadow: 0 18px 60px rgba(0,0,0,.58);
+  padding: .65rem;
+  backdrop-filter: blur(14px);
+}
+
+.haswolf-persistent-voice > span {
+  color: #737373;
+}
+
+.haswolf-persistent-voice > span.is-live {
+  color: #35dc69;
+  filter: drop-shadow(0 0 6px #35dc69);
+}
+
+.haswolf-persistent-voice__summary {
+  min-width: 0;
+}
+
+.haswolf-persistent-voice strong,
+.haswolf-persistent-voice small {
+  display: block;
+}
+
+.haswolf-persistent-voice strong {
+  overflow: hidden;
+  color: #e4b956;
+  font-size: .72rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.haswolf-persistent-voice small {
+  margin-top: .12rem;
+  color: #999;
+  font-size: .58rem;
+}
+
+.haswolf-persistent-voice button {
+  border: 1px solid #51401f;
+  border-radius: .65rem;
+  background: #17140d;
+  padding: .48rem .62rem;
+  color: #f1ca75;
+  font-size: .62rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.haswolf-persistent-voice button.is-danger {
+  border-color: rgba(239,68,68,.45);
+  color: #ff9898;
+}
+
+.haswolf-delete-guest {
+  display: grid;
+  gap: .35rem;
+  margin-top: .65rem;
+}
+
+.haswolf-delete-guest button {
+  width: 100%;
+  min-height: 2.7rem;
+  border: 1px solid rgba(239,68,68,.55);
+  border-radius: .7rem;
+  background: rgba(100,18,18,.2);
+  color: #ff9a9a;
+  font-size: .75rem;
+  font-weight: 900;
+}
+
+.haswolf-delete-guest small {
+  color: #f87171;
+  font-size: .65rem;
+}
+
+/* Masaüstünde Premium, Bildirimler ve Dil çakışmasını engeller. */
+@media (min-width: 1280px) {
+  .haswolf-main-nav {
+    display: grid !important;
+    grid-template-columns:
+      minmax(8.2rem,1fr)
+      minmax(7rem,.9fr)
+      minmax(6.5rem,.8fr)
+      minmax(7rem,.9fr)
+      minmax(8rem,1fr)
+      minmax(8rem,1fr)
+      minmax(7rem,.85fr)
+      minmax(8rem,1fr)
+      minmax(9rem,1.1fr)
+      minmax(6.5rem,.75fr) !important;
+    align-items: stretch !important;
+    gap: .45rem !important;
+    overflow: visible !important;
+  }
+
+  .haswolf-main-nav > a,
+  .haswolf-main-nav > button,
+  .haswolf-main-nav > div {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+
+  .haswolf-main-nav > div > button {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 3rem !important;
+    padding-inline: .55rem !important;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1450px) {
+  .haswolf-main-nav {
+    grid-template-columns: repeat(5,minmax(0,1fr)) !important;
+  }
+}
+
+@media (max-width: 639px) {
+  .haswolf-persistent-voice {
+    right: .5rem;
+    bottom: calc(5.35rem + env(safe-area-inset-bottom));
+    grid-template-columns: auto minmax(0,1fr) auto auto;
+    width: calc(100vw - 1rem);
+  }
+
+  .haswolf-persistent-voice button:first-of-type {
+    display: none;
+  }
+}
+
+
+
+/* HASWOLF V6 persistent voice mobile hotfix */
+.haswolf-persistent-voice {
+  max-width: calc(100vw - 1rem);
+}
+
+@media (max-width: 767px) {
+  .haswolf-persistent-voice {
+    left: .5rem !important;
+    right: .5rem !important;
+    bottom: calc(5.35rem + env(safe-area-inset-bottom)) !important;
+    width: auto !important;
+    max-width: none !important;
+    grid-template-columns: auto minmax(0,1fr) auto auto !important;
+    gap: .4rem !important;
+    padding: .55rem !important;
+  }
+
+  .haswolf-persistent-voice > button:first-of-type {
+    display: none !important;
+  }
+
+  .haswolf-persistent-voice strong {
+    font-size: .68rem !important;
+  }
+
+  .haswolf-persistent-voice small {
+    font-size: .55rem !important;
+  }
+
+  .haswolf-persistent-voice button {
+    min-height: 2.25rem !important;
+    padding: .4rem .55rem !important;
+    font-size: .58rem !important;
+  }
+}
+
+
+
+/* HASWOLF V6 professional compact voice panel */
+.haswolf-persistent-voice {
+  position: fixed !important;
+  z-index: 2147482000 !important;
+  right: max(1rem, env(safe-area-inset-right)) !important;
+  bottom: calc(5.8rem + env(safe-area-inset-bottom)) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: .75rem !important;
+  width: min(28rem, calc(100vw - 2rem)) !important;
+  min-height: 3.25rem !important;
+  border: 1px solid rgba(217,170,74,.55) !important;
+  border-radius: 1rem !important;
+  background:
+    linear-gradient(135deg, rgba(18,20,20,.98), rgba(6,8,8,.98)) !important;
+  box-shadow: 0 18px 55px rgba(0,0,0,.52) !important;
+  padding: .55rem .65rem !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+.haswolf-persistent-voice__status {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  min-width: 0;
+}
+
+.haswolf-persistent-voice__status > span {
+  flex: 0 0 auto;
+  color: #777;
+  font-size: .72rem;
+}
+
+.haswolf-persistent-voice__status > span.is-live {
+  color: #35dc69;
+  filter: drop-shadow(0 0 7px #35dc69);
+}
+
+.haswolf-persistent-voice__summary {
+  min-width: 0;
+}
+
+.haswolf-persistent-voice__summary strong,
+.haswolf-persistent-voice__summary small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.haswolf-persistent-voice__summary strong {
+  color: #edc367;
+  font-size: .72rem;
+  letter-spacing: .01em;
+}
+
+.haswolf-persistent-voice__summary small {
+  margin-top: .12rem;
+  max-width: 16rem;
+  color: #989898;
+  font-size: .58rem;
+}
+
+.haswolf-persistent-voice__actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: .38rem;
+}
+
+.haswolf-persistent-voice__actions button {
+  display: grid !important;
+  width: 2.2rem !important;
+  height: 2.2rem !important;
+  min-width: 2.2rem !important;
+  min-height: 2.2rem !important;
+  place-items: center !important;
+  border: 1px solid #4d3d20 !important;
+  border-radius: .68rem !important;
+  background: #17140d !important;
+  padding: 0 !important;
+  color: #f1ca75 !important;
+  font-size: .9rem !important;
+  line-height: 1 !important;
+}
+
+.haswolf-persistent-voice__actions button.is-active {
+  border-color: rgba(53,220,105,.72) !important;
+  background: rgba(20,93,45,.36) !important;
+  box-shadow: 0 0 16px rgba(53,220,105,.2) !important;
+}
+
+.haswolf-persistent-voice__actions button.is-danger {
+  border-color: rgba(239,68,68,.5) !important;
+  background: rgba(90,15,15,.28) !important;
+  color: #ff9b9b !important;
+}
+
+@media (max-width: 767px) {
+  .haswolf-persistent-voice {
+    left: .5rem !important;
+    right: .5rem !important;
+    bottom: calc(5.35rem + env(safe-area-inset-bottom)) !important;
+    width: auto !important;
+    min-height: 3rem !important;
+    gap: .45rem !important;
+    padding: .48rem .55rem !important;
+  }
+
+  .haswolf-persistent-voice__summary strong {
+    font-size: .66rem;
+  }
+
+  .haswolf-persistent-voice__summary small {
+    max-width: 11rem;
+    font-size: .53rem;
+  }
+
+  .haswolf-persistent-voice__actions button {
+    width: 2rem !important;
+    height: 2rem !important;
+    min-width: 2rem !important;
+    min-height: 2rem !important;
+    font-size: .8rem !important;
+  }
+}
+
+
+
+/* HASWOLF V6 microphone recovery */
+.haswolf-voice-error {
+  position: fixed;
+  z-index: 2147482001;
+  right: 1rem;
+  bottom: calc(9.5rem + env(safe-area-inset-bottom));
+  max-width: min(28rem, calc(100vw - 2rem));
+  border: 1px solid rgba(239,68,68,.55);
+  border-radius: .8rem;
+  background: rgba(45,8,8,.96);
+  padding: .65rem .85rem;
+  color: #ffaaaa;
+  font-size: .68rem;
+  font-weight: 800;
+  box-shadow: 0 14px 40px rgba(0,0,0,.4);
+}
+
+@media (max-width: 767px) {
+  .haswolf-voice-error {
+    left: .5rem;
+    right: .5rem;
+    bottom: calc(8.9rem + env(safe-area-inset-bottom));
+    max-width: none;
+  }
+}
+

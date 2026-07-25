@@ -132,18 +132,16 @@ function YangIcon({ className = "h-5 w-5" }: { className?: string }) {
   );
 }
 
-function SocialIcon({ name }: { name: "youtube" | "instagram" | "tiktok" | "discord" }) {
+function SocialIcon({ name }: { name: "youtube" | "instagram" | "tiktok" }) {
   if (name === "youtube") return <span className="social-brand social-brand--youtube">▶</span>;
   if (name === "instagram") return <span className="social-brand social-brand--instagram">◎</span>;
   if (name === "tiktok") return <span className="social-brand social-brand--tiktok">♪</span>;
-  return <span className="social-brand social-brand--discord">☁</span>;
 }
 
 const headerSocials = [
   { name: "youtube" as const, label: "YouTube", detail: "HASWOLF TV", href: "https://www.youtube.com/@ROYALEONLINEHASWOLF" },
   { name: "instagram" as const, label: "Instagram", detail: "@royaleonlinehaswolf", href: "https://www.instagram.com/royaleonlinehaswolf" },
   { name: "tiktok" as const, label: "TikTok", detail: "@haswolfgame", href: "https://www.tiktok.com/@haswolfgame" },
-  { name: "discord" as const, label: "Discord", detail: "HASWOLF Topluluğu", href: "#footer" },
 ];
 function MobileSocialRail() {
   const [open, setOpen] = useState(false);
@@ -1139,4 +1137,5 @@ function SecurityBox() {
     </div>
   );
 }
+
 

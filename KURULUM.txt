@@ -1,10 +1,18 @@
-HASWOLF V5.3 KATEGORİ PANELİ DÜZELTMESİ
+HASWOLF V6 MICROPHONE RECOVERY FIX
 
-1. ZIP içindeki app/page.tsx ve app/globals.css dosyalarını projenin aynı yollarına kopyala.
-2. Terminal:
-   taskkill /F /IM node.exe
-   Remove-Item .next -Recurse -Force -ErrorAction SilentlyContinue
-   npm run dev
-3. Tarayıcıda Ctrl + Shift + R yap.
+Düzeltmeler:
+- Otomatik konuşma sırası mikrofonu yanlışlıkla sürekli kapatıyordu; bu davranış kaldırıldı.
+- Mikrofon açma doğrudan LiveKit local participant üzerinden yapılır.
+- Echo cancellation etkin.
+- Noise suppression etkin.
+- Auto gain control etkin.
+- Mono kanal kullanılır; arka plan sesi mümkün olan en düşük seviyeye iner.
+- Konuşan kullanıcı adı panelde gösterilmeye devam eder.
+- Mikrofon izin/yayın hatası panelin üstünde açıkça gösterilir.
 
-Bu düzeltme Kategoriler panelini Oyunlar paneliyle aynı dış genişliğe getirir ve Dokun ve Aç yazısının üst üste binmesini engeller.
+Kurulum:
+cd C:\Users\Lenovo\haswolf-v6
+powershell -ExecutionPolicy Bypass -File ".\apply-microphone-recovery-fix.ps1"
+taskkill /F /IM node.exe
+Remove-Item .next -Recurse -Force -ErrorAction SilentlyContinue
+npm run build

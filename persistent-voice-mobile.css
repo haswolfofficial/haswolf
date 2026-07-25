@@ -1,0 +1,36 @@
+
+/* HASWOLF V6 persistent voice mobile hotfix */
+.haswolf-persistent-voice {
+  max-width: calc(100vw - 1rem);
+}
+
+@media (max-width: 767px) {
+  .haswolf-persistent-voice {
+    left: .5rem !important;
+    right: .5rem !important;
+    bottom: calc(5.35rem + env(safe-area-inset-bottom)) !important;
+    width: auto !important;
+    max-width: none !important;
+    grid-template-columns: auto minmax(0,1fr) auto auto !important;
+    gap: .4rem !important;
+    padding: .55rem !important;
+  }
+
+  .haswolf-persistent-voice > button:first-of-type {
+    display: none !important;
+  }
+
+  .haswolf-persistent-voice strong {
+    font-size: .68rem !important;
+  }
+
+  .haswolf-persistent-voice small {
+    font-size: .55rem !important;
+  }
+
+  .haswolf-persistent-voice button {
+    min-height: 2.25rem !important;
+    padding: .4rem .55rem !important;
+    font-size: .58rem !important;
+  }
+}

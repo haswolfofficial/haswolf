@@ -1,0 +1,128 @@
+
+/* HASWOLF V6 professional compact voice panel */
+.haswolf-persistent-voice {
+  position: fixed !important;
+  z-index: 2147482000 !important;
+  right: max(1rem, env(safe-area-inset-right)) !important;
+  bottom: calc(5.8rem + env(safe-area-inset-bottom)) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: .75rem !important;
+  width: min(28rem, calc(100vw - 2rem)) !important;
+  min-height: 3.25rem !important;
+  border: 1px solid rgba(217,170,74,.55) !important;
+  border-radius: 1rem !important;
+  background:
+    linear-gradient(135deg, rgba(18,20,20,.98), rgba(6,8,8,.98)) !important;
+  box-shadow: 0 18px 55px rgba(0,0,0,.52) !important;
+  padding: .55rem .65rem !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+.haswolf-persistent-voice__status {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  min-width: 0;
+}
+
+.haswolf-persistent-voice__status > span {
+  flex: 0 0 auto;
+  color: #777;
+  font-size: .72rem;
+}
+
+.haswolf-persistent-voice__status > span.is-live {
+  color: #35dc69;
+  filter: drop-shadow(0 0 7px #35dc69);
+}
+
+.haswolf-persistent-voice__summary {
+  min-width: 0;
+}
+
+.haswolf-persistent-voice__summary strong,
+.haswolf-persistent-voice__summary small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.haswolf-persistent-voice__summary strong {
+  color: #edc367;
+  font-size: .72rem;
+  letter-spacing: .01em;
+}
+
+.haswolf-persistent-voice__summary small {
+  margin-top: .12rem;
+  max-width: 16rem;
+  color: #989898;
+  font-size: .58rem;
+}
+
+.haswolf-persistent-voice__actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: .38rem;
+}
+
+.haswolf-persistent-voice__actions button {
+  display: grid !important;
+  width: 2.2rem !important;
+  height: 2.2rem !important;
+  min-width: 2.2rem !important;
+  min-height: 2.2rem !important;
+  place-items: center !important;
+  border: 1px solid #4d3d20 !important;
+  border-radius: .68rem !important;
+  background: #17140d !important;
+  padding: 0 !important;
+  color: #f1ca75 !important;
+  font-size: .9rem !important;
+  line-height: 1 !important;
+}
+
+.haswolf-persistent-voice__actions button.is-active {
+  border-color: rgba(53,220,105,.72) !important;
+  background: rgba(20,93,45,.36) !important;
+  box-shadow: 0 0 16px rgba(53,220,105,.2) !important;
+}
+
+.haswolf-persistent-voice__actions button.is-danger {
+  border-color: rgba(239,68,68,.5) !important;
+  background: rgba(90,15,15,.28) !important;
+  color: #ff9b9b !important;
+}
+
+@media (max-width: 767px) {
+  .haswolf-persistent-voice {
+    left: .5rem !important;
+    right: .5rem !important;
+    bottom: calc(5.35rem + env(safe-area-inset-bottom)) !important;
+    width: auto !important;
+    min-height: 3rem !important;
+    gap: .45rem !important;
+    padding: .48rem .55rem !important;
+  }
+
+  .haswolf-persistent-voice__summary strong {
+    font-size: .66rem;
+  }
+
+  .haswolf-persistent-voice__summary small {
+    max-width: 11rem;
+    font-size: .53rem;
+  }
+
+  .haswolf-persistent-voice__actions button {
+    width: 2rem !important;
+    height: 2rem !important;
+    min-width: 2rem !important;
+    min-height: 2rem !important;
+    font-size: .8rem !important;
+  }
+}
