@@ -1,0 +1,89 @@
+/* HASWOLF V6 Mobile Voice V4 */
+.haswolf-persistent-voice {
+  position: fixed !important;
+  z-index: 95 !important;
+  right: max(12px, env(safe-area-inset-right)) !important;
+  bottom: calc(86px + env(safe-area-inset-bottom)) !important;
+  width: min(390px, calc(100vw - 24px)) !important;
+  min-height: 58px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  padding: 9px 10px !important;
+  border: 1px solid rgba(217, 170, 74, 0.55) !important;
+  border-radius: 16px !important;
+  background: rgba(7, 8, 8, 0.97) !important;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.62) !important;
+  backdrop-filter: blur(18px) !important;
+}
+
+.haswolf-persistent-voice__status {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+}
+
+.haswolf-persistent-voice__summary {
+  min-width: 0 !important;
+}
+
+.haswolf-persistent-voice__summary strong,
+.haswolf-persistent-voice__summary small {
+  display: block !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.haswolf-persistent-voice__summary strong {
+  color: #efc76b !important;
+  font-size: 12px !important;
+}
+
+.haswolf-persistent-voice__summary small {
+  margin-top: 2px !important;
+  color: #a1a1aa !important;
+  font-size: 10px !important;
+}
+
+.haswolf-persistent-voice__actions {
+  display: flex !important;
+  flex: 0 0 auto !important;
+  gap: 6px !important;
+}
+
+.haswolf-persistent-voice__actions button {
+  width: 36px !important;
+  height: 36px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid rgba(217, 170, 74, 0.42) !important;
+  border-radius: 10px !important;
+  background: #111 !important;
+}
+
+.haswolf-persistent-voice__actions button.is-active {
+  border-color: #22c55e !important;
+  background: rgba(34, 197, 94, 0.15) !important;
+}
+
+.haswolf-persistent-voice__actions button.is-danger {
+  border-color: rgba(239, 68, 68, 0.55) !important;
+}
+
+@media (max-width: 767px) {
+  .haswolf-persistent-voice {
+    left: 50% !important;
+    right: auto !important;
+    bottom: calc(82px + env(safe-area-inset-bottom)) !important;
+    transform: translateX(-50%) !important;
+    width: min(360px, calc(100vw - 20px)) !important;
+  }
+
+  body:has(.haswolf-persistent-voice) main {
+    padding-bottom: calc(10.5rem + env(safe-area-inset-bottom)) !important;
+  }
+}

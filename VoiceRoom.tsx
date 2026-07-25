@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect } from "react";
 import { usePersistentVoice } from "@/components/PersistentVoiceProvider";
@@ -25,8 +25,8 @@ export default function VoiceRoom({
               ğŸ”Š {roomName}
             </h2>
             <p className="mt-2 text-sm text-zinc-500">
-              {nickname} olarak baÄŸlandÄ±n. Ana sayfaya veya markete
-              geÃ§tiÄŸinde ses baÄŸlantÄ±sÄ± kÃ¼Ã§Ã¼k panelde devam eder.
+              {nickname} olarak baÄŸlandÄ±n. Ana sayfaya veya markete geÃ§tiÄŸinde
+              ses baÄŸlantÄ±sÄ± kÃ¼Ã§Ã¼k panelde devam eder.
             </p>
           </div>
 
@@ -41,15 +41,12 @@ export default function VoiceRoom({
                     : "KapalÄ±"
               }
             />
-            <Info
-              title="KatÄ±lÄ±mcÄ±"
-              value={String(voice.participantCount)}
-            />
+            <Info title="KatÄ±lÄ±mcÄ±" value={String(voice.participantCount)} />
             <Info
               title="KonuÅŸma sÄ±rasÄ±"
               value={
-                Boolean(voice.activeSpeaker)
-                  ? voice.activeSpeaker || "BaÅŸka kullanÄ±cÄ±"
+                voice.activeSpeaker
+                  ? voice.activeSpeaker
                   : voice.microphoneEnabled
                     ? "Sende"
                     : "BoÅŸ"
@@ -70,8 +67,8 @@ export default function VoiceRoom({
                   : "bg-[#d9aa4a] text-black"
               }`}
             >
-              {Boolean(voice.activeSpeaker)
-                ? `â³ ${voice.activeSpeaker || "Bir kullanÄ±cÄ±"} konuÅŸuyor`
+              {voice.activeSpeaker
+                ? `â³ ${voice.activeSpeaker} konuÅŸuyor`
                 : voice.microphoneEnabled
                   ? "ğŸŸ¢ Mikrofon AÃ§Ä±k"
                   : "ğŸ¤ KonuÅŸmayÄ± AÃ§"}
@@ -80,9 +77,7 @@ export default function VoiceRoom({
             <div className="haswolf-voice-room-actions">
               <button
                 type="button"
-                onClick={() =>
-                  voice.setOutput(!voice.outputEnabled)
-                }
+                onClick={() => voice.setOutput(!voice.outputEnabled)}
               >
                 {voice.outputEnabled ? "ğŸ”Š Sesi kapat" : "ğŸ”‡ Sesi aÃ§"}
               </button>
@@ -97,14 +92,12 @@ export default function VoiceRoom({
             </div>
 
             <p className="mt-4 max-w-xl text-center text-sm text-zinc-500">
-              BaÅŸka biri konuÅŸurken mikrofonun otomatik susturulur.
-              KonuÅŸma bitince sÄ±ra sana geri gelir.
+              BaÅŸka biri konuÅŸurken mikrofonun otomatik susturulur. KonuÅŸma
+              bitince sÄ±ra sana geri gelir.
             </p>
 
             {voice.error && (
-              <p className="mt-4 text-sm text-red-400">
-                {voice.error}
-              </p>
+              <p className="mt-4 text-sm text-red-400">{voice.error}</p>
             )}
           </div>
         </div>
@@ -113,13 +106,7 @@ export default function VoiceRoom({
   );
 }
 
-function Info({
-  title,
-  value,
-}: {
-  title: string;
-  value: string;
-}) {
+function Info({ title, value }: { title: string; value: string }) {
   return (
     <div className="rounded-xl border border-zinc-800 bg-[#0a0c0e] p-4">
       <small className="text-zinc-500">{title}</small>
@@ -127,5 +114,3 @@ function Info({
     </div>
   );
 }
-
-

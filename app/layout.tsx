@@ -1,11 +1,13 @@
-﻿import type { Metadata, Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "./voice-mobile-v3.css";
 import CampaignRenderer from "../components/CampaignRenderer";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import AutoTranslate from "@/components/AutoTranslate";
 import SitePresence from "@/components/SitePresence";
 import AnnouncementBroadcast from "@/components/AnnouncementBroadcast";
 import { PersistentVoiceProvider } from "@/components/PersistentVoiceProvider";
+import VoiceMediaSession from "@/components/VoiceMediaSession";
 
 const siteUrl = "https://www.haswolf.com";
 
@@ -94,6 +96,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="min-h-full bg-[#050707] text-white">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
         <PersistentVoiceProvider>
+          <VoiceMediaSession />
         <AutoTranslate />
         <SitePresence />
         <AnnouncementBroadcast />
