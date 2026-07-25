@@ -13,7 +13,7 @@ const sections = [
   ["reviews", "â­", "YorumlarÄ±m"],
   ["notifications", "ğŸ””", "Bildirim tercihlerim"],
   ["security", "ğŸ”’", "GÃ¼venlik ayarlarÄ±m"],
-  ["sessions", "ğŸ“±", "Oturum aÃ§an cihazlar"],
+  ["sessions", "ğŸ“±", "Oturum açan cihazlar"],
 ] as const;
 
 type FavoriteProduct = {
@@ -57,7 +57,7 @@ export default function AccountPage() {
             <span>{user?.email?.[0]?.toUpperCase()}</span>
             <div>
               <strong>
-                {user?.user_metadata?.full_name || "HASWOLF Ãœyesi"}
+                {user?.user_metadata?.full_name || "HASWOLF Üyesi"}
               </strong>
               <small>{user?.email}</small>
             </div>
@@ -91,7 +91,7 @@ export default function AccountPage() {
               <small>HESABIM</small>
               <h1>{sections.find((item) => item[0] === active)?.[2]}</h1>
             </div>
-            <a href="/">Siteye dÃ¶n</a>
+            <a href="/">Siteye dön</a>
           </header>
           <Panel active={active} userId={user?.id || ""} />
         </section>
@@ -138,7 +138,7 @@ function Panel({ active, userId }: { active: string; userId: string }) {
   if (active === "sessions") {
     return (
       <div className="haswolf-panel-card">
-        <h2>Oturum aÃ§an cihazlar</h2>
+        <h2>Oturum açan cihazlar</h2>
         <article>
           <b>Bu cihaz</b>
           <span>Chrome Â· Windows</span>
@@ -202,7 +202,7 @@ function FavoritesPanel({ userId }: { userId: string }) {
       setError(
         caught instanceof Error
           ? caught.message
-          : "Favoriler yÃ¼klenemedi.",
+          : "Favoriler yüklenemedi.",
       );
     } finally {
       setLoading(false);
@@ -241,7 +241,7 @@ function FavoritesPanel({ userId }: { userId: string }) {
     return (
       <div className="haswolf-panel-empty">
         <span>â—†</span>
-        <h2>Favoriler yÃ¼kleniyor...</h2>
+        <h2>Favoriler yükleniyor...</h2>
       </div>
     );
   }
@@ -261,8 +261,8 @@ function FavoritesPanel({ userId }: { userId: string }) {
     return (
       <div className="haswolf-panel-empty">
         <span>â—†</span>
-        <h2>HenÃ¼z favori Ã¼rÃ¼nÃ¼n yok</h2>
-        <p>Favoriye eklediÄŸin Ã¼rÃ¼nler burada gÃ¶rÃ¼ntÃ¼lenir.</p>
+        <h2>Henüz favori ürünün yok</h2>
+        <p>Favoriye eklediğin ürünler burada görüntülenir.</p>
         <a href="/#market">Markete git</a>
       </div>
     );
@@ -300,7 +300,7 @@ function FavoritesPanel({ userId }: { userId: string }) {
               href={`/?product=${product.id}#market`}
               className="flex-1 rounded-lg bg-[#d9aa4a] px-3 py-2 text-center font-bold text-black"
             >
-              ÃœrÃ¼ne git
+              Ürüne git
             </a>
             <button
               type="button"

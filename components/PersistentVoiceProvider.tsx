@@ -95,7 +95,7 @@ function participantToItem(
   return {
     identity: participant.identity,
     userId: metadata.userId || participant.identity,
-    name: participant.name || participant.identity || "KatÃ„Â±lÃ„Â±mcÃ„Â±",
+    name: participant.name || participant.identity || "Katılımcı",
     isGuest: metadata.isGuest,
     isLocal,
     isSpeaking: participant.isSpeaking,
@@ -233,7 +233,7 @@ export function PersistentVoiceProvider({
         setState((current) => ({
           ...current,
           microphoneEnabled: false,
-          error: "Ses odasÃ„Â± baÃ„Å¸lantÃ„Â±sÃ„Â± hazÃ„Â±r deÃ„Å¸il.",
+          error: "Ses odası bağlantısı hazır değil.",
         }));
         return;
       }
@@ -267,7 +267,7 @@ export function PersistentVoiceProvider({
             microphoneEnabled: active,
             error:
               enabled && !active
-                ? "Mikrofon yayÃ„Â±nÃ„Â± baÃ…Å¸latÃ„Â±lamadÃ„Â±. TarayÃ„Â±cÃ„Â± mikrofon iznini kontrol et."
+                ? "Mikrofon yayını başlatılamadı. Tarayıcı mikrofon iznini kontrol et."
                 : "",
           };
         });
@@ -279,7 +279,7 @@ export function PersistentVoiceProvider({
           ...current,
           microphoneEnabled: false,
           error:
-            error instanceof Error ? error.message : "Mikrofon aÃƒÂ§Ã„Â±lamadÃ„Â±.",
+            error instanceof Error ? error.message : "Mikrofon açılamadı.",
         }));
       }
     },
@@ -334,7 +334,7 @@ export function PersistentVoiceProvider({
         };
 
         if (!response.ok || !data.token || !data.serverUrl) {
-          throw new Error(data.error || "Ses odasÃ„Â±na baÃ„Å¸lanÃ„Â±lamadÃ„Â±.");
+          throw new Error(data.error || "Ses odasına bağlanılamadı.");
         }
 
         const room = new Room({
@@ -353,7 +353,7 @@ export function PersistentVoiceProvider({
           ) => {
             if (track.kind !== Track.Kind.Audio) return;
 
-            const trackKey = publication.trackSid || track.sid || `audio-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+            const trackKey = publication.trackSid || track.sid || `${track.kind}-${publication.source}-${publication.trackName || "audio"}`;
             const previous = audioByTrackRef.current.get(trackKey);
             if (previous) {
               previous.pause();
@@ -372,7 +372,7 @@ export function PersistentVoiceProvider({
             const element = track.attach() as HTMLMediaElement;
             element.autoplay = true;
 element.muted = !outputEnabledRef.current;
-            element.volume = outputEnabledRef.current ? 1 : 0;
+            element.volume = outputEnabledRef.current ? 0.82 : 0;
             element.dataset.haswolfVoiceTrack = trackKey;
             document.body.appendChild(element);
             audioByTrackRef.current.set(trackKey, element);
@@ -447,7 +447,7 @@ element.muted = !outputEnabledRef.current;
           error:
             error instanceof Error
               ? error.message
-              : "Ses odasÃ„Â±na baÃ„Å¸lanÃ„Â±lamadÃ„Â±.",
+              : "Ses odasına bağlanılamadı.",
         }));
       } finally {
         connectingRef.current = false;
