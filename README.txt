@@ -1,10 +1,23 @@
-HASWOLF V6 MOBILE VOICE V6
+HASWOLF MOBILE VOICE V6.1
 
-1) ZIP icindeki iki dosyayi C:\Users\Lenovo\haswolf-v6 klasorune kopyala.
-2) Acik build varsa Ctrl+C.
-3) Calistir:
+Bu sürüm, önceki Node betiğindeki 'ReferenceError: sp is not defined'
+hatasını giderir. İç içe template literal kullanılmaz.
+
+KULLANIM
+
+1. haswolf-mobile-voice-v6-1.mjs dosyasını:
+   C:\Users\Lenovo\haswolf-v6
+   klasörüne kopyala.
+
+2. Terminal:
 
 cd C:\Users\Lenovo\haswolf-v6
-powershell -ExecutionPolicy Bypass -File .\apply-haswolf-v6-mobile-voice-v6.ps1
+node .\haswolf-mobile-voice-v6-1.mjs
 Remove-Item .next -Recurse -Force -ErrorAction SilentlyContinue
 npm run build
+
+3. Build başarılıysa:
+
+git add .
+git commit -m "Fix mobile voice patch runtime v6.1"
+git push origin haswolf-v6-professional

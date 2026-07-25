@@ -1,50 +1,86 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { usePersistentVoice } from "@/components/PersistentVoiceProvider";
+
+type ExtendedMediaSession = MediaSession & {
+  setMicrophoneActive?: (active: boolean) => void;
+};
 
 export default function VoiceMediaSession() {
   const voice = usePersistentVoice();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    const audio = new Audio("/audio/haswolf-voice-session.wav");
+    audio.loop = true;
+    audio.preload = "auto";
+    audio.volume = 0.001;
+    audioRef.current = audio;
+
+    return () => {
+      audio.pause();
+      audio.src = "";
+      audioRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (voice.connected) {
+      void audio.play().catch(() => {});
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  }, [voice.connected]);
 
   useEffect(() => {
     if (!("mediaSession" in navigator)) return;
 
+    const session = navigator.mediaSession as ExtendedMediaSession;
+
     if (!voice.connected) {
-      navigator.mediaSession.metadata = null;
-      navigator.mediaSession.playbackState = "none";
+      session.metadata = null;
+      session.playbackState = "none";
       return;
     }
 
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: voice.activeSpeaker
-        ? `${voice.activeSpeaker} konuÅŸuyor`
-        : voice.microphoneEnabled
-          ? `${voice.nickname} mikrofonu aÃ§Ä±k`
-          : "Ses odasÄ± arka planda aktif",
-      artist: voice.roomName || "HASWOLF Ses OdasÄ±",
-      album: "HASWOLF",
+    const speaker = voice.activeSpeaker?.trim();
+    const title = speaker
+      ? speaker + " konuşuyor"
+      : voice.microphoneEnabled
+        ? (voice.nickname || "Sen") + " konuşmaya hazır"
+        : "Ses odası arka planda aktif";
+
+    session.metadata = new MediaMetadata({
+      title,
+      artist: voice.roomName || "HASWOLF Ses Odası",
+      album: voice.outputEnabled ? "Ses açık" : "Ses kapalı",
       artwork: [
         { src: "/icons/haswolf-192.png", sizes: "192x192", type: "image/png" },
         { src: "/icons/haswolf-512.png", sizes: "512x512", type: "image/png" },
       ],
     });
 
-    navigator.mediaSession.playbackState = voice.outputEnabled
-      ? "playing"
-      : "paused";
+    session.playbackState = voice.outputEnabled ? "playing" : "paused";
 
-    const setAction = (
-      action: MediaSessionAction,
-      handler: MediaSessionActionHandler | null,
-    ) => {
+    try {
+      session.setMicrophoneActive?.(voice.microphoneEnabled);
+    } catch {}
+
+    const setAction = (action: MediaSessionAction, handler: MediaSessionActionHandler | null) => {
       try {
-        navigator.mediaSession.setActionHandler(action, handler);
-      } catch {
-        // Mobil tarayÄ±cÄ± bu eylemi desteklemiyor olabilir.
-      }
+        session.setActionHandler(action, handler);
+      } catch {}
     };
 
-    setAction("play", () => voice.setOutput(true));
+    setAction("play", () => {
+      voice.setOutput(true);
+      void audioRef.current?.play();
+    });
     setAction("pause", () => voice.setOutput(false));
     setAction("stop", () => void voice.disconnectVoice());
 

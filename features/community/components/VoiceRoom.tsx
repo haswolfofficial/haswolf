@@ -25,8 +25,8 @@ export default function VoiceRoom({
               ğŸ”Š {roomName}
             </h2>
             <p className="mt-2 text-sm text-zinc-500">
-              {nickname} olarak baÄŸlandÄ±n. Ana sayfaya veya markete geÃ§tiÄŸinde
-              ses baÄŸlantÄ±sÄ± kÃ¼Ã§Ã¼k panelde devam eder.
+              {nickname} olarak bağlandın. Ana sayfaya veya markete geçtiğinde
+              ses bağlantısı küçük panelde devam eder.
             </p>
           </div>
 
@@ -35,7 +35,7 @@ export default function VoiceRoom({
               title="Bağlantı"
               value={
                 voice.connecting
-                  ? "BaÄŸlanÄ±yor"
+                  ? "Bağlanıyor"
                   : voice.connected
                     ? "Bağlı"
                     : "KapalÄ±"
@@ -92,7 +92,7 @@ export default function VoiceRoom({
             </div>
 
             <p className="mt-4 max-w-xl text-center text-sm text-zinc-500">
-              Başka biri konuşurken mikrofonun otomatik susturulur. KonuÅŸma
+              Başka biri konuşurken mikrofonun otomatik susturulur. Konuşma
               bitince sÄ±ra sana geri gelir.
             </p>
 
