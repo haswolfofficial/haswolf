@@ -2211,3 +2211,417 @@ body>.skiptranslate{display:none!important}
     width: 8.5rem;
   }
 }
+/* =========================================================
+   HASWOLF V6 — MOBILE / TABLET / WEB UI REPAIR
+   Menü, bildirim paneli, sosyal ray, oyunlar ve sunucu kartları
+   ========================================================= */
+
+:root {
+  --haswolf-mobile-header-gap: .24rem;
+}
+
+/* Açılır paneller sayfayı itmez; viewport içinde sabit kalır. */
+.haswolf-notification-root,
+.haswolf-premium-root,
+.haswolf-language-compact,
+.haswolf-language-menu {
+  position: relative;
+  min-width: 0;
+}
+
+.haswolf-notification-panel,
+.haswolf-premium-panel {
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+/* Sağ rayda sosyal medya + WhatsApp tek sistem. */
+.haswolf-mobile-social-rail__panel a.haswolf-mobile-social-rail__whatsapp {
+  border: 1px solid rgba(74, 222, 128, .42);
+  background: linear-gradient(135deg, rgba(21,128,61,.42), rgba(7,94,50,.78));
+  color: #d9ffe6;
+}
+
+.haswolf-mobile-social-rail__whatsapp-icon {
+  display: grid;
+  width: 1.65rem;
+  height: 1.65rem;
+  flex: 0 0 1.65rem;
+  place-items: center;
+  border-radius: .45rem;
+  background: #22c55e;
+  color: white;
+  font-size: .78rem;
+  font-weight: 950;
+  box-shadow: 0 0 14px rgba(34,197,94,.25);
+}
+
+/* Ana oyun alanı */
+.haswolf-games-primary {
+  width: min(100% - 1.5rem, 1500px);
+  margin: .75rem auto 0;
+  border: 1px solid rgba(82,148,255,.34);
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at 92% 0%, rgba(64,145,255,.12), transparent 34%),
+    linear-gradient(180deg, rgba(21,31,48,.62), rgba(7,10,12,.96));
+  padding: .8rem;
+}
+
+.haswolf-games-primary__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .8rem;
+  min-height: 3rem;
+  color: #91c3ff;
+}
+
+.haswolf-games-primary__heading strong {
+  font-size: .92rem;
+  font-weight: 950;
+  letter-spacing: .04em;
+}
+
+.haswolf-games-primary__heading small {
+  color: #7188a6;
+  font-size: .62rem;
+}
+
+.haswolf-games-primary__card {
+  display: grid;
+  grid-template-columns: auto minmax(0,1fr) auto;
+  align-items: center;
+  gap: .75rem;
+  margin-top: .55rem;
+  border: 1px solid rgba(217,170,74,.4);
+  border-radius: .85rem;
+  background: linear-gradient(135deg, rgba(49,34,10,.76), rgba(8,10,10,.96));
+  padding: .75rem;
+}
+
+.haswolf-games-primary__logo {
+  display: grid;
+  width: 2.65rem;
+  height: 2.65rem;
+  place-items: center;
+  border-radius: .72rem;
+  background: linear-gradient(145deg,#d9aa4a,#7e5113);
+  color: #080604;
+  font-size: 1.15rem;
+  font-weight: 950;
+}
+
+.haswolf-games-primary__card strong,
+.haswolf-games-primary__card small {
+  display: block;
+}
+
+.haswolf-games-primary__card strong {
+  color: #f1c96e;
+  font-size: .9rem;
+}
+
+.haswolf-games-primary__card small {
+  margin-top: .12rem;
+  color: #8b9191;
+  font-size: .62rem;
+}
+
+.haswolf-games-primary__status {
+  border: 1px solid rgba(74,222,128,.4);
+  border-radius: 999px;
+  background: rgba(22,101,52,.24);
+  padding: .3rem .55rem;
+  color: #8df0ae;
+  font-size: .57rem;
+  font-weight: 900;
+}
+
+/* Masaüstü menüde bütün düğmeler eşit yükseklik ve kontrollü genişlik. */
+@media (min-width: 1024px) {
+  .haswolf-main-nav {
+    display: grid !important;
+    grid-template-columns:
+      minmax(7.4rem,1fr)
+      minmax(6.3rem,.85fr)
+      minmax(6.3rem,.85fr)
+      minmax(6.3rem,.85fr)
+      minmax(7rem,.95fr)
+      minmax(8.7rem,1.15fr)
+      minmax(7rem,.95fr)
+      minmax(8rem,1fr)
+      minmax(5.2rem,.62fr);
+    align-items: stretch;
+    gap: .55rem !important;
+  }
+
+  .haswolf-main-nav > a,
+  .haswolf-main-nav > button,
+  .haswolf-main-nav > div {
+    width: 100%;
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+
+  .haswolf-main-nav > a,
+  .haswolf-main-nav > button,
+  .haswolf-main-nav > div > button {
+    min-height: 3.2rem !important;
+  }
+
+  .haswolf-chat-before-admin {
+    margin-left: 0 !important;
+  }
+}
+
+/* Tablet ve mobil üst menü: iki düzgün satır, kayma yok. */
+@media (max-width: 1023px) {
+  .haswolf-header {
+    contain: layout paint;
+  }
+
+  .haswolf-main-nav {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0,1fr)) !important;
+    align-items: stretch !important;
+    gap: var(--haswolf-mobile-header-gap) !important;
+    overflow: visible !important;
+    padding: .38rem 0 .48rem !important;
+  }
+
+  .haswolf-main-nav > a,
+  .haswolf-main-nav > button,
+  .haswolf-main-nav > div {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+  }
+
+  .haswolf-main-nav > a,
+  .haswolf-main-nav > button,
+  .haswolf-main-nav > div > button,
+  .haswolf-language-compact > button,
+  .haswolf-language-menu__trigger {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 2.65rem !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: .22rem !important;
+    padding: .3rem .16rem !important;
+    border-radius: .55rem !important;
+    font-size: .56rem !important;
+    line-height: 1.08 !important;
+    white-space: normal !important;
+    text-align: center !important;
+  }
+
+  .haswolf-main-nav > a,
+  .haswolf-main-nav > button {
+    flex-direction: column !important;
+  }
+
+  .haswolf-premium-trigger b,
+  .haswolf-notification-trigger span:not(.haswolf-notification-trigger__icon) {
+    display: inline !important;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .haswolf-premium-trigger,
+  .haswolf-notification-trigger {
+    flex-direction: column !important;
+  }
+
+  .haswolf-premium-trigger em {
+    display: none;
+  }
+
+  .haswolf-chat-before-admin {
+    margin-left: 0 !important;
+  }
+
+  .haswolf-notification-panel,
+  .haswolf-premium-panel {
+    position: fixed !important;
+    z-index: 220 !important;
+    top: max(5.1rem, env(safe-area-inset-top)) !important;
+    right: .55rem !important;
+    left: .55rem !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: calc(100dvh - 6rem) !important;
+    transform: none !important;
+  }
+
+  .haswolf-notification-list {
+    max-height: calc(100dvh - 12rem) !important;
+  }
+
+  .haswolf-language-compact__menu,
+  .haswolf-language-menu__panel {
+    position: fixed !important;
+    z-index: 225 !important;
+    top: max(5.1rem, env(safe-area-inset-top)) !important;
+    right: .55rem !important;
+    left: .55rem !important;
+    width: auto !important;
+    max-height: calc(100dvh - 6rem) !important;
+  }
+
+  /* Sunucu kartları artık viewport genişliğini aşmaz. */
+  .haswolf-server-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0,1fr)) !important;
+    width: 100% !important;
+    gap: .42rem !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .haswolf-server-grid > div {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    padding: .62rem .38rem !important;
+    transform: none !important;
+  }
+
+  .haswolf-server-grid > div > button > div {
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: .35rem !important;
+    text-align: center !important;
+  }
+
+  .haswolf-server-grid > div > button > div > div:first-child {
+    width: 2.55rem !important;
+    height: 2.55rem !important;
+    margin-inline: auto !important;
+    font-size: .95rem !important;
+  }
+
+  .haswolf-server-grid h3 {
+    overflow: hidden;
+    font-size: .68rem !important;
+    line-height: 1.1 !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .haswolf-server-grid p {
+    font-size: .54rem !important;
+  }
+
+  .haswolf-server-actions {
+    grid-template-columns: 1fr !important;
+    gap: .32rem !important;
+    margin-top: .55rem !important;
+  }
+
+  .haswolf-server-actions button {
+    min-height: 2.1rem !important;
+    padding: .3rem .18rem !important;
+    font-size: .51rem !important;
+  }
+
+  /* Market sekmeleri dört adet, ekrana tam oturur. */
+  .haswolf-market-tabs {
+    grid-template-columns: repeat(4,minmax(0,1fr)) !important;
+    gap: .28rem !important;
+    padding: .35rem !important;
+    overflow: visible !important;
+  }
+
+  .haswolf-market-tabs > button {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 3.2rem !important;
+    padding: .42rem .15rem !important;
+    font-size: .54rem !important;
+    line-height: 1.12 !important;
+    white-space: normal !important;
+  }
+
+  /* DOM sırası da değiştirilir; bu CSS yedek güvence sağlar. */
+  .haswolf-market-tabs > button:nth-child(1) { order: 3; }
+  .haswolf-market-tabs > button:nth-child(2) { order: 1; }
+  .haswolf-market-tabs > button:nth-child(3) { order: 2; }
+  .haswolf-market-tabs > button:nth-child(4) { order: 4; }
+
+  .haswolf-mobile-social-rail {
+    z-index: 120 !important;
+  }
+
+  /* Ayrı yüzen WhatsApp mobilde kapatılır; rayın içinde gösterilir. */
+  .haswolf-floating-whatsapp {
+    display: none !important;
+  }
+}
+
+@media (max-width: 639px) {
+  .haswolf-topbar {
+    min-height: 56px !important;
+  }
+
+  .haswolf-main-nav {
+    gap: .18rem !important;
+  }
+
+  .haswolf-main-nav > a,
+  .haswolf-main-nav > button,
+  .haswolf-main-nav > div > button,
+  .haswolf-language-compact > button {
+    min-height: 2.5rem !important;
+    font-size: .5rem !important;
+  }
+
+  .haswolf-games-primary {
+    width: calc(100% - .7rem);
+    padding: .6rem;
+  }
+
+  .haswolf-games-primary__card {
+    gap: .55rem;
+    padding: .6rem;
+  }
+
+  .haswolf-games-primary__heading strong {
+    font-size: .8rem;
+  }
+
+  .haswolf-games-primary__heading small {
+    display: none;
+  }
+
+  .haswolf-server-grid {
+    gap: .3rem !important;
+  }
+
+  .haswolf-server-grid > div {
+    padding: .5rem .24rem !important;
+  }
+
+  .haswolf-server-actions button {
+    font-size: .47rem !important;
+  }
+}
+
+/* Dokunma sesini CSS üretmez; istemsiz tıklama/aktif animasyonlarını azalt. */
+button,
+a,
+summary {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (hover: none) {
+  button:active,
+  a:active,
+  summary:active {
+    transform: none !important;
+  }
+}

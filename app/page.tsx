@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import AuthButton from "../components/AuthButton";
 import MobileBottomNav from "../components/MobileBottomNav";
@@ -177,6 +177,17 @@ function MobileSocialRail() {
             <span>{social.label}</span>
           </a>
         ))}
+        <a
+          className="haswolf-mobile-social-rail__whatsapp"
+          href="https://wa.me/905010942080?text=Merhaba%20Haswolf%2C%20destek%20almak%20istiyorum."
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="WhatsApp canlı destek"
+        >
+          <span className="haswolf-mobile-social-rail__whatsapp-icon">☎</span>
+          <span>WhatsApp</span>
+        </a>
+
       </div>
     </aside>
   );
@@ -405,18 +416,18 @@ export default function Home() {
 
           <nav aria-label="Ana navigasyon" className="haswolf-main-nav">
             <a href="#top"><span aria-hidden="true">⌂</span><span>Ana Sayfa</span></a>
+            <button type="button" onClick={() => goToMarket("yang")}><YangIcon /><span>Yang</span></button>
+            <button type="button" onClick={() => goToMarket("dc")}><span aria-hidden="true">💎</span><span>DC</span></button>
             <button type="button" onClick={() => goToMarket("item")}><span aria-hidden="true">⚔</span><span>Item</span></button>
             <button type="button" onClick={() => goToMarket("account")}><span aria-hidden="true">♟</span><span>Karakter</span></button>
-            <button type="button" onClick={() => goToMarket("yang")}><YangIcon /><span>Yang</span></button>
-            <button type="button" onClick={() => goToMarket("dc")}><span aria-hidden="true">💎</span><span>DC Satış</span></button>
             <a href="/topluluk" className="haswolf-chat-before-admin">
               <span aria-hidden="true">👥</span>
-              <span>Sohbet Odaları</span>
+              <span>Sohbet</span>
             </a>
             {isAdmin && <a href="/admin"><span aria-hidden="true">🛡</span><span>Admin</span></a>}
             <PremiumBenefits />
-            <LanguageSelector />
             <NotificationCenter deals={products.map(({id,name,price,old_price,server,category,created_at,stock,is_daily_favorite,is_best_price,low_stock_alert})=>({id,name,price,old_price,server,category,created_at,stock,is_daily_favorite:Boolean(is_daily_favorite),is_best_price:Boolean(is_best_price),low_stock_alert:Boolean(low_stock_alert)}))} />
+            <LanguageSelector />
           </nav>
         </div>
 
@@ -425,11 +436,11 @@ export default function Home() {
             <div className="haswolf-container py-3">
               <nav className="haswolf-mobile-drawer__links" aria-label="Mobil menü">
                 <a href="#top"><span>⌂</span><span>Ana Sayfa</span></a>
+                <button type="button" onClick={() => goToMarket("yang")}><span>◉</span><span>Yang</span></button>
+                <button type="button" onClick={() => goToMarket("dc")}><span>💎</span><span>DC</span></button>
                 <button type="button" onClick={() => goToMarket("item")}><span>⚔</span><span>Item</span></button>
                 <button type="button" onClick={() => goToMarket("account")}><span>♟</span><span>Karakter</span></button>
-                <button type="button" onClick={() => goToMarket("yang")}><span>◉</span><span>Yang</span></button>
-                <button type="button" onClick={() => goToMarket("dc")}><span>💎</span><span>DC Satış</span></button>
-                <a href="/topluluk"><span>✦</span><span>Sohbet Odaları</span></a>
+                <a href="/topluluk"><span>✦</span><span>Sohbet</span></a>
               </nav>
 
               <details className="haswolf-mobile-socials">
@@ -514,6 +525,21 @@ export default function Home() {
         </div>
       </section>
 
+            <section className="haswolf-games-primary" aria-labelledby="haswolf-games-title">
+        <div className="haswolf-games-primary__heading">
+          <strong id="haswolf-games-title">🎮 OYUNLAR</strong>
+          <small>HASWOLF ana oyun pazarı</small>
+        </div>
+        <div className="haswolf-games-primary__card">
+          <span className="haswolf-games-primary__logo">R</span>
+          <span>
+            <strong>Royale Online</strong>
+            <small>Item, Yang, DC ve karakter pazarı</small>
+          </span>
+          <span className="haswolf-games-primary__status">AKTİF</span>
+        </div>
+      </section>
+
       <section className="mx-auto max-w-[1500px] px-3 py-3 sm:px-5 sm:py-4 lg:px-6">
         <div className="rounded-xl border border-[#8c641e]/40 bg-[#0d0f0f]/95 p-3 sm:p-4">
           <h2 className="mb-3 text-center text-sm font-bold text-[#ddb45b] sm:text-base">
@@ -591,17 +617,6 @@ export default function Home() {
       <section id="market" className="scroll-mt-20 mx-auto max-w-[1500px] px-4 pb-6 sm:px-6">
         <div className="haswolf-market-tabs grid grid-cols-2 sm:grid-cols-4 gap-2 rounded-xl border border-[#765625]/50 bg-[#0b0d0d] p-2 md:gap-3 md:p-3">
           <button
-            onClick={() => goToMarket("item")}
-            className={`min-w-0 whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
-              market === "item"
-                ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
-                : "bg-[#141616] text-zinc-400"
-            }`}
-          >
-            ⚔ ITEM MARKET
-          </button>
-
-          <button
             onClick={() => goToMarket("yang")}
             className={`min-w-0 whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
               market === "yang"
@@ -624,6 +639,17 @@ export default function Home() {
           </button>
 
           <button
+            onClick={() => goToMarket("item")}
+            className={`min-w-0 whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
+              market === "item"
+                ? "bg-gradient-to-r from-[#765016] to-[#c29335] text-black"
+                : "bg-[#141616] text-zinc-400"
+            }`}
+          >
+            ⚔ ITEM MARKET
+          </button>
+
+          <button
             onClick={() => goToMarket("account")}
             className={`min-w-0 whitespace-nowrap rounded-lg px-4 py-3 text-sm font-bold transition md:min-w-0 md:px-5 md:py-4 ${
               market === "account"
@@ -631,7 +657,7 @@ export default function Home() {
                 : "bg-[#141616] text-zinc-400"
             }`}
           >
-            👤 HESAP / KARAKTER
+            👤 KARAKTER
           </button>
         </div>
       </section>
@@ -678,13 +704,6 @@ export default function Home() {
                   </button>
                 ))}
               </div>
-            </details>
-
-            <details className="haswolf-games-drawer">
-              <summary><span>🎮 OYUNLAR</span><small>8 yeni pazar</small><i>▼</i></summary>
-              <div>{["Mobile2","Wild Rift","Mobile Legends: Bang Bang","Knight Online","Silkroad Online","World of Warcraft","Valorant","PUBG Mobile"].map((game) => (
-                <button type="button" key={game} disabled><span>{game}</span><b>YAKINDA</b></button>
-              ))}</div>
             </details>
 
             <div className="hidden lg:block">
@@ -1120,3 +1139,4 @@ function SecurityBox() {
     </div>
   );
 }
+
