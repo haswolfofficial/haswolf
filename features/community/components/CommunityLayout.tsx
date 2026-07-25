@@ -747,6 +747,8 @@ export default function CommunityLayout({
               key={selectedRoom.slug}
               roomName={`haswolf-${selectedRoom.slug}`}
               nickname={nickname}
+              currentUserId={currentUserId}
+              canManageMembers={canManageMembers}
             />
           </div>
         ) : (

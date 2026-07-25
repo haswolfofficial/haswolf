@@ -66,34 +66,34 @@ export default function VoiceRoom({
         <div className="rounded-2xl border border-zinc-800 bg-[#111315] p-5 sm:p-7">
           <div>
             <h2 className="text-2xl font-black text-[#d9aa4a]">
-              ğŸ”Š {roomName}
+              🔊 {roomName}
             </h2>
             <p className="mt-2 text-sm text-zinc-500">
-              {nickname} olarak baÄŸlandÄ±n. Ana sayfaya veya markete geÃ§tiÄŸinde
-              ses baÄŸlantÄ±sÄ± kÃ¼Ã§Ã¼k panelde devam eder.
+              {nickname} olarak bağlandın. Ana sayfaya veya markete geçtiğinde
+              ses bağlantısı küçük panelde devam eder.
             </p>
           </div>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             <Info
-              title="BaÄŸlantÄ±"
+              title="Bağlantı"
               value={
                 voice.connecting
-                  ? "BaÄŸlanÄ±yor"
+                  ? "Bağlanıyor"
                   : voice.connected
-                    ? "BaÄŸlÄ±"
-                    : "KapalÄ±"
+                    ? "Bağlı"
+                    : "Kapalı"
               }
             />
-            <Info title="KatÄ±lÄ±mcÄ±" value={String(voice.participantCount)} />
+            <Info title="Katılımcı" value={String(voice.participantCount)} />
             <Info
-              title="KonuÅŸma sÄ±rasÄ±"
+              title="Konuşma sırası"
               value={
                 voice.activeSpeaker
                   ? voice.activeSpeaker
                   : voice.microphoneEnabled
                     ? "Sende"
-                    : "BoÅŸ"
+                    : "Boş"
               }
             />
           </div>
@@ -112,10 +112,10 @@ export default function VoiceRoom({
               }`}
             >
               {voice.activeSpeaker
-                ? `â³ ${voice.activeSpeaker} konuÅŸuyor`
+                ? `⏳ ${voice.activeSpeaker} konuşuyor`
                 : voice.microphoneEnabled
-                  ? "ğŸŸ¢ Mikrofon AÃ§Ä±k"
-                  : "ğŸ¤ KonuÅŸmayÄ± AÃ§"}
+                  ? "🟢 Mikrofon Açık"
+                  : "🎤 Konuşmayı Aç"}
             </button>
 
             <div className="haswolf-voice-room-actions">
@@ -123,7 +123,7 @@ export default function VoiceRoom({
                 type="button"
                 onClick={() => voice.setOutput(!voice.outputEnabled)}
               >
-                {voice.outputEnabled ? "ğŸ”Š Sesi kapat" : "ğŸ”‡ Sesi aÃ§"}
+                {voice.outputEnabled ? "🔊 Sesi kapat" : "🔇 Sesi aç"}
               </button>
 
               <button
@@ -131,21 +131,21 @@ export default function VoiceRoom({
                 className="is-danger"
                 onClick={() => void voice.disconnectVoice()}
               >
-                Ses odasÄ±ndan Ã§Ä±k
+                Ses odasından çık
               </button>
             </div>
 
             <p className="mt-4 max-w-xl text-center text-sm text-zinc-500">
-              YankÄ± Ã¶nleme, gÃ¼rÃ¼ltÃ¼ azaltma ve otomatik kazanÃ§ denetimi aktiftir.
+              Yankı önleme, gürültü azaltma ve otomatik kazanç denetimi aktiftir.
             </p>
 
             <div className="mt-6 w-full max-w-2xl rounded-2xl border border-zinc-800 bg-[#0a0c0e] p-4">
               <div className="mb-3 flex items-center justify-between">
                 <h3 className="font-black text-[#d9aa4a]">
-                  Ses odasÄ±ndaki katÄ±lÄ±mcÄ±lar
+                  Ses odasındaki katılımcılar
                 </h3>
                 <span className="text-xs text-zinc-500">
-                  {voice.participants.length} kiÅŸi
+                  {voice.participants.length} kişi
                 </span>
               </div>
 
@@ -162,10 +162,10 @@ export default function VoiceRoom({
                       </strong>
                       <small className="text-zinc-500">
                         {participant.isSpeaking
-                          ? "KonuÅŸuyor"
+                          ? "Konuşuyor"
                           : participant.isGuest
                             ? "Misafir"
-                            : "Ãœye"}
+                            : "Üye"}
                       </small>
                     </div>
 
@@ -193,7 +193,7 @@ export default function VoiceRoom({
 
                 {voice.participants.length === 0 && (
                   <p className="py-5 text-center text-sm text-zinc-500">
-                    KatÄ±lÄ±mcÄ±lar yÃ¼kleniyor...
+                    Katılımcılar yükleniyor...
                   </p>
                 )}
               </div>
