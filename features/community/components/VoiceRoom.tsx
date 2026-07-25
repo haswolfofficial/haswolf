@@ -32,24 +32,24 @@ export default function VoiceRoom({
 
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             <Info
-              title="BaÄŸlantÄ±"
+              title="Bağlantı"
               value={
                 voice.connecting
                   ? "BaÄŸlanÄ±yor"
                   : voice.connected
-                    ? "BaÄŸlÄ±"
+                    ? "Bağlı"
                     : "KapalÄ±"
               }
             />
-            <Info title="KatÄ±lÄ±mcÄ±" value={String(voice.participantCount)} />
+            <Info title="Katılımcı" value={String(voice.participantCount)} />
             <Info
-              title="KonuÅŸma sÄ±rasÄ±"
+              title="Konuşma sırası"
               value={
                 voice.activeSpeaker
                   ? voice.activeSpeaker
                   : voice.microphoneEnabled
                     ? "Sende"
-                    : "BoÅŸ"
+                    : "Boş"
               }
             />
           </div>
@@ -71,7 +71,7 @@ export default function VoiceRoom({
                 ? `â³ ${voice.activeSpeaker} konuÅŸuyor`
                 : voice.microphoneEnabled
                   ? "ğŸŸ¢ Mikrofon AÃ§Ä±k"
-                  : "ğŸ¤ KonuÅŸmayÄ± AÃ§"}
+                  : "ğŸ¤ Konuşmayı Aç"}
             </button>
 
             <div className="haswolf-voice-room-actions">
@@ -87,12 +87,12 @@ export default function VoiceRoom({
                 className="is-danger"
                 onClick={() => void voice.disconnectVoice()}
               >
-                Ses odasÄ±ndan Ã§Ä±k
+                Ses odasından çık
               </button>
             </div>
 
             <p className="mt-4 max-w-xl text-center text-sm text-zinc-500">
-              BaÅŸka biri konuÅŸurken mikrofonun otomatik susturulur. KonuÅŸma
+              Başka biri konuşurken mikrofonun otomatik susturulur. KonuÅŸma
               bitince sÄ±ra sana geri gelir.
             </p>
 

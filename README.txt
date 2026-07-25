@@ -1,16 +1,10 @@
-HASWOLF V6 MOBILE VOICE V3 — FIXED
+HASWOLF V6 MOBILE VOICE V6
 
-Önce eski betiği silmek zorunda değilsin. Bu düzeltilmiş dosyayı proje klasörüne kopyalayıp eskisinin üzerine yaz.
-
-VS Code terminalinde:
+1) ZIP icindeki iki dosyayi C:\Users\Lenovo\haswolf-v6 klasorune kopyala.
+2) Acik build varsa Ctrl+C.
+3) Calistir:
 
 cd C:\Users\Lenovo\haswolf-v6
-powershell -ExecutionPolicy Bypass -File .\apply-haswolf-v6-mobile-voice-v3.ps1
+powershell -ExecutionPolicy Bypass -File .\apply-haswolf-v6-mobile-voice-v6.ps1
 Remove-Item .next -Recurse -Force -ErrorAction SilentlyContinue
 npm run build
-
-Build başarılıysa:
-
-git add .
-git commit -m "Mobile voice panel, media controls and Turkish encoding fix"
-git push origin haswolf-v6-professional
