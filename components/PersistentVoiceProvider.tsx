@@ -515,22 +515,17 @@ element.muted = !outputEnabledRef.current;
       {children}
 
       {state.connected && !isCommunityPage && (
-        <div className="haswolf-persistent-voice" role="status">
+        <section className="haswolf-persistent-voice" aria-label="Aktif ses odası">
           <div className="haswolf-persistent-voice__status">
-            <span
-              className={state.microphoneEnabled ? "is-live" : ""}
-              aria-hidden="true"
-            >
-              Ã¢â€”Â
-            </span>
+            <span className={state.microphoneEnabled ? "is-live" : ""} aria-hidden="true">●</span>
             <div className="haswolf-persistent-voice__summary">
               <strong>{state.roomName}</strong>
               <small>
                 {state.activeSpeaker
-                  ? `${state.activeSpeaker} konuÃ…Å¸uyor`
+                  ? `${state.activeSpeaker} konuşuyor`
                   : state.microphoneEnabled
-                    ? `${state.nickname} mikrofonu aÃƒÂ§Ã„Â±k`
-                    : "Ses odasÃ„Â± arka planda aktif"}
+                    ? `${state.nickname || "Sen"} · Mikrofon açık`
+                    : "Ses odası arka planda aktif"}
               </small>
             </div>
           </div>
@@ -539,30 +534,35 @@ element.muted = !outputEnabledRef.current;
             <button
               type="button"
               onClick={() => setOutput(!state.outputEnabled)}
-              title={state.outputEnabled ? "Oda sesini kapat" : "Oda sesini aÃƒÂ§"}
+              aria-pressed={state.outputEnabled}
+              title={state.outputEnabled ? "Oda sesini kapat" : "Oda sesini aç"}
             >
-              {state.outputEnabled ? "ÄŸÅ¸â€Å " : "ÄŸÅ¸â€â€¡"}
+              <span aria-hidden="true">{state.outputEnabled ? "🔊" : "🔇"}</span>
+              <b>{state.outputEnabled ? "Sesi kapat" : "Sesi aç"}</b>
             </button>
+
             <button
               type="button"
               className={state.microphoneEnabled ? "is-active" : ""}
               onClick={() => void setMicrophone(!state.microphoneEnabled)}
-              title={
-                state.microphoneEnabled ? "Mikrofonu sustur" : "Mikrofonu aÃƒÂ§"
-              }
+              aria-pressed={state.microphoneEnabled}
+              title={state.microphoneEnabled ? "Mikrofonu kapat" : "Mikrofonu aç"}
             >
-              {state.microphoneEnabled ? "ÄŸÅ¸Ââ„¢Ã¯Â¸Â" : "ÄŸÅ¸ÂÂ¤"}
+              <span aria-hidden="true">{state.microphoneEnabled ? "🎙️" : "🎤"}</span>
+              <b>{state.microphoneEnabled ? "Mikrofonu kapat" : "Mikrofonu aç"}</b>
             </button>
+
             <button
               type="button"
               className="is-danger"
               onClick={() => void disconnectVoice()}
-              title="Ses odasÃ„Â±ndan ÃƒÂ§Ã„Â±k"
+              title="Ses odasından ayrıl"
             >
-              Ã¢Å“â€¢
+              <span aria-hidden="true">✕</span>
+              <b>Odadan ayrıl</b>
             </button>
           </div>
-        </div>
+        </section>
       )}
 
       {state.error && !isCommunityPage && (
@@ -571,7 +571,6 @@ element.muted = !outputEnabledRef.current;
     </VoiceContext.Provider>
   );
 }
-
 export function usePersistentVoice() {
   const value = useContext(VoiceContext);
   if (!value) throw new Error("PersistentVoiceProvider eksik.");
