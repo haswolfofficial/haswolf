@@ -206,3 +206,42 @@
     overflow: hidden !important;
   }
 }
+
+/* HASWOLF V7.2 PROFESSIONAL FINAL */
+.haswolf-persistent-voice {
+  z-index: 9998 !important;
+}
+.haswolf-persistent-voice__actions {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+.haswolf-persistent-voice__actions button {
+  min-width: 0 !important;
+}
+@media (max-width: 767px) {
+  html, body {
+    overflow-x: hidden !important;
+  }
+  .haswolf-account-page,
+  .haswolf-community-page,
+  .haswolf-mobile-drawer,
+  [data-haswolf-mobile-overlay="true"] {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9999 !important;
+    width: 100vw !important;
+    min-height: 100dvh !important;
+    background: #050606 !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+  }
+  .haswolf-account-shell {
+    min-height: 100dvh !important;
+  }
+  .haswolf-persistent-voice {
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+    width: auto !important;
+  }
+}

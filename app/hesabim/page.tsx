@@ -160,7 +160,7 @@ function SimpleDataPanel({ table, title, userId }: { table: string; title: strin
       if (!active) return;
       if (result.error) {
         setRows([]);
-        setMessage("Bu bölüm hazır. Henüz kayıt bulunmuyor.");
+        setMessage("Henüz burada gösterilecek bir kayıt yok.");
       } else {
         setRows(result.data || []);
         setMessage("");

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import {
   createContext,
@@ -369,6 +369,11 @@ export function PersistentVoiceProvider({
               .forEach((duplicate) => duplicate.remove());
 
             track.detach().forEach((element) => element.remove());
+            track.detach().forEach((oldElement) => {
+              oldElement.pause();
+              oldElement.srcObject = null;
+              oldElement.remove();
+            });
             const element = track.attach() as HTMLMediaElement;
             element.autoplay = true;
 element.muted = !outputEnabledRef.current;
