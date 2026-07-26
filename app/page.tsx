@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import AuthButton from "../components/AuthButton";
 import MobileBottomNav from "../components/MobileBottomNav";
@@ -1038,7 +1038,7 @@ export default function Home() {
       <SiteFooter />
       <AutoTranslate />
       <FloatingWhatsApp />
-      <AdminLiveVisitors enabled={isAdmin} />
+      <AdminLiveVisitors enabled />
       <CompareDock />
       <MobileBottomNav activeMarket={market} onMarketChange={goToMarket} />
     </main>

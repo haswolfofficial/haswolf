@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 type Deal = {
   id: number;
@@ -38,6 +39,7 @@ export default function NotificationCenter({ deals }: { deals: Deal[] }) {
     [deals],
   );
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [seen, setSeen] = useState<number[]>([]);
   const [now, setNow] = useState(Date.now());
   const root = useRef<HTMLDivElement>(null);
@@ -45,6 +47,7 @@ export default function NotificationCenter({ deals }: { deals: Deal[] }) {
   const previousNotificationIds = useRef<number[]>([]);
 
   useEffect(() => {
+    setMounted(true);
     try {
       const value = JSON.parse(localStorage.getItem(KEY) || "[]");
       if (Array.isArray(value)) setSeen(value);
@@ -54,12 +57,13 @@ export default function NotificationCenter({ deals }: { deals: Deal[] }) {
   useEffect(() => { const timer=window.setInterval(()=>setNow(Date.now()),30000); return()=>window.clearInterval(timer); },[]);
 
   useEffect(() => {
-    const close = (event: PointerEvent) => {
-      if (!root.current?.contains(event.target as Node)) setOpen(false);
-    };
-    document.addEventListener("pointerdown", close);
-    return () => document.removeEventListener("pointerdown", close);
-  }, []);
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (event: KeyboardEvent) => event.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => { document.body.style.overflow = previous; window.removeEventListener("keydown", onKey); };
+  }, [open]);
 
   function mark(id: number) {
     setSeen((current) => {
@@ -125,10 +129,11 @@ export default function NotificationCenter({ deals }: { deals: Deal[] }) {
         {unread > 0 && <b>{unread > 9 ? "9+" : unread}</b>}
       </button>
 
-      {open && (
-        <aside className="haswolf-notification-panel">
+      {mounted && open && createPortal(
+        <div className="haswolf-modal-layer" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}>
+        <aside className="haswolf-notification-panel haswolf-modal-card" role="dialog" aria-modal="true" aria-labelledby="notification-title">
           <header>
-            <div><small>HASWOLF</small><h2>Bildirim Merkezi</h2></div>
+            <div><small>HASWOLF</small><h2 id="notification-title">Bildirim Merkezi</h2></div>
             <button type="button" className="haswolf-panel-close" onClick={() => setOpen(false)} aria-label="Bildirim merkezini kapat">✕</button>
           </header>
           <div className="haswolf-notification-list">
@@ -164,7 +169,7 @@ export default function NotificationCenter({ deals }: { deals: Deal[] }) {
             }) : <p className="haswolf-notification-empty">Yeni bildirimin bulunmuyor.</p>}
           </div>
         </aside>
-      )}
+        </div>, document.body)}
     </div>
   );
 }

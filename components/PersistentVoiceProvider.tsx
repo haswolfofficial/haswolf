@@ -48,7 +48,6 @@ type VoiceContextValue = {
   participantCount: number;
   participants: VoiceParticipant[];
   error: string;
-  canSpeak: boolean;
   connectVoice: (roomName: string, nickname: string, userId?: string) => Promise<void>;
   disconnectVoice: () => Promise<void>;
   setMicrophone: (enabled: boolean) => Promise<void>;
@@ -69,7 +68,6 @@ const initialState = {
   participantCount: 0,
   participants: [] as VoiceParticipant[],
   error: "",
-  canSpeak: false,
 };
 
 const VoiceContext = createContext<VoiceContextValue | null>(null);
@@ -231,11 +229,6 @@ export function PersistentVoiceProvider({
     async (enabled: boolean) => {
       const room = roomRef.current;
 
-      if (enabled && !state.canSpeak) {
-        setState((current) => ({ ...current, microphoneEnabled: false, error: "Konuşma yetkin yok. Kurucu veya admin yetki vermeli." }));
-        return;
-      }
-
       if (!room || room.state !== "connected") {
         setState((current) => ({
           ...current,
@@ -290,7 +283,7 @@ export function PersistentVoiceProvider({
         }));
       }
     },
-    [persist, refreshParticipants, state.canSpeak],
+    [persist, refreshParticipants],
   );
 
   const connectVoice = useCallback(
@@ -337,7 +330,6 @@ export function PersistentVoiceProvider({
         const data = (await response.json()) as {
           token?: string;
           serverUrl?: string;
-          canSpeak?: boolean;
           error?: string;
         };
 
@@ -435,7 +427,6 @@ element.muted = !outputEnabledRef.current;
           participants,
           participantCount: participants.length,
           error: "",
-          canSpeak: data.canSpeak !== false,
         }));
 
         persist(
@@ -531,49 +522,22 @@ element.muted = !outputEnabledRef.current;
       {state.connected && !isCommunityPage && (
         <section className="haswolf-persistent-voice" aria-label="Aktif ses odası">
           <div className="haswolf-persistent-voice__status">
-            <span className={state.microphoneEnabled ? "is-live" : ""} aria-hidden="true">●</span>
+            <span className="is-live" aria-hidden="true">●</span>
             <div className="haswolf-persistent-voice__summary">
-              <strong>{state.roomName}</strong>
-              <small>
-                {state.activeSpeaker
-                  ? `${state.activeSpeaker} konuşuyor`
-                  : state.microphoneEnabled
-                    ? `${state.nickname || "Sen"} · Mikrofon açık`
-                    : "Ses odası arka planda aktif"}
-              </small>
+              <strong>Bağlı</strong>
+              <small>{state.roomName}</small>
             </div>
           </div>
 
           <div className="haswolf-persistent-voice__actions">
-            <button
-              type="button"
-              onClick={() => setOutput(!state.outputEnabled)}
-              aria-pressed={state.outputEnabled}
-              title={state.outputEnabled ? "Oda sesini kapat" : "Oda sesini aç"}
-            >
-              <span aria-hidden="true">{state.outputEnabled ? "🔊" : "🔇"}</span>
-              <b>{state.outputEnabled ? "Sesi kapat" : "Sesi aç"}</b>
+            <button type="button" className={state.microphoneEnabled ? "is-active" : ""} onClick={() => void setMicrophone(!state.microphoneEnabled)} aria-pressed={state.microphoneEnabled}>
+              <span aria-hidden="true">🎤</span><b>Mikrofon</b><small>{state.microphoneEnabled ? "Açık" : "Kapalı"}</small>
             </button>
-
-            <button
-              type="button"
-              className={state.microphoneEnabled ? "is-active" : ""}
-              onClick={() => void setMicrophone(!state.microphoneEnabled)}
-              aria-pressed={state.microphoneEnabled}
-              title={state.microphoneEnabled ? "Mikrofonu kapat" : "Mikrofonu aç"}
-            >
-              <span aria-hidden="true">{state.microphoneEnabled ? "🎙️" : "🎤"}</span>
-              <b>{state.microphoneEnabled ? "Mikrofonu kapat" : "Mikrofonu aç"}</b>
+            <button type="button" className={state.outputEnabled ? "is-active" : ""} onClick={() => setOutput(!state.outputEnabled)} aria-pressed={state.outputEnabled}>
+              <span aria-hidden="true">🔇</span><b>Ses</b><small>{state.outputEnabled ? "Açık" : "Kapalı"}</small>
             </button>
-
-            <button
-              type="button"
-              className="is-danger"
-              onClick={() => void disconnectVoice()}
-              title="Ses odasından ayrıl"
-            >
-              <span aria-hidden="true">✕</span>
-              <b>Odadan ayrıl</b>
+            <button type="button" className="is-danger" onClick={() => void disconnectVoice()}>
+              <span aria-hidden="true">🚪</span><b>Ayrıl</b><small>Odadan çık</small>
             </button>
           </div>
         </section>

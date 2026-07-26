@@ -42,9 +42,9 @@ export default function VoiceMediaSession() {
 
     const speaker = voice.activeSpeaker?.trim();
     session.metadata = new MediaMetadata({
-      title: speaker ? `${speaker} konuşuyor` : voice.microphoneEnabled ? "Mikrofon açık" : "Mikrofon kapalı",
+      title: speaker ? `${speaker} konuşuyor` : "🟢 Bağlı",
       artist: voice.roomName || "HASWOLF Ses Odası",
-      album: voice.outputEnabled ? "Oda sesi açık" : "Oda sesi kapalı",
+      album: `🎤 Mikrofon ${voice.microphoneEnabled ? "açık" : "kapalı"} · 🔇 Ses ${voice.outputEnabled ? "açık" : "kapalı"}`,
       artwork: [
         { src: "/icons/haswolf-192.png", sizes: "192x192", type: "image/png" },
         { src: "/icons/haswolf-512.png", sizes: "512x512", type: "image/png" },
@@ -65,11 +65,13 @@ export default function VoiceMediaSession() {
     });
     action("pause", () => void voice.setMicrophone(false));
     action("stop", () => void voice.disconnectVoice());
+    action("nexttrack", () => voice.setOutput(!voice.outputEnabled));
 
     return () => {
       action("play", null);
       action("pause", null);
       action("stop", null);
+      action("nexttrack", null);
     };
   }, [
     voice.activeSpeaker,
@@ -79,6 +81,7 @@ export default function VoiceMediaSession() {
     voice.outputEnabled,
     voice.roomName,
     voice.setMicrophone,
+    voice.setOutput,
   ]);
 
   return null;
