@@ -23,6 +23,19 @@ export default function VoiceRoom({
     void voice.connectVoice(roomName, nickname, currentUserId);
   }, [currentUserId, nickname, roomName, voice.connectVoice]);
 
+
+  async function moderateParticipant(action: "kick" | "ban" | "mute" | "unmute" | "role" | "speak", participant: { userId: string; identity: string }, value?: string | boolean) {
+    setModerationError("");
+    const { data: { session } } = await supabase.auth.getSession();
+    const response = await fetch("/api/admin/member-action", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${session?.access_token || ""}` },
+      body: JSON.stringify({ action, userId: participant.userId, roomName, participantIdentity: participant.identity, value }),
+    });
+    const result = await response.json() as { error?: string };
+    if (!response.ok) setModerationError(result.error || "İşlem tamamlanamadı.");
+  }
+
   async function deleteGuest(userId: string, identity: string) {
     if (!window.confirm("Bu misafir oturumu tamamen silinsin mi?")) return;
 
@@ -169,25 +182,25 @@ export default function VoiceRoom({
                       </small>
                     </div>
 
-                    {canManageMembers &&
-                      participant.isGuest &&
-                      !participant.isLocal && (
-                        <button
-                          type="button"
-                          disabled={deletingId === participant.userId}
-                          onClick={() =>
-                            void deleteGuest(
-                              participant.userId,
-                              participant.identity,
-                            )
-                          }
-                          className="rounded-lg border border-red-500/40 bg-red-950/30 px-3 py-2 text-xs font-bold text-red-300 disabled:opacity-50"
-                        >
-                          {deletingId === participant.userId
-                            ? "Siliniyor..."
-                            : "Misafiri sil"}
-                        </button>
-                      )}
+                    {canManageMembers && !participant.isLocal && (
+                      <div className="haswolf-voice-member-actions">
+                        <button type="button" onClick={() => void moderateParticipant("speak", participant, true)}>Konuşma ver</button>
+                        <button type="button" onClick={() => void moderateParticipant("speak", participant, false)}>Konuşmayı al</button>
+                        <button type="button" onClick={() => void moderateParticipant("mute", participant)}>Sustur</button>
+                        <button type="button" onClick={() => void moderateParticipant("kick", participant)}>Kick</button>
+                        <button type="button" className="is-danger" onClick={() => void moderateParticipant("ban", participant, true)}>Ban</button>
+                        {participant.isGuest && (
+                          <button
+                            type="button"
+                            className="is-danger"
+                            disabled={deletingId === participant.userId}
+                            onClick={() => void deleteGuest(participant.userId, participant.identity)}
+                          >
+                            {deletingId === participant.userId ? "Siliniyor..." : "Üyeyi sil"}
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
 

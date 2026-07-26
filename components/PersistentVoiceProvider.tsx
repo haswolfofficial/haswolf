@@ -48,6 +48,7 @@ type VoiceContextValue = {
   participantCount: number;
   participants: VoiceParticipant[];
   error: string;
+  canSpeak: boolean;
   connectVoice: (roomName: string, nickname: string, userId?: string) => Promise<void>;
   disconnectVoice: () => Promise<void>;
   setMicrophone: (enabled: boolean) => Promise<void>;
@@ -68,6 +69,7 @@ const initialState = {
   participantCount: 0,
   participants: [] as VoiceParticipant[],
   error: "",
+  canSpeak: false,
 };
 
 const VoiceContext = createContext<VoiceContextValue | null>(null);
@@ -229,6 +231,11 @@ export function PersistentVoiceProvider({
     async (enabled: boolean) => {
       const room = roomRef.current;
 
+      if (enabled && !state.canSpeak) {
+        setState((current) => ({ ...current, microphoneEnabled: false, error: "Konuşma yetkin yok. Kurucu veya admin yetki vermeli." }));
+        return;
+      }
+
       if (!room || room.state !== "connected") {
         setState((current) => ({
           ...current,
@@ -283,7 +290,7 @@ export function PersistentVoiceProvider({
         }));
       }
     },
-    [persist, refreshParticipants],
+    [persist, refreshParticipants, state.canSpeak],
   );
 
   const connectVoice = useCallback(
@@ -330,6 +337,7 @@ export function PersistentVoiceProvider({
         const data = (await response.json()) as {
           token?: string;
           serverUrl?: string;
+          canSpeak?: boolean;
           error?: string;
         };
 
@@ -427,6 +435,7 @@ element.muted = !outputEnabledRef.current;
           participants,
           participantCount: participants.length,
           error: "",
+          canSpeak: data.canSpeak !== false,
         }));
 
         persist(

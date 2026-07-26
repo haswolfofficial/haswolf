@@ -845,7 +845,7 @@ export default function CommunityLayout({
       </section>
 
       <div className="hidden shrink-0 xl:block">
-        <MemberSidebar currentUserId={currentUserId} canManageMembers={canManageMembers} canChangeNicknames={canChangeNicknames} onlineUserIds={onlineUserIds} />
+        <MemberSidebar currentUserId={currentUserId} canManageMembers={canManageMembers} canChangeNicknames={canChangeNicknames} onlineUserIds={onlineUserIds} activeVoiceRoomName={isVoiceRoom ? `haswolf-${selectedRoom.slug}` : undefined} />
       </div>
 
       <div
@@ -861,7 +861,7 @@ export default function CommunityLayout({
           >
             ✕
           </button>
-          <MemberSidebar currentUserId={currentUserId} canManageMembers={canManageMembers} canChangeNicknames={canChangeNicknames} onlineUserIds={onlineUserIds} />
+          <MemberSidebar currentUserId={currentUserId} canManageMembers={canManageMembers} canChangeNicknames={canChangeNicknames} onlineUserIds={onlineUserIds} activeVoiceRoomName={isVoiceRoom ? `haswolf-${selectedRoom.slug}` : undefined} />
         </div>
       </div>
 

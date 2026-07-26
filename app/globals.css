@@ -2998,3 +2998,7 @@ summary {
   }
 }
 
+
+
+/* HASWOLF V8 professional responsive moderation controls */
+.haswolf-voice-member-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.35rem}.haswolf-voice-member-actions button{border:1px solid rgba(217,170,74,.3);border-radius:.55rem;background:#17140d;padding:.45rem .58rem;color:#efc76b;font-size:.62rem;font-weight:800}.haswolf-voice-member-actions button.is-danger{border-color:rgba(239,68,68,.4);background:rgba(127,29,29,.24);color:#fca5a5}@media(max-width:680px){.haswolf-voice-member-actions{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));justify-content:stretch}.haswolf-voice-member-actions button{min-height:2.45rem;white-space:normal}.haswolf-admin-responsive-list,.haswolf-admin-action-list,.haswolf-admin-room-list,.haswolf-admin-user-list{min-width:0;width:100%}.haswolf-admin-responsive-list article,.haswolf-admin-action-list article,.haswolf-admin-room-list article,.haswolf-admin-user-list article{min-width:0;max-width:100%;overflow:visible;grid-template-columns:1fr!important}.haswolf-admin-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}.haswolf-user-quick-menu{position:fixed;z-index:2147483000;inset:auto .65rem calc(env(safe-area-inset-bottom) + .65rem) .65rem;width:auto;max-height:70dvh;overflow:auto}}

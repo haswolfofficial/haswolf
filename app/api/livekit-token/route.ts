@@ -28,14 +28,19 @@ export async function POST(request: NextRequest) {
     }
 
     let isGuest = false;
+    let canSpeak = false;
     if (userId) {
       const supabase = createServiceClient();
       const { data: profile } = await supabase
         .from("profiles")
-        .select("is_guest")
+        .select("is_guest,can_speak,is_muted,banned_until")
         .eq("id", userId)
         .maybeSingle();
       isGuest = Boolean(profile?.is_guest);
+      canSpeak = Boolean(profile?.can_speak) && !Boolean(profile?.is_muted);
+      if (profile?.banned_until && new Date(profile.banned_until).getTime() > Date.now()) {
+        return NextResponse.json({ error: "Bu hesap ses odalarından uzaklaştırılmış." }, { status: 403 });
+      }
     }
 
     const identity = userId || `guest-${crypto.randomUUID()}`;
@@ -49,13 +54,14 @@ export async function POST(request: NextRequest) {
     accessToken.addGrant({
       roomJoin: true,
       room: roomName,
-      canPublish: true,
+      canPublish: canSpeak,
       canSubscribe: true,
     });
 
     return NextResponse.json({
       token: await accessToken.toJwt(),
       serverUrl: livekitUrl,
+      canSpeak,
     });
   } catch (error) {
     console.error("LiveKit token hatasÄ±:", error);
