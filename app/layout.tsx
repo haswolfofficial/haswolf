@@ -15,11 +15,11 @@ const siteUrl = "https://www.haswolf.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "HASWOLF | Item, Yang ve DC AlÄ±m SatÄ±m Merkezi",
+    default: "HASWOLF | Item, Yang ve DC Alım Satım Merkezi",
     template: "%s | HASWOLF",
   },
-  description: "HASWOLF'ta Item, Yang, DC ve karakter Ã¼rÃ¼nlerini gÃ¼venle satÄ±n al veya Ã¼rÃ¼nlerini hÄ±zlÄ± deÄŸerlendirme iÃ§in bize sat.",
-  keywords: ["Haswolf", "Yang satÄ±n al", "Yang sat", "DC satÄ±n al", "Item satÄ±n al", "Royale Online market"],
+  description: "HASWOLF'ta Item, Yang, DC ve karakter ürünlerini güvenle satın al veya ürünlerini hızlı değerlendirme için bize sat.",
+  keywords: ["Haswolf", "Yang satın al", "Yang sat", "DC satın al", "Item satın al", "Royale Online market"],
   applicationName: "HASWOLF",
   manifest: "/manifest.webmanifest",
   alternates: { canonical: "/" },
@@ -27,14 +27,14 @@ export const metadata: Metadata = {
     type: "website",
     url: siteUrl,
     siteName: "HASWOLF",
-    title: "HASWOLF | Bizden SatÄ±n Al veya Bize Sat",
-    description: "Item, Yang, DC ve karakter alÄ±ÅŸveriÅŸinde gÃ¼venli, hÄ±zlÄ± ve profesyonel pazar deneyimi.",
+    title: "HASWOLF | Bizden Satın Al veya Bize Sat",
+    description: "Item, Yang, DC ve karakter alışverişinde güvenli, hızlı ve profesyonel pazar deneyimi.",
     images: [{ url: "/icons/haswolf-512.png", width: 512, height: 512, alt: "HASWOLF" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "HASWOLF | Bizden SatÄ±n Al veya Bize Sat",
-    description: "Item, Yang, DC ve karakter alÄ±ÅŸveriÅŸinde gÃ¼venli pazar deneyimi.",
+    title: "HASWOLF | Bizden Satın Al veya Bize Sat",
+    description: "Item, Yang, DC ve karakter alışverişinde güvenli pazar deneyimi.",
     images: ["/icons/haswolf-512.png"],
   },
   icons: {
@@ -80,11 +80,11 @@ const structuredData = {
     },
     {
       "@type": "ItemList",
-      name: "HASWOLF alÄ±ÅŸveriÅŸ hizmetleri",
+      name: "HASWOLF alışveriş hizmetleri",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Bizden SatÄ±n Al", url: `${siteUrl}/#market` },
+        { "@type": "ListItem", position: 1, name: "Bizden Satın Al", url: `${siteUrl}/#market` },
         { "@type": "ListItem", position: 2, name: "Bize Sat", url: `${siteUrl}/#top` },
-        { "@type": "ListItem", position: 3, name: "DC SatÄ±ÅŸ", url: `${siteUrl}/#market` },
+        { "@type": "ListItem", position: 3, name: "DC Satış", url: `${siteUrl}/#market` },
         { "@type": "ListItem", position: 4, name: "Yang Market", url: `${siteUrl}/#market` },
       ],
     },
@@ -98,13 +98,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
         <PersistentVoiceProvider>
           <VoiceMediaSession />
-        <AutoTranslate />
-        <SitePresence />
-        <AnnouncementBroadcast />
-        {children}
-        <YangMarketIndex />
-        <CampaignRenderer />
-        <FloatingWhatsApp />
+          <AutoTranslate />
+          <SitePresence />
+          <AnnouncementBroadcast />
+          {children}
+          <YangMarketIndex />
+          <CampaignRenderer />
+          <FloatingWhatsApp />
         </PersistentVoiceProvider>
       </body>
     </html>
