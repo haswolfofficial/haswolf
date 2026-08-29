@@ -8,24 +8,44 @@ const UPDATE_INTERVAL = 8000;
 
 const clamp = (value: number) => Math.min(MAX_ACTIVITY, Math.max(MIN_ACTIVITY, value));
 
+function getSharedActivity(now = Date.now()) {
+  const bucket = Math.floor(now / UPDATE_INTERVAL);
+
+  // Tüm cihazlarda aynı zaman diliminde aynı değeri üretir.
+  // İki yavaş dalga üst üste bindirilerek ani sıçramalar engellenir.
+  const waveA = Math.sin(bucket * 0.085) * 82;
+  const waveB = Math.sin(bucket * 0.031 + 1.7) * 38;
+  const waveC = Math.sin(bucket * 0.013 + 4.2) * 18;
+  const value = Math.round(158 + waveA + waveB + waveC);
+
+  return clamp(value);
+}
+
+function msUntilNextBucket(now = Date.now()) {
+  return UPDATE_INTERVAL - (now % UPDATE_INTERVAL) + 25;
+}
+
 export default function AdminLiveVisitors({ enabled = true }: { enabled?: boolean }) {
   const [open, setOpen] = useState(false);
-  const [activity, setActivity] = useState(0);
+  const [activity, setActivity] = useState(() => getSharedActivity());
 
   useEffect(() => {
     if (!enabled) return;
 
-    setActivity(Math.floor(Math.random() * 86) + 65);
+    let interval: number | undefined;
 
-    const timer = window.setInterval(() => {
-      setActivity((current) => {
-        const base = current || 100;
-        const step = Math.floor(Math.random() * 21) - 10;
-        return clamp(base + step);
-      });
-    }, UPDATE_INTERVAL);
+    const sync = () => setActivity(getSharedActivity());
+    sync();
 
-    return () => window.clearInterval(timer);
+    const timeout = window.setTimeout(() => {
+      sync();
+      interval = window.setInterval(sync, UPDATE_INTERVAL);
+    }, msUntilNextBucket());
+
+    return () => {
+      window.clearTimeout(timeout);
+      if (interval !== undefined) window.clearInterval(interval);
+    };
   }, [enabled]);
 
   if (!enabled) return null;
@@ -40,13 +60,13 @@ export default function AdminLiveVisitors({ enabled = true }: { enabled?: boolea
         aria-label={`${activity} aktif`}
       >
         <span className="haswolf-live-dot" />
-        <b>{activity || MIN_ACTIVITY}</b>
+        <b>{activity}</b>
       </button>
       {open && (
         <div className="haswolf-live-orb__panel">
           <header>
             <small>CANLI DURUM</small>
-            <strong>{activity || MIN_ACTIVITY} aktif</strong>
+            <strong>{activity} aktif</strong>
           </header>
           <p><span>Durum</span><b>Aktif</b></p>
         </div>
