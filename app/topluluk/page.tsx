@@ -25,9 +25,7 @@ export default function ToplulukPage() {
 
   useEffect(() => {
     async function checkProfile() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
         router.replace("/misafir-giris");
@@ -36,7 +34,7 @@ export default function ToplulukPage() {
 
       const { data: profile, error } = await supabase
         .from("profiles")
-        .select("nickname,is_banned")
+        .select("nickname,is_banned,is_guest")
         .eq("id", user.id)
         .maybeSingle();
 
@@ -52,7 +50,8 @@ export default function ToplulukPage() {
       }
 
       const userNickname = profile?.nickname?.trim();
-      if (!userNickname) {
+      const guestNeedsAlias = Boolean(profile?.is_guest && userNickname && !userNickname.includes(" - ("));
+      if (!userNickname || guestNeedsAlias) {
         router.replace("/mahlas");
         return;
       }
@@ -87,30 +86,21 @@ export default function ToplulukPage() {
         }
 
         const activeRoles = (roleRows || []) as RoleRow[];
-        const normalizedRoleNames = activeRoles.map((role) =>
-          role.name.trim().toLocaleLowerCase("tr-TR")
-        );
-
-        managerByRole = normalizedRoleNames.some((roleName) =>
-          MANAGER_ROLES.has(roleName)
-        );
-
+        const normalizedRoleNames = activeRoles.map((role) => role.name.trim().toLocaleLowerCase("tr-TR"));
+        managerByRole = normalizedRoleNames.some((roleName) => MANAGER_ROLES.has(roleName));
         founderByRole = normalizedRoleNames.includes("kurucu");
       }
 
       setCurrentUserId(user.id);
       setNickname(userNickname);
-      const isMainAdmin =
-        user.email?.trim().toLocaleLowerCase("tr-TR") ===
-        ADMIN_EMAIL.toLocaleLowerCase("tr-TR");
-
+      const isMainAdmin = user.email?.trim().toLocaleLowerCase("tr-TR") === ADMIN_EMAIL.toLocaleLowerCase("tr-TR");
       const delegatedAdmin = await hasAdminAccess(user);
       setCanManageMembers(Boolean(isMainAdmin || delegatedAdmin || managerByRole));
       setCanChangeNicknames(Boolean(isMainAdmin || delegatedAdmin || founderByRole));
       setReady(true);
     }
 
-    checkProfile();
+    void checkProfile();
   }, [router]);
 
   if (!ready) {
