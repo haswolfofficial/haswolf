@@ -11,6 +11,7 @@ import SitePresence from "@/components/SitePresence";
 import AnnouncementBroadcast from "@/components/AnnouncementBroadcast";
 import YangMarketIndex from "@/components/YangMarketIndex";
 import SitePolish from "@/components/SitePolish";
+import HomeCommunityPreview from "@/components/HomeCommunityPreview";
 import { PersistentVoiceProvider } from "@/components/PersistentVoiceProvider";
 import VoiceMediaSession from "@/components/VoiceMediaSession";
 
@@ -107,6 +108,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <SitePresence />
           <AnnouncementBroadcast />
           {children}
+          <HomeCommunityPreview />
           <YangMarketIndex />
           <CampaignRenderer />
           <FloatingWhatsApp />
