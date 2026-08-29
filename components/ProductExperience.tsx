@@ -192,12 +192,17 @@ export default function ProductExperience({ product, compact = false }: { produc
 
   if (isYangReference) {
     const invalidHigh = rawYangAmount > MAX_YANG_M;
+    const campaignText = numericYangAmount >= 2000
+      ? "2 T ve üzeri alımlarda maksimum indirim: 1 M başına 0,50 TL. 5 T, 10 T veya daha yüksek alımlarda da bu indirim seviyesi korunur."
+      : numericYangAmount >= 1000
+        ? "1 T ve üzeri alımlarda 1 M başına 0,25 TL anında indirim. 2 T'ye ulaştığında indirim 0,50 TL/M seviyesine çıkar."
+        : "1 T ve üzeri alımlarda 1 M başına 0,25 TL indirim başlar. 2 T ve üzerindeki alımlarda indirim 0,50 TL/M seviyesine çıkar ve daha yüksek miktarlarda korunur.";
     return (
       <div className="haswolf-yang-flexible-calculator">
         <div className="haswolf-yang-flexible-calculator__heading"><div><strong>İstediğin miktarı yaz</strong><span>{hasYangDiscount ? <><s>1 M = {formatTl(yangUnitPrice)} TL</s><b className="haswolf-yang-sale-unit">1 M = {formatTl(yangDiscountedUnitPrice)} TL</b></> : <>1 M = {formatTl(yangUnitPrice)} TL</>}</span></div><b>{product.server}</b></div>
         <label><span>Yang miktarı (M)</span><div><input type="number" min="1" max={MAX_YANG_M} step="1" inputMode="numeric" value={yangAmount} onChange={(event) => setYangAmount(event.target.value)} onBlur={() => { if (rawYangAmount > MAX_YANG_M) setYangAmount(String(MAX_YANG_M)); }} placeholder="Örn. 558" /><em>{numericYangAmount >= 1000 ? `${new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 3 }).format(numericYangAmount / 1000)} T` : "M"}</em></div></label>
         {invalidHigh && <div className="haswolf-yang-limit-warning">En fazla 20.000 M (20 T) satın alabilirsin.</div>}
-        {hasYangDiscount && <div className="haswolf-yang-campaign"><strong>⚡ TOPLU ALIM AVANTAJI</strong><span>{numericYangAmount >= 2000 ? "2 T ve üzeri alımlarda maksimum indirim: 1 M başına 0,50 TL. 5 T, 10 T veya daha yüksek alımlarda da bu indirim seviyesi korunur." : "1 T ve üzeri alımlarda 1 M başına 0,25 TL anında indirim. 2 T'ye ulaştığında indirim 0,50 TL/M seviyesine çıkar."}</span></div>}
+        <div className="haswolf-yang-campaign"><strong>⚡ TOPLU ALIM AVANTAJI</strong><span>{campaignText}</span></div>
         <div className="haswolf-yang-flexible-calculator__total"><span>Hesaplanan toplam</span><strong>{numericYangAmount >= 1 ? <>{hasYangDiscount && <s>{formatTl(yangOriginalTotal)} TL</s>}<b>{formatTl(yangTotal)} TL</b></> : "—"}</strong></div>
         <p>1–20.000 M arasında istediğin miktarı yazabilirsin. 1.000 M = 1 T. <b>Toplu alım indirimi tüm sunucularda otomatik uygulanır.</b></p>
         <button type="button" onClick={buyFlexibleYang} disabled={numericYangAmount < 1 || invalidHigh}>WhatsApp ile {numericYangAmount >= 1 ? formatYangAmount(numericYangAmount) : "Yang"} Satın Al</button>
