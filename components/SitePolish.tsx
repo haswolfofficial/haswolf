@@ -39,10 +39,20 @@ function fixDragonCoinNavigation() {
   });
 }
 
+function markPurchaseActions() {
+  document.querySelectorAll<HTMLElement>("a, button").forEach((element) => {
+    const text = (element.textContent || "").replace(/\s+/g, " ").trim().toLowerCase();
+    if (text.includes("satın al") || text.includes("bize sat") || text.includes("markete git")) {
+      element.classList.add("haswolf-luxury-purchase-cursor");
+    }
+  });
+}
+
 export default function SitePolish() {
   useEffect(() => {
     normalizeDragonCoinLabels();
     fixDragonCoinNavigation();
+    markPurchaseActions();
     const observer = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         for (const node of Array.from(mutation.addedNodes)) {
@@ -56,6 +66,7 @@ export default function SitePolish() {
         }
       }
       fixDragonCoinNavigation();
+      markPurchaseActions();
     });
     observer.observe(document.body, { childList: true, subtree: true });
     return () => observer.disconnect();
@@ -85,14 +96,36 @@ export default function SitePolish() {
         text-align: center !important;
       }
 
-      /* Single Metin2-inspired fantasy cursor across the entire desktop site. */
+      /* Default site cursor stays normal and familiar. */
       @media (pointer: fine) {
         html,
         body,
-        *,
-        *::before,
-        *::after {
-          cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Cdefs%3E%3ClinearGradient id='steel' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffffff'/%3E%3Cstop offset='.20' stop-color='%23d8e0e4'/%3E%3Cstop offset='.46' stop-color='%238b99a2'/%3E%3Cstop offset='.72' stop-color='%23f4f7f8'/%3E%3Cstop offset='1' stop-color='%23434c53'/%3E%3C/linearGradient%3E%3ClinearGradient id='edge' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23232a2f'/%3E%3Cstop offset='.5' stop-color='%23080b0d'/%3E%3Cstop offset='1' stop-color='%235c6972'/%3E%3C/linearGradient%3E%3CradialGradient id='orb' cx='.38' cy='.30'%3E%3Cstop offset='0' stop-color='%23e8ffff'/%3E%3Cstop offset='.18' stop-color='%236fffff'/%3E%3Cstop offset='.48' stop-color='%2300cfd8'/%3E%3Cstop offset='.76' stop-color='%23007886'/%3E%3Cstop offset='1' stop-color='%2300141d'/%3E%3C/radialGradient%3E%3Cfilter id='glow' x='-70%25' y='-70%25' width='240%25' height='240%25'%3E%3CfeGaussianBlur stdDeviation='1.15' result='b'/%3E%3CfeMerge%3E%3CfeMergeNode in='b'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/defs%3E%3Cpath d='M3.5 2.5 L27.7 15.2 L20.7 17.6 L26.2 26.3 L22.2 28.9 L16.7 20.1 L12.1 27.2 Z' fill='%23030608' stroke='%23000000' stroke-width='2.4' stroke-linejoin='round'/%3E%3Cpath d='M5.4 4.7 L24.2 14.8 L18.3 16.3 L22.8 23.8 L21.6 24.5 L16.6 16.7 L13.0 23.3 Z' fill='url(%23steel)' stroke='%23f7fbfc' stroke-width='1.05' stroke-linejoin='round'/%3E%3Cpath d='M7.6 7.0 L19.7 13.8 L14.8 14.8 L12.9 19.0 Z' fill='%23ffffff' opacity='.58'/%3E%3Cpath d='M15.4 14.5 L21.2 17.0' stroke='%23050a0d' stroke-width='1.2'/%3E%3Ccircle cx='17.1' cy='19.2' r='7.2' fill='url(%23edge)' stroke='%23131619' stroke-width='1.2'/%3E%3Ccircle cx='17.1' cy='19.2' r='5.75' fill='%23030b0f' stroke='%23b7f9ff' stroke-width='1.05' filter='url(%23glow)'/%3E%3Ccircle cx='17.1' cy='19.2' r='4.25' fill='url(%23orb)'/%3E%3Ccircle cx='15.6' cy='17.5' r='1.25' fill='%23ffffff' opacity='.9'/%3E%3Cpath d='M26.1 6.6 Q29.4 4.4 33.1 6.6 Q29.8 6.1 27.8 8.7' fill='none' stroke='%2398f8ff' stroke-width='1.05' stroke-linecap='round'/%3E%3Cpath d='M28.0 10.5 L33.6 12.8 L30.0 13.6 L33.0 16.2' fill='none' stroke='%236ff5ff' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 4 3, auto !important;
+        body * {
+          cursor: default !important;
+        }
+
+        a,
+        button,
+        [role="button"],
+        input[type="button"],
+        input[type="submit"],
+        label,
+        select {
+          cursor: pointer !important;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="search"],
+        textarea {
+          cursor: text !important;
+        }
+
+        /* Luxury gold cursor is reserved for buying/selling CTAs only. */
+        .haswolf-luxury-purchase-cursor,
+        .haswolf-luxury-purchase-cursor * {
+          cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23fff3bf'/%3E%3Cstop offset='.28' stop-color='%23f4c95d'/%3E%3Cstop offset='.62' stop-color='%23a86a0a'/%3E%3Cstop offset='1' stop-color='%23492703'/%3E%3C/linearGradient%3E%3CradialGradient id='j'%3E%3Cstop stop-color='%23fff8d6'/%3E%3Cstop offset='.35' stop-color='%23ffd66b'/%3E%3Cstop offset='.72' stop-color='%23c78008'/%3E%3Cstop offset='1' stop-color='%236d3a00'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M2.8 2.4 L23.4 13.1 L17 15.1 L22.6 23.6 L18.8 26.1 L13.2 17.6 L9.2 23.7 Z' fill='%230d0a05' stroke='%23000000' stroke-width='2.4' stroke-linejoin='round'/%3E%3Cpath d='M4.4 4.1 L20.5 12.7 L15.3 14.1 L19.8 21.3 L18.6 22 L13.7 14.5 L10.6 20 Z' fill='url(%23g)' stroke='%23fff0ad' stroke-width='1.15' stroke-linejoin='round'/%3E%3Ccircle cx='16.4' cy='17.7' r='5.8' fill='%23130c03' stroke='%23f4c95d' stroke-width='1.25'/%3E%3Ccircle cx='16.4' cy='17.7' r='3.9' fill='url(%23j)'/%3E%3Ccircle cx='15.2' cy='16.5' r='1.05' fill='%23ffffff' opacity='.9'/%3E%3Cpath d='M23.2 7.7 l3.7 1.6 -2.5 1 2 2.1' fill='none' stroke='%23ffd86e' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 3 3, pointer !important;
         }
       }
     `}</style>
