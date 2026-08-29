@@ -5,20 +5,27 @@ import { useEffect, useState } from "react";
 const MIN_ACTIVITY = 15;
 const MAX_ACTIVITY = 300;
 const UPDATE_INTERVAL = 8000;
+const CENTER = 155;
 
 const clamp = (value: number) => Math.min(MAX_ACTIVITY, Math.max(MIN_ACTIVITY, value));
+
+function seededNoise(seed: number) {
+  const x = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
+  return x - Math.floor(x);
+}
 
 function getSharedActivity(now = Date.now()) {
   const bucket = Math.floor(now / UPDATE_INTERVAL);
 
-  // Tüm cihazlarda aynı zaman diliminde aynı değeri üretir.
-  // İki yavaş dalga üst üste bindirilerek ani sıçramalar engellenir.
-  const waveA = Math.sin(bucket * 0.085) * 82;
-  const waveB = Math.sin(bucket * 0.031 + 1.7) * 38;
-  const waveC = Math.sin(bucket * 0.013 + 4.2) * 18;
-  const value = Math.round(158 + waveA + waveB + waveC);
+  // Tüm cihazlarda aynı 8 saniyelik dilimde aynı değer üretilir.
+  // Yavaş piyasa dalgası + küçük deterministik gürültü kullanılır.
+  // Gürültü artış/azalış yönünde dengelidir ve merkez değere geri çekilme vardır.
+  const slowWave = Math.sin(bucket * 0.055) * 48;
+  const mediumWave = Math.sin(bucket * 0.017 + 1.8) * 24;
+  const jitter = (seededNoise(bucket) - 0.5) * 14;
+  const raw = CENTER + slowWave + mediumWave + jitter;
 
-  return clamp(value);
+  return clamp(Math.round(raw));
 }
 
 function msUntilNextBucket(now = Date.now()) {
