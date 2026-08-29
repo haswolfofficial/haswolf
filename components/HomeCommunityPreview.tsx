@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
 import { supabase } from "../lib/supabase";
 
 type PreviewMessage = {
@@ -28,11 +29,13 @@ function timeLabel(value: string) {
 }
 
 export default function HomeCommunityPreview() {
+  const pathname = usePathname();
   const [messages, setMessages] = useState<PreviewMessage[]>([]);
   const [open, setOpen] = useState(true);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (pathname !== "/") return;
     let active = true;
 
     async function loadPreview() {
@@ -95,9 +98,10 @@ export default function HomeCommunityPreview() {
       active = false;
       void supabase.removeChannel(channel);
     };
-  }, []);
+  }, [pathname]);
 
   const visibleMessages = useMemo(() => messages.slice(0, 5), [messages]);
+  if (pathname !== "/") return null;
 
   return (
     <aside className={`fixed left-3 top-1/2 z-40 hidden -translate-y-1/2 xl:block ${open ? "w-[310px]" : "w-[58px]"}`}>
