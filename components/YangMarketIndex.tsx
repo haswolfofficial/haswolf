@@ -43,32 +43,54 @@ export default function YangMarketIndex() {
   if (pathname !== "/" || !rows.length) return null;
 
   return (
-    <aside className={`haswolf-yang-index ${pulse ? "is-pulsing" : ""}`} aria-label="HASWOLF Yang Endeksi">
-      <div className="haswolf-yang-index__head">
-        <div>
-          <span className="haswolf-yang-index__live"><i /> CANLI</span>
-          <strong>HASWOLF YANG ENDEKSİ</strong>
-          <small>1 M piyasa fiyatı · son değişim</small>
+    <aside className={`haswolf-yang-terminal ${pulse ? "is-pulsing" : ""}`} aria-label="HASWOLF Yang Endeksi">
+      <div className="haswolf-yang-terminal__tab">
+        <span className="haswolf-yang-terminal__dot" />
+        <span>YANG<br/>PİYASA</span>
+        <b>HMX</b>
+      </div>
+      <div className="haswolf-yang-terminal__panel">
+        <div className="haswolf-yang-terminal__topbar">
+          <div>
+            <span className="haswolf-yang-terminal__live"><i /> CANLI PİYASA</span>
+            <strong>HASWOLF YANG MARKET</strong>
+            <small>1 M referans fiyatı · son değişime göre</small>
+          </div>
+          <span className="haswolf-yang-terminal__stamp">HMX</span>
         </div>
-        <span className="haswolf-yang-index__badge">HMX</span>
+
+        <div className="haswolf-yang-terminal__ticker" aria-hidden="true">
+          <div className="haswolf-yang-terminal__ticker-track">
+            {[...markets, ...markets].map((market, index) => {
+              const up = market.change >= 0;
+              return <span key={`${market.server}-${index}`}><b>{SERVER_LABELS[market.server]}</b><strong>₺{formatTl(market.current)}</strong><em className={up ? "up" : "down"}>{up ? "▲" : "▼"} %{Math.abs(market.change).toLocaleString("tr-TR", { maximumFractionDigits: 2 })}</em></span>;
+            })}
+          </div>
+        </div>
+
+        <div className="haswolf-yang-terminal__grid">
+          <div className="haswolf-yang-terminal__labels"><span>Sunucu</span><span>1 M</span><span>Önceki</span><span>Değişim</span></div>
+          {markets.map((market) => {
+            const direction = market.change > 0 ? "up" : market.change < 0 ? "down" : "flat";
+            const symbol = direction === "up" ? "▲" : direction === "down" ? "▼" : "●";
+            return (
+              <div className={`haswolf-yang-terminal__row is-${direction}`} key={market.server}>
+                <span><b>{SERVER_LABELS[market.server]}</b><small>RO/{market.server.slice(0,3)}</small></span>
+                <span><b>₺{formatTl(market.current)}</b></span>
+                <span><b>₺{formatTl(market.previous)}</b><small>referans</small></span>
+                <span className="haswolf-yang-terminal__change"><b>{symbol} %{Math.abs(market.change).toLocaleString("tr-TR", { maximumFractionDigits: 2 })}</b><small>{direction === "up" ? "Yükseliş" : direction === "down" ? "Düşüş" : "Sabit"}</small></span>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="haswolf-yang-terminal__disclaimer">
+          <b>Fiyatlar canlı piyasaya göre hesaplanır.</b>
+          <span>Piyasa koşulları değişkendir. Gösterge yalnızca son fiyat hareketini yansıtır; fiyatlar yönetici tercihine göre değil, güncel piyasa koşullarına göre sisteme işlenir.</span>
+        </div>
       </div>
-      <div className="haswolf-yang-index__table">
-        <div className="haswolf-yang-index__row haswolf-yang-index__labels"><span>Sunucu</span><span>Yang</span><span>Değişim</span></div>
-        {markets.map((market) => {
-          const direction = market.change > 0 ? "up" : market.change < 0 ? "down" : "flat";
-          const symbol = direction === "up" ? "▲" : direction === "down" ? "▼" : "●";
-          return (
-            <div className={`haswolf-yang-index__row is-${direction}`} key={market.server}>
-              <span><b>{SERVER_LABELS[market.server]}</b><small>RO/{market.server.slice(0, 3)}</small></span>
-              <span><b>₺{formatTl(market.current)}</b><small className="haswolf-yang-index__previous">Önceki ₺{formatTl(market.previous)}</small></span>
-              <span className="haswolf-yang-index__change"><b>{symbol} %{Math.abs(market.change).toLocaleString("tr-TR", { maximumFractionDigits: 2 })}</b><small>{direction === "up" ? "Yükseliş" : direction === "down" ? "Düşüş" : "Sabit"}</small></span>
-            </div>
-          );
-        })}
-      </div>
-      <div className="haswolf-yang-index__notice"><b>Fiyatlar canlı piyasaya göre hesaplanır.</b><span>Piyasa koşulları değişkendir; endeks son fiyat hareketini gösterir. Yönetim yalnızca güncel satış fiyatını sisteme işler.</span></div>
       <style jsx global>{`
-        .haswolf-yang-index{position:fixed;right:18px;top:250px;z-index:44;width:min(340px,calc(100vw - 28px));overflow:hidden;border:1px solid #d8c79d;border-radius:14px;background:#fff;color:#111827;box-shadow:0 18px 48px rgba(0,0,0,.28);transition:box-shadow .3s ease,transform .3s ease}.haswolf-yang-index:hover{transform:translateY(-2px);box-shadow:0 22px 58px rgba(0,0,0,.34)}.haswolf-yang-index.is-pulsing{animation:haswolfIndexPulse .65s ease}.haswolf-yang-index__head{display:flex;align-items:center;justify-content:space-between;padding:11px 13px 10px;border-bottom:1px solid #eadfca;background:linear-gradient(135deg,#fffdf7,#f7f0df)}.haswolf-yang-index__head>div{display:grid;gap:1px}.haswolf-yang-index__head strong{font-size:12px;letter-spacing:.09em;color:#8a5a0a}.haswolf-yang-index__head small{font-size:9px;color:#6b7280}.haswolf-yang-index__live{display:flex;align-items:center;gap:5px;font-size:8px;font-weight:900;letter-spacing:.12em;color:#15803d}.haswolf-yang-index__live i{width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;animation:haswolfLive 1.6s infinite}.haswolf-yang-index__badge{display:grid;place-items:center;width:34px;height:34px;border:1px solid #d6b96d;border-radius:9px;background:#fff7df;font-size:9px;font-weight:900;letter-spacing:.08em;color:#9a6700}.haswolf-yang-index__table{padding:5px 9px}.haswolf-yang-index__row{display:grid;grid-template-columns:1fr .95fr .82fr;align-items:center;gap:7px;padding:8px 5px;border-bottom:1px solid #eceff3}.haswolf-yang-index__row:last-child{border-bottom:0}.haswolf-yang-index__row>span{display:grid;gap:1px;min-width:0}.haswolf-yang-index__row b{font-size:11px;color:#111827}.haswolf-yang-index__row small{font-size:7px;color:#7b8492;white-space:nowrap}.haswolf-yang-index__row .haswolf-yang-index__previous{margin-top:2px;font-size:9px;font-weight:800;color:#4b5563}.haswolf-yang-index__labels{padding-top:3px;padding-bottom:4px}.haswolf-yang-index__labels span{font-size:7px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#8b93a0}.haswolf-yang-index__change b{font-variant-numeric:tabular-nums}.haswolf-yang-index__row.is-up .haswolf-yang-index__change b{color:#15803d}.haswolf-yang-index__row.is-down .haswolf-yang-index__change b{color:#dc2626}.haswolf-yang-index__row.is-flat .haswolf-yang-index__change b{color:#6b7280}.haswolf-yang-index__notice{display:grid;gap:2px;border-top:1px solid #eadfca;background:#fff9e9;padding:8px 11px}.haswolf-yang-index__notice b{font-size:9px;color:#8a5a0a}.haswolf-yang-index__notice span{font-size:7.5px;line-height:1.4;color:#6b7280}@keyframes haswolfLive{0%,100%{opacity:.45}50%{opacity:1}}@keyframes haswolfIndexPulse{0%{box-shadow:0 18px 48px rgba(0,0,0,.28)}45%{box-shadow:0 18px 48px rgba(0,0,0,.28),0 0 0 4px rgba(217,170,74,.18)}100%{box-shadow:0 18px 48px rgba(0,0,0,.28)}}@media(max-width:1100px){.haswolf-yang-index{position:relative;right:auto;top:auto;z-index:2;width:auto;max-width:520px;margin:12px auto 0}}@media(max-width:640px){.haswolf-yang-index{margin:10px;border-radius:12px}.haswolf-yang-index__row{grid-template-columns:1fr .95fr .9fr;padding:8px 3px}.haswolf-yang-index__row b{font-size:10px}.haswolf-yang-index__row .haswolf-yang-index__previous{font-size:8px}}
+        .haswolf-yang-terminal{position:fixed;right:0;top:220px;z-index:46;width:430px;height:350px;pointer-events:none}.haswolf-yang-terminal__tab{pointer-events:auto;position:absolute;right:0;top:50%;transform:translateY(-50%);width:64px;height:154px;border:1px solid #c9a64a;border-right:0;border-radius:16px 0 0 16px;background:linear-gradient(180deg,#0b1118,#121922 58%,#0a0f15);box-shadow:-10px 16px 34px rgba(0,0,0,.35),inset 0 1px rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;color:#f4d27a;cursor:default}.haswolf-yang-terminal__tab span:not(.haswolf-yang-terminal__dot){font-size:9px;line-height:1.25;text-align:center;font-weight:900;letter-spacing:.12em}.haswolf-yang-terminal__tab b{font-size:10px;color:#fff;border:1px solid rgba(217,170,74,.45);border-radius:6px;padding:4px 5px;background:rgba(217,170,74,.08)}.haswolf-yang-terminal__dot{width:7px;height:7px;border-radius:50%;background:#28d17c;box-shadow:0 0 12px #28d17c;animation:hmxLive 1.5s infinite}.haswolf-yang-terminal__panel{pointer-events:auto;position:absolute;right:58px;top:0;width:360px;overflow:hidden;border:1px solid #26313d;border-radius:16px;background:linear-gradient(180deg,#0a1016,#0d141c 48%,#080d12);color:#e8eef5;box-shadow:0 28px 80px rgba(0,0,0,.48),0 0 0 1px rgba(255,255,255,.02) inset;opacity:0;transform:translateX(34px) scale(.97);transform-origin:right center;transition:opacity .22s ease,transform .22s ease;visibility:hidden}.haswolf-yang-terminal:hover .haswolf-yang-terminal__panel,.haswolf-yang-terminal:focus-within .haswolf-yang-terminal__panel{opacity:1;transform:translateX(0) scale(1);visibility:visible}.haswolf-yang-terminal.is-pulsing .haswolf-yang-terminal__tab{animation:hmxPulse .65s ease}.haswolf-yang-terminal__topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 15px 12px;border-bottom:1px solid #202a35;background:radial-gradient(circle at 82% 10%,rgba(217,170,74,.12),transparent 36%)}.haswolf-yang-terminal__topbar>div{display:grid;gap:2px}.haswolf-yang-terminal__topbar strong{font-size:13px;letter-spacing:.08em;color:#f1d47e}.haswolf-yang-terminal__topbar small{font-size:8px;color:#7e8b99}.haswolf-yang-terminal__live{display:flex;align-items:center;gap:5px;font-size:8px;font-weight:900;letter-spacing:.13em;color:#3de08b}.haswolf-yang-terminal__live i{width:6px;height:6px;border-radius:50%;background:#2bd67b;box-shadow:0 0 9px #2bd67b}.haswolf-yang-terminal__stamp{font-size:10px;font-weight:900;letter-spacing:.1em;color:#d9aa4a;border:1px solid rgba(217,170,74,.4);background:rgba(217,170,74,.06);border-radius:8px;padding:7px}.haswolf-yang-terminal__ticker{overflow:hidden;border-bottom:1px solid #1d2630;background:#070c11}.haswolf-yang-terminal__ticker-track{display:flex;width:max-content;animation:hmxTicker 18s linear infinite}.haswolf-yang-terminal__ticker-track>span{display:flex;align-items:center;gap:7px;padding:8px 16px;border-right:1px solid #1d2630;font-size:9px;white-space:nowrap}.haswolf-yang-terminal__ticker-track b{color:#b8c4d0}.haswolf-yang-terminal__ticker-track strong{color:#fff;font-variant-numeric:tabular-nums}.haswolf-yang-terminal__ticker-track em{font-style:normal;font-weight:800}.haswolf-yang-terminal__ticker-track em.up{color:#38d88a}.haswolf-yang-terminal__ticker-track em.down{color:#ff6679}.haswolf-yang-terminal__grid{padding:7px 10px 4px}.haswolf-yang-terminal__labels,.haswolf-yang-terminal__row{display:grid;grid-template-columns:1.05fr .72fr .8fr .9fr;gap:8px;align-items:center}.haswolf-yang-terminal__labels{padding:5px 6px;color:#607080;font-size:7px;font-weight:900;letter-spacing:.11em;text-transform:uppercase}.haswolf-yang-terminal__row{padding:10px 6px;border-top:1px solid #1c2631}.haswolf-yang-terminal__row>span{display:grid;gap:2px;min-width:0}.haswolf-yang-terminal__row b{font-size:11px;color:#eef3f8;font-variant-numeric:tabular-nums}.haswolf-yang-terminal__row small{font-size:7px;color:#687786}.haswolf-yang-terminal__row.is-up .haswolf-yang-terminal__change b{color:#41db8f}.haswolf-yang-terminal__row.is-down .haswolf-yang-terminal__change b{color:#ff6679}.haswolf-yang-terminal__row.is-flat .haswolf-yang-terminal__change b{color:#9ba7b3}.haswolf-yang-terminal__disclaimer{display:grid;gap:3px;margin:4px 10px 10px;padding:9px 10px;border:1px solid #26313c;border-radius:9px;background:#0b1219}.haswolf-yang-terminal__disclaimer b{font-size:9px;color:#e9c86d}.haswolf-yang-terminal__disclaimer span{font-size:7.5px;line-height:1.45;color:#7f8c99}@keyframes hmxTicker{from{transform:translateX(0)}to{transform:translateX(-50%)}}@keyframes hmxLive{0%,100%{opacity:.45}50%{opacity:1}}@keyframes hmxPulse{0%{box-shadow:-10px 16px 34px rgba(0,0,0,.35)}50%{box-shadow:-10px 16px 34px rgba(0,0,0,.35),0 0 0 4px rgba(217,170,74,.16)}100%{box-shadow:-10px 16px 34px rgba(0,0,0,.35)}}@media(max-width:900px){.haswolf-yang-terminal{top:auto;bottom:112px;width:365px;height:310px}.haswolf-yang-terminal__panel{width:300px}.haswolf-yang-terminal__labels,.haswolf-yang-terminal__row{grid-template-columns:1fr .72fr .82fr}.haswolf-yang-terminal__labels span:nth-child(3),.haswolf-yang-terminal__row>span:nth-child(3){display:none}}@media(max-width:560px){.haswolf-yang-terminal{width:330px;bottom:100px}.haswolf-yang-terminal__panel{width:270px}.haswolf-yang-terminal__tab{width:58px;height:138px}.haswolf-yang-terminal__panel{right:52px}.haswolf-yang-terminal__ticker-track>span{padding:7px 12px}}
       `}</style>
     </aside>
   );
