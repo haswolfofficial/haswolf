@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 const MIN_ACTIVITY = 50;
 const MAX_ACTIVITY = 900;
-const UPDATE_INTERVAL = 5000;
+const UPDATE_INTERVAL = 8000;
 
 const clamp = (value: number) => Math.min(MAX_ACTIVITY, Math.max(MIN_ACTIVITY, value));
 
@@ -15,7 +15,6 @@ export default function AdminLiveVisitors({ enabled = true }: { enabled?: boolea
   useEffect(() => {
     if (!enabled) return;
 
-    // Eğlence/demo amaçlı hareketli site aktivitesi göstergesi.
     setActivity(Math.floor(Math.random() * 201) + 250);
 
     const timer = window.setInterval(() => {
@@ -38,7 +37,7 @@ export default function AdminLiveVisitors({ enabled = true }: { enabled?: boolea
         className="haswolf-live-orb__trigger"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
-        aria-label={`${activity} site aktivitesi`}
+        aria-label={`${activity} aktif`}
       >
         <span className="haswolf-live-dot" />
         <b>{activity || 50}</b>
@@ -47,10 +46,9 @@ export default function AdminLiveVisitors({ enabled = true }: { enabled?: boolea
         <div className="haswolf-live-orb__panel">
           <header>
             <small>CANLI DURUM</small>
-            <strong>{activity || 50} site aktivitesi</strong>
+            <strong>{activity || 50} aktif</strong>
           </header>
           <p><span>Durum</span><b>Aktif</b></p>
-          <p><span>Gösterge</span><b>Demo</b></p>
         </div>
       )}
     </aside>
