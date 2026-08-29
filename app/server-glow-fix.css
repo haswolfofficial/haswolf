@@ -1,0 +1,65 @@
+/* Selected server halo — rendered on the grid BACKGROUND, never over card content */
+.haswolf-server-grid{
+  position:relative!important;
+  isolation:isolate;
+  overflow:visible!important;
+  border-radius:24px;
+  transition:background .3s ease, box-shadow .3s ease;
+}
+
+/* Disable the old card-level sunburst that could wash over content. */
+.haswolf-server-grid>div[class*="scale-[1.01]"]::after{
+  content:none!important;
+  display:none!important;
+}
+
+/* Keep selected cards crisp — no blur. */
+.haswolf-server-grid>div{
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  z-index:2;
+}
+
+/* EPHESUS — halo/rays are on the grid layer, behind the card. */
+.haswolf-server-grid:has(>div:nth-child(1)[class*="scale-[1.01]"]){
+  background:
+    radial-gradient(ellipse 24% 88% at 16.66% 50%,rgba(69,214,107,.24) 0%,rgba(69,214,107,.10) 43%,transparent 75%),
+    repeating-conic-gradient(from -4deg at 16.66% 50%,rgba(69,214,107,.075) 0deg 2deg,transparent 2deg 12deg)!important;
+  box-shadow:inset 0 0 65px rgba(69,214,107,.025)!important;
+}
+
+/* PERGAMON */
+.haswolf-server-grid:has(>div:nth-child(2)[class*="scale-[1.01]"]){
+  background:
+    radial-gradient(ellipse 24% 88% at 50% 50%,rgba(77,143,255,.27) 0%,rgba(77,143,255,.11) 43%,transparent 75%),
+    repeating-conic-gradient(from -4deg at 50% 50%,rgba(77,143,255,.085) 0deg 2deg,transparent 2deg 12deg)!important;
+  box-shadow:inset 0 0 70px rgba(77,143,255,.03)!important;
+}
+
+/* TEOS */
+.haswolf-server-grid:has(>div:nth-child(3)[class*="scale-[1.01]"]){
+  background:
+    radial-gradient(ellipse 24% 88% at 83.33% 50%,rgba(255,86,95,.24) 0%,rgba(255,86,95,.10) 43%,transparent 75%),
+    repeating-conic-gradient(from -4deg at 83.33% 50%,rgba(255,86,95,.075) 0deg 2deg,transparent 2deg 12deg)!important;
+  box-shadow:inset 0 0 65px rgba(255,86,95,.025)!important;
+}
+
+/* Selected card gets only a refined edge glow; the broad glow stays behind it. */
+.haswolf-server-grid>div[class*="scale-[1.01]"]{
+  transform:translateY(-2px) scale(1.008)!important;
+}
+.haswolf-server-grid>div:nth-child(1)[class*="scale-[1.01]"]{
+  box-shadow:inset 0 1px rgba(220,255,230,.10),0 0 0 1px rgba(69,214,107,.12),0 12px 34px rgba(0,0,0,.36),0 0 16px rgba(69,214,107,.13)!important;
+}
+.haswolf-server-grid>div:nth-child(2)[class*="scale-[1.01]"]{
+  box-shadow:inset 0 1px rgba(224,237,255,.10),0 0 0 1px rgba(77,143,255,.12),0 12px 34px rgba(0,0,0,.36),0 0 17px rgba(77,143,255,.15)!important;
+}
+.haswolf-server-grid>div:nth-child(3)[class*="scale-[1.01]"]{
+  box-shadow:inset 0 1px rgba(255,228,230,.10),0 0 0 1px rgba(255,86,95,.12),0 12px 34px rgba(0,0,0,.36),0 0 16px rgba(255,86,95,.13)!important;
+}
+
+@media(max-width:900px){
+  .haswolf-server-grid:has(>div[class*="scale-[1.01]"]){
+    background-size:100% 100%!important;
+  }
+}
