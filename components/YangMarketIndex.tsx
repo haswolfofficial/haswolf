@@ -28,7 +28,7 @@ export default function YangMarketIndex() {
     if (pathname !== "/") return;
     setIntroOpen(true);
     setManualClosed(false);
-    const timer = window.setTimeout(() => setIntroOpen(false), 10000);
+    const timer = window.setTimeout(() => setIntroOpen(false), 3000);
     return () => window.clearTimeout(timer);
   }, [pathname]);
 
