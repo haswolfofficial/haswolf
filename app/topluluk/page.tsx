@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import CommunityLayout from "@/features/community/components/CommunityLayout";
+import ChatScrollMemory from "@/features/community/components/ChatScrollMemory";
 import { hasAdminAccess } from "@/lib/admin-access";
 
 const ADMIN_EMAIL = "haswolf666@gmail.com";
@@ -125,11 +126,14 @@ export default function ToplulukPage() {
   }
 
   return (
-    <CommunityLayout
-      nickname={nickname}
-      currentUserId={currentUserId}
-      canManageMembers={canManageMembers}
-      canChangeNicknames={canChangeNicknames}
-    />
+    <>
+      <CommunityLayout
+        nickname={nickname}
+        currentUserId={currentUserId}
+        canManageMembers={canManageMembers}
+        canChangeNicknames={canChangeNicknames}
+      />
+      <ChatScrollMemory />
+    </>
   );
 }
