@@ -24,17 +24,41 @@ function normalizeDragonCoinLabels(root: Node = document) {
   }
 }
 
+function simplifyDragonCoinLabel(element: HTMLElement) {
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+  let node = walker.nextNode();
+  while (node) {
+    const text = node as Text;
+    const value = text.nodeValue || "";
+    if (value.includes(DRAGON_COIN_LABEL)) {
+      text.nodeValue = value.replaceAll(DRAGON_COIN_LABEL, DRAGON_COIN_NAV_LABEL);
+      element.classList.add("haswolf-dragon-nav-label");
+    }
+    node = walker.nextNode();
+  }
+}
+
 function fixDragonCoinNavigation() {
-  document.querySelectorAll<HTMLElement>(".haswolf-main-nav a, .haswolf-main-nav button, .haswolf-bottom-nav a, .haswolf-bottom-nav button").forEach((element) => {
-    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
-    let node = walker.nextNode();
-    while (node) {
-      const text = node as Text;
-      if (text.nodeValue?.includes(DRAGON_COIN_LABEL)) {
-        text.nodeValue = text.nodeValue.replaceAll(DRAGON_COIN_LABEL, DRAGON_COIN_NAV_LABEL);
-        element.classList.add("haswolf-dragon-nav-label");
+  document
+    .querySelectorAll<HTMLElement>(".haswolf-main-nav a, .haswolf-main-nav button, .haswolf-bottom-nav a, .haswolf-bottom-nav button")
+    .forEach(simplifyDragonCoinLabel);
+
+  document.querySelectorAll<HTMLElement>(".haswolf-market-tabs button").forEach((element) => {
+    const text = (element.textContent || "").replace(/\s+/g, " ").trim();
+    if (/Dragon Coin \(DC\) SATIŞ/i.test(text) || /^💎?\s*DC SATIŞ$/i.test(text)) {
+      const textNodes: Text[] = [];
+      const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+      let node = walker.nextNode();
+      while (node) {
+        textNodes.push(node as Text);
+        node = walker.nextNode();
       }
-      node = walker.nextNode();
+      for (const textNode of textNodes) {
+        const value = textNode.nodeValue || "";
+        if (/Dragon Coin \(DC\) SATIŞ/i.test(value)) textNode.nodeValue = value.replace(/Dragon Coin \(DC\) SATIŞ/gi, "Dragon Coin SATIŞ");
+        else if (/\bDC SATIŞ\b/i.test(value)) textNode.nodeValue = value.replace(/\bDC SATIŞ\b/gi, "Dragon Coin SATIŞ");
+      }
+      element.classList.add("haswolf-dragon-market-label");
     }
   });
 }
@@ -65,7 +89,8 @@ export default function SitePolish() {
     <style jsx global>{`
       .haswolf-yang-card:has(.haswolf-dc-flexible-calculator) .haswolf-yang-card__meta button { display: none !important; }
 
-      .haswolf-main-nav .haswolf-dragon-nav-label {
+      .haswolf-main-nav .haswolf-dragon-nav-label,
+      .haswolf-market-tabs .haswolf-dragon-market-label {
         min-width: 0 !important;
         padding-left: 10px !important;
         padding-right: 10px !important;
@@ -73,6 +98,7 @@ export default function SitePolish() {
         letter-spacing: 0 !important;
         white-space: nowrap !important;
         overflow: hidden !important;
+        text-overflow: ellipsis !important;
       }
 
       .haswolf-bottom-nav .haswolf-dragon-nav-label {
@@ -85,7 +111,6 @@ export default function SitePolish() {
         text-align: center !important;
       }
 
-      /* Professional cursor system: native, crisp and consistent across browsers. */
       @media (pointer: fine) {
         html, body { cursor: default !important; }
         a, button, [role="button"], summary, label, select,
