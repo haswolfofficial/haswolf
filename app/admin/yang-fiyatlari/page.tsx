@@ -6,230 +6,217 @@ import AdminNav from "../../../components/AdminNav";
 import { supabase } from "../../../lib/supabase";
 import { hasAdminAccess } from "../../../lib/admin-access";
 
-type YangProduct = {
+type MarketProduct = {
   id: number;
   name: string;
+  category: "yang" | "dc";
   server: "EPHESUS" | "PERGAMON" | "TEOS";
   price: number;
   is_active: boolean;
 };
 
 const SERVERS = ["EPHESUS", "PERGAMON", "TEOS"] as const;
+const DEFAULT_YANG_UNIT: Record<(typeof SERVERS)[number], number> = {
+  EPHESUS: 9.5,
+  PERGAMON: 9,
+  TEOS: 8.75,
+};
+const DEFAULT_DC_PRICE: Record<(typeof SERVERS)[number], number> = {
+  EPHESUS: 8,
+  PERGAMON: 8.5,
+  TEOS: 9,
+};
 
 function getReferenceAmount(name: string) {
   const lower = name.toLocaleLowerCase("tr-TR");
   const parenthetical = lower.match(/\((\d[\d.,]*)\s*m\)/i);
   const direct = lower.match(/(\d[\d.,]*)\s*m\b/i);
   const match = parenthetical || direct;
-
   if (match) {
     const normalized = match[1].replace(/\./g, "").replace(",", ".");
     const value = Number(normalized);
     if (Number.isFinite(value) && value > 0) return value;
   }
-
   if (/\b1\s*t\b/i.test(lower)) return 1000;
   return 0;
 }
 
-function formatUnitPrice(value: number) {
-  return new Intl.NumberFormat("tr-TR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 4,
-  }).format(value);
+function formatNumber(value: number) {
+  return new Intl.NumberFormat("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(value);
 }
 
-export default function YangUnitPricesPage() {
+export default function MarketPricePage() {
   const router = useRouter();
   const [authorized, setAuthorized] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState<YangProduct[]>([]);
-  const [inputs, setInputs] = useState<Record<string, string>>({});
+  const [products, setProducts] = useState<MarketProduct[]>([]);
+  const [yangInputs, setYangInputs] = useState<Record<string, string>>({});
+  const [dcInputs, setDcInputs] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState<string | null>(null);
   const [message, setMessage] = useState("");
 
-  const references = useMemo(() => {
-    return Object.fromEntries(
-      SERVERS.map((server) => {
-        const candidates = products
-          .filter((product) => product.server === server)
-          .map((product) => ({ product, amount: getReferenceAmount(product.name) }))
-          .filter((entry) => entry.amount >= 1000)
-          .sort((a, b) => {
-            if (a.product.is_active !== b.product.is_active) return a.product.is_active ? -1 : 1;
-            return Math.abs(a.amount - 1000) - Math.abs(b.amount - 1000);
-          });
-        return [server, candidates[0] ?? null];
-      }),
-    ) as Record<(typeof SERVERS)[number], { product: YangProduct; amount: number } | null>;
-  }, [products]);
+  const yangRefs = useMemo(() => Object.fromEntries(SERVERS.map((server) => {
+    const candidates = products.filter((p) => p.category === "yang" && p.server === server)
+      .map((product) => ({ product, amount: getReferenceAmount(product.name) }))
+      .filter((entry) => entry.amount >= 1000)
+      .sort((a, b) => Number(b.product.is_active) - Number(a.product.is_active));
+    return [server, candidates[0] ?? null];
+  })) as Record<(typeof SERVERS)[number], { product: MarketProduct; amount: number } | null>, [products]);
 
-  async function loadProducts() {
+  const dcRefs = useMemo(() => Object.fromEntries(SERVERS.map((server) => [
+    server,
+    products.find((p) => p.category === "dc" && p.server === server) ?? null,
+  ])) as Record<(typeof SERVERS)[number], MarketProduct | null>, [products]);
+
+  async function fetchProducts() {
     const { data, error } = await supabase
       .from("products")
-      .select("id,name,server,price,is_active")
-      .eq("category", "yang");
-
+      .select("id,name,category,server,price,is_active")
+      .in("category", ["yang", "dc"]);
     if (error) throw error;
-    const loaded = (data ?? []) as YangProduct[];
-    setProducts(loaded);
+    return (data ?? []) as MarketProduct[];
+  }
 
-    const next: Record<string, string> = {};
+  async function ensureDefaults(userId: string) {
+    let current = await fetchProducts();
+
     for (const server of SERVERS) {
-      const candidates = loaded
-        .filter((product) => product.server === server)
-        .map((product) => ({ product, amount: getReferenceAmount(product.name) }))
-        .filter((entry) => entry.amount >= 1000)
-        .sort((a, b) => {
-          if (a.product.is_active !== b.product.is_active) return a.product.is_active ? -1 : 1;
-          return Math.abs(a.amount - 1000) - Math.abs(b.amount - 1000);
+      const serverYang = current.filter((p) => p.category === "yang" && p.server === server);
+      const validYang = serverYang.find((p) => getReferenceAmount(p.name) >= 1000);
+
+      if (!validYang && serverYang.length > 0) {
+        const chosen = serverYang.find((p) => p.is_active) ?? serverYang[0];
+        const assumedUnit = chosen.price > 0 && chosen.price < 100 ? chosen.price : DEFAULT_YANG_UNIT[server];
+        const { error } = await supabase.from("products").update({
+          name: "1 T (1000 M)",
+          price: Number((assumedUnit * 1000).toFixed(2)),
+          stock: 1000000,
+          is_active: true,
+        }).eq("id", chosen.id);
+        if (error) throw error;
+      }
+
+      if (serverYang.length === 0) {
+        const { error } = await supabase.from("products").insert({
+          name: "1 T (1000 M)", category: "yang", server,
+          price: DEFAULT_YANG_UNIT[server] * 1000,
+          stock: 1000000, is_active: true, created_by: userId,
+          delivery_time: "1 saat",
         });
-      const reference = candidates[0];
-      if (reference) next[server] = String(reference.product.price / reference.amount);
+        if (error) throw error;
+      }
+
+      const serverDc = current.find((p) => p.category === "dc" && p.server === server);
+      if (!serverDc) {
+        const { error } = await supabase.from("products").insert({
+          name: "100 DC", category: "dc", server,
+          price: DEFAULT_DC_PRICE[server],
+          stock: 1000000, is_active: true, created_by: userId,
+          delivery_time: "1 saat",
+        });
+        if (error) throw error;
+      }
     }
-    setInputs(next);
+  }
+
+  async function loadProducts() {
+    const loaded = await fetchProducts();
+    setProducts(loaded);
+    const nextYang: Record<string, string> = {};
+    const nextDc: Record<string, string> = {};
+    for (const server of SERVERS) {
+      const y = loaded.filter((p) => p.category === "yang" && p.server === server)
+        .map((product) => ({ product, amount: getReferenceAmount(product.name) }))
+        .find((entry) => entry.amount >= 1000);
+      if (y) nextYang[server] = String(y.product.price / y.amount);
+      const d = loaded.find((p) => p.category === "dc" && p.server === server);
+      if (d) nextDc[server] = String(d.price);
+    }
+    setYangInputs(nextYang);
+    setDcInputs(nextDc);
   }
 
   useEffect(() => {
     async function init() {
       const { data } = await supabase.auth.getSession();
-      if (!data.session) {
-        router.replace("/admin-login");
-        return;
-      }
+      if (!data.session) { router.replace("/admin-login"); return; }
       if (!(await hasAdminAccess(data.session.user))) {
         setMessage("Bu sayfaya yalnızca yetkili yönetici hesapları erişebilir.");
-        setLoading(false);
-        return;
+        setLoading(false); return;
       }
       setAuthorized(true);
       try {
+        await ensureDefaults(data.session.user.id);
         await loadProducts();
+        setMessage("Eksik Yang ve DC kayıtları kontrol edildi. Üç sunucu da fiyat yönetimine hazır.");
       } catch (error) {
-        setMessage(error instanceof Error ? error.message : "Yang fiyatları yüklenemedi.");
-      } finally {
-        setLoading(false);
-      }
+        setMessage(error instanceof Error ? error.message : "Fiyat kayıtları hazırlanamadı.");
+      } finally { setLoading(false); }
     }
     void init();
   }, [router]);
 
-  async function saveServer(server: (typeof SERVERS)[number]) {
-    const reference = references[server];
-    if (!reference) {
-      setMessage(`${server} için en az 1000 M referans Yang ilanı bulunamadı.`);
-      return;
-    }
-
-    const unitPrice = Number((inputs[server] || "").replace(",", "."));
-    if (!Number.isFinite(unitPrice) || unitPrice <= 0) {
-      setMessage(`${server} için geçerli bir 1 M fiyatı gir.`);
-      return;
-    }
-
-    const totalReferencePrice = Number((unitPrice * reference.amount).toFixed(2));
-    setSaving(server);
-    setMessage("");
-
-    const { error } = await supabase
-      .from("products")
-      .update({ price: totalReferencePrice })
-      .eq("id", reference.product.id);
-
-    if (error) {
-      setMessage(error.message);
-      setSaving(null);
-      return;
-    }
-
-    setMessage(`${server}: 1 M = ${formatUnitPrice(unitPrice)} TL olarak güncellendi.`);
-    await loadProducts();
-    setSaving(null);
+  async function saveYang(server: (typeof SERVERS)[number]) {
+    const reference = yangRefs[server];
+    const unitPrice = Number((yangInputs[server] || "").replace(",", "."));
+    if (!reference || !Number.isFinite(unitPrice) || unitPrice <= 0) { setMessage(`${server} için geçerli bir 1 M fiyatı gir.`); return; }
+    setSaving(`yang-${server}`);
+    const total = Number((unitPrice * reference.amount).toFixed(2));
+    const { error } = await supabase.from("products").update({ price: total, is_active: true }).eq("id", reference.product.id);
+    if (error) setMessage(error.message); else setMessage(`${server} Yang: 1 M = ${formatNumber(unitPrice)} TL olarak güncellendi.`);
+    await loadProducts(); setSaving(null);
   }
 
-  if (loading) {
-    return <main className="min-h-screen bg-[#050707] p-8 text-white">Kontrol ediliyor...</main>;
+  async function saveDc(server: (typeof SERVERS)[number]) {
+    const reference = dcRefs[server];
+    const value = Number((dcInputs[server] || "").replace(",", "."));
+    if (!reference || !Number.isFinite(value) || value <= 0) { setMessage(`${server} için geçerli bir DC fiyatı gir.`); return; }
+    setSaving(`dc-${server}`);
+    const { error } = await supabase.from("products").update({ price: value, is_active: true }).eq("id", reference.id);
+    if (error) setMessage(error.message); else setMessage(`${server}: 100 DC = ${formatNumber(value)} M olarak güncellendi.`);
+    await loadProducts(); setSaving(null);
   }
 
-  if (!authorized) {
-    return (
-      <main className="min-h-screen bg-[#050707] p-8 text-white">
-        <div className="mx-auto max-w-xl rounded-xl border border-red-500/40 bg-red-950/20 p-6">{message}</div>
-      </main>
-    );
-  }
+  if (loading) return <main className="min-h-screen bg-[#050707] p-8 text-white">Kontrol ediliyor...</main>;
+  if (!authorized) return <main className="min-h-screen bg-[#050707] p-8 text-white"><div className="mx-auto max-w-xl rounded-xl border border-red-500/40 bg-red-950/20 p-6">{message}</div></main>;
 
   return (
     <main className="haswolf-admin-v5">
       <AdminNav />
       <section className="haswolf-admin-v5__content">
-        <div className="mx-auto max-w-5xl">
-          <div className="mb-8">
-            <h1 className="text-3xl font-black text-[#d9aa4a]">Yang Birim Fiyatları</h1>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-zinc-400">
-              Her sunucu için yalnızca 1 M satış fiyatını belirle. Müşteri 29 M, 558 M veya istediği başka miktarı yazdığında toplam tutar otomatik hesaplanır.
-            </p>
-          </div>
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-8"><h1 className="text-3xl font-black text-[#d9aa4a]">Yang ve DC Fiyatları</h1><p className="mt-2 text-sm leading-6 text-zinc-400">Her sunucu için tek fiyat gir. Yang tarafında 1 M fiyatı, DC tarafında 100 DC karşılığı M değeri yönetilir.</p></div>
+          {message && <div className="mb-6 rounded-xl border border-[#765625]/50 bg-black/40 px-4 py-3 text-sm text-[#e8bd67]">{message}</div>}
 
-          {message && (
-            <div className="mb-6 rounded-xl border border-[#765625]/50 bg-black/40 px-4 py-3 text-sm text-[#e8bd67]">{message}</div>
-          )}
+          <section className="mb-8">
+            <h2 className="mb-4 text-xl font-black text-[#e3b653]">Yang · 1 M Fiyatı (TL)</h2>
+            <div className="grid gap-5 md:grid-cols-3">
+              {SERVERS.map((server) => {
+                const ref = yangRefs[server];
+                return <article key={server} className="rounded-2xl border border-[#765625]/50 bg-[#0b0d0d] p-5">
+                  <div className="flex justify-between gap-3"><div><p className="text-xs uppercase tracking-[.2em] text-zinc-500">Sunucu</p><h3 className="mt-1 text-xl font-black text-[#e3b653]">{server}</h3></div><span className="text-xs text-emerald-400">{ref?.product.is_active ? "Yayında" : "Hazır"}</span></div>
+                  <label className="mt-5 block"><span className="mb-2 block text-sm text-zinc-300">1 M fiyatı</span><div className="flex overflow-hidden rounded-xl border border-white/10 bg-black"><input type="number" min="0.01" step="0.01" value={yangInputs[server] ?? ""} onChange={(e)=>setYangInputs((c)=>({...c,[server]:e.target.value}))} className="min-w-0 flex-1 bg-transparent px-4 py-3 text-lg font-bold outline-none"/><span className="px-4 py-3 font-bold text-[#e3b653]">TL</span></div></label>
+                  <button type="button" onClick={()=>saveYang(server)} disabled={!ref || saving===`yang-${server}`} className="mt-5 w-full rounded-xl bg-[#d1a13d] px-4 py-3 font-black text-black disabled:opacity-40">{saving===`yang-${server}`?"Kaydediliyor...":"Kaydet"}</button>
+                </article>;
+              })}
+            </div>
+          </section>
 
-          <div className="grid gap-5 md:grid-cols-3">
-            {SERVERS.map((server) => {
-              const reference = references[server];
-              return (
-                <article key={server} className="rounded-2xl border border-[#765625]/50 bg-[#0b0d0d] p-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-xs uppercase tracking-[.2em] text-zinc-500">Sunucu</p>
-                      <h2 className="mt-1 text-xl font-black text-[#e3b653]">{server}</h2>
-                    </div>
-                    <span className={reference?.product.is_active ? "text-xs text-emerald-400" : "text-xs text-zinc-500"}>
-                      {reference ? (reference.product.is_active ? "Yayında" : "Pasif") : "Referans yok"}
-                    </span>
-                  </div>
+          <section>
+            <h2 className="mb-4 text-xl font-black text-blue-300">DC · 100 DC Fiyatı (M)</h2>
+            <div className="grid gap-5 md:grid-cols-3">
+              {SERVERS.map((server) => {
+                const ref = dcRefs[server];
+                return <article key={server} className="rounded-2xl border border-blue-500/30 bg-[#0b0d0d] p-5">
+                  <div className="flex justify-between gap-3"><div><p className="text-xs uppercase tracking-[.2em] text-zinc-500">Sunucu</p><h3 className="mt-1 text-xl font-black text-blue-300">{server}</h3></div><span className="text-xs text-emerald-400">{ref?.is_active ? "Yayında" : "Hazır"}</span></div>
+                  <label className="mt-5 block"><span className="mb-2 block text-sm text-zinc-300">100 DC karşılığı</span><div className="flex overflow-hidden rounded-xl border border-white/10 bg-black"><input type="number" min="0.01" step="0.01" value={dcInputs[server] ?? ""} onChange={(e)=>setDcInputs((c)=>({...c,[server]:e.target.value}))} className="min-w-0 flex-1 bg-transparent px-4 py-3 text-lg font-bold outline-none"/><span className="px-4 py-3 font-bold text-blue-300">M</span></div></label>
+                  <button type="button" onClick={()=>saveDc(server)} disabled={!ref || saving===`dc-${server}`} className="mt-5 w-full rounded-xl bg-blue-400 px-4 py-3 font-black text-black disabled:opacity-40">{saving===`dc-${server}`?"Kaydediliyor...":"Kaydet"}</button>
+                </article>;
+              })}
+            </div>
+          </section>
 
-                  <label className="mt-6 block">
-                    <span className="mb-2 block text-sm font-semibold text-zinc-300">1 M fiyatı (TL)</span>
-                    <div className="flex items-center overflow-hidden rounded-xl border border-white/10 bg-black">
-                      <input
-                        type="number"
-                        min="0.0001"
-                        step="0.0001"
-                        value={inputs[server] ?? ""}
-                        onChange={(event) => setInputs((current) => ({ ...current, [server]: event.target.value }))}
-                        className="min-w-0 flex-1 bg-transparent px-4 py-3 text-lg font-bold outline-none"
-                        placeholder="Örn. 9.50"
-                      />
-                      <span className="px-4 text-sm font-bold text-[#e3b653]">TL</span>
-                    </div>
-                  </label>
-
-                  {reference ? (
-                    <p className="mt-3 text-xs leading-5 text-zinc-500">
-                      Referans: {reference.product.name} · {reference.amount.toLocaleString("tr-TR")} M. Sistem arka planda bu ilanın toplam fiyatını günceller.
-                    </p>
-                  ) : (
-                    <p className="mt-3 text-xs leading-5 text-red-300">Bu sunucuda 1000 M veya 1 T referans ilanı bulunamadı.</p>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={() => saveServer(server)}
-                    disabled={!reference || saving === server}
-                    className="mt-5 w-full rounded-xl bg-[#d1a13d] px-4 py-3 font-black text-black disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    {saving === server ? "Kaydediliyor..." : "1 M Fiyatını Kaydet"}
-                  </button>
-                </article>
-              );
-            })}
-          </div>
-
-          <div className="mt-7 rounded-xl border border-blue-500/20 bg-blue-950/10 p-5 text-sm leading-6 text-zinc-400">
-            Örnek: 1 M fiyatını 9,50 TL yaparsan 558 M için sistem otomatik 5.301 TL hesaplar ve WhatsApp mesajına miktar ile hesaplanan toplamı ekler.
-          </div>
+          <div className="mt-8 rounded-xl border border-white/10 bg-black/30 p-5 text-sm leading-6 text-zinc-400">Başlangıç değerleri: Yang için EPHESUS 9,5 TL, PERGAMON 9 TL, TEOS 8,75 TL / 1 M. DC için EPHESUS 8 M, PERGAMON 8,5 M, TEOS 9 M / 100 DC. Bunların tamamını buradan istediğin zaman değiştirebilirsin.</div>
         </div>
       </section>
     </main>
