@@ -39,7 +39,6 @@ export default function AdminLiveVisitors({ enabled = true }: { enabled?: boolea
   const stats = useMemo(() => ({
     total: items.length,
     guests: items.filter((item) => item.anonymous).length,
-    members: items.filter((item) => !item.anonymous).length,
     mobile: items.filter((item) => item.device === "mobile").length,
   }), [items]);
 
@@ -60,7 +59,6 @@ export default function AdminLiveVisitors({ enabled = true }: { enabled?: boolea
       {open && (
         <div className="haswolf-live-orb__panel">
           <header><small>CANLI DURUM</small><strong>{stats.total} kişi çevrimiçi</strong></header>
-          <p><span>Üye</span><b>{stats.members}</b></p>
           <p><span>Misafir</span><b>{stats.guests}</b></p>
           <p><span>Mobil</span><b>{stats.mobile}</b></p>
         </div>
