@@ -1,5 +1,6 @@
 "use client";
 
+// HASWOLF homepage community preview — source touch to ensure Vercel builds the latest main branch.
 import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { supabase } from "../lib/supabase";
