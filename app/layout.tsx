@@ -3,6 +3,7 @@ import "./globals.css";
 import "./voice-mobile-v3.css";
 import "./premium-glass.css";
 import "./server-glow-fix.css";
+import "./cursor.css";
 import CampaignRenderer from "../components/CampaignRenderer";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import AutoTranslate from "@/components/AutoTranslate";
