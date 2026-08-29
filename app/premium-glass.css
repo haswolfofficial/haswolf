@@ -1,239 +1,44 @@
-/* HASWOLF — Full Premium Dark Glassmorphism */
-:root{
-  --hw-glass-0:rgba(5,8,10,.58);
-  --hw-glass-1:rgba(8,12,15,.72);
-  --hw-glass-2:rgba(10,15,18,.86);
-  --hw-glass-border:rgba(235,190,88,.28);
-  --hw-glass-border-strong:rgba(241,196,93,.52);
-  --hw-highlight:rgba(255,255,255,.075);
-  --hw-gold:#d9aa4a;
-  --hw-gold-2:#f2c969;
-  --hw-shadow:0 22px 70px rgba(0,0,0,.48);
-}
+/* HASWOLF — VISIBLE PREMIUM DARK GLASS V3 */
+:root{--gold:#e6b84f;--gold2:#ffd878;--glass:rgba(12,16,18,.62);--line:rgba(255,214,120,.34);}
 
-/* ---------- HEADER / TOP BAR ---------- */
-.haswolf-header{
-  background:linear-gradient(180deg,rgba(2,4,5,.82),rgba(5,7,8,.68))!important;
-  border-bottom:1px solid rgba(217,170,74,.24)!important;
-  box-shadow:0 18px 70px rgba(0,0,0,.5),inset 0 -1px rgba(255,255,255,.025)!important;
-  -webkit-backdrop-filter:blur(28px) saturate(1.45)!important;
-  backdrop-filter:blur(28px) saturate(1.45)!important;
-}
-.haswolf-topbar{position:relative;}
-.haswolf-topbar:after{
-  content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(217,170,74,.34),transparent);
-}
-.haswolf-social-strip{
-  padding:.22rem;
-  border:1px solid rgba(217,170,74,.12);
-  border-radius:1rem;
-  background:rgba(255,255,255,.018);
-  box-shadow:inset 0 1px rgba(255,255,255,.025);
-}
-.haswolf-header-social,
-.haswolf-main-nav a,
-.haswolf-main-nav button,
-.haswolf-download-button,
-.haswolf-menu-button{
-  border:1px solid rgba(232,189,103,.24)!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.085),rgba(255,255,255,.018))!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 9px 24px rgba(0,0,0,.2)!important;
-  -webkit-backdrop-filter:blur(16px) saturate(1.3)!important;
-  backdrop-filter:blur(16px) saturate(1.3)!important;
-  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background .2s ease!important;
-}
-.haswolf-header-social:hover,
-.haswolf-main-nav a:hover,
-.haswolf-main-nav button:hover,
-.haswolf-download-button:hover,
-.haswolf-menu-button:hover{
-  transform:translateY(-2px)!important;
-  color:#f8d77f!important;
-  border-color:rgba(242,201,105,.72)!important;
-  background:linear-gradient(145deg,rgba(217,170,74,.20),rgba(255,255,255,.035))!important;
-  box-shadow:inset 0 1px rgba(255,255,255,.10),0 14px 34px rgba(0,0,0,.32),0 0 26px rgba(217,170,74,.10)!important;
-}
-.haswolf-main-nav{
-  padding:.72rem .3rem!important;
-  border-top:0!important;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.018),transparent);
-}
+/* Header */
+.haswolf-header{background:linear-gradient(180deg,rgba(3,5,6,.76),rgba(4,7,8,.58))!important;border-bottom:1px solid rgba(230,184,79,.28)!important;box-shadow:0 18px 55px rgba(0,0,0,.52),inset 0 -1px rgba(255,255,255,.04)!important;backdrop-filter:blur(28px) saturate(1.5)!important;-webkit-backdrop-filter:blur(28px) saturate(1.5)!important;}
+.haswolf-topbar{position:relative}.haswolf-topbar:after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,207,99,.45),transparent)}
+.haswolf-header-social,.haswolf-main-nav a,.haswolf-main-nav button,.haswolf-download-button,.haswolf-menu-button{background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.025))!important;border:1px solid rgba(235,193,101,.30)!important;box-shadow:inset 0 1px rgba(255,255,255,.11),0 10px 28px rgba(0,0,0,.26)!important;backdrop-filter:blur(18px) saturate(1.4)!important;-webkit-backdrop-filter:blur(18px) saturate(1.4)!important;}
+.haswolf-header-social:hover,.haswolf-main-nav a:hover,.haswolf-main-nav button:hover{transform:translateY(-2px);border-color:rgba(255,213,117,.7)!important;background:linear-gradient(145deg,rgba(230,184,79,.25),rgba(255,255,255,.055))!important;box-shadow:inset 0 1px rgba(255,255,255,.14),0 15px 36px rgba(0,0,0,.38),0 0 28px rgba(230,184,79,.13)!important;}
 
-/* ---------- HERO: KEEP BRAND MATTE, ADD DEPTH ONLY ---------- */
-.haswolf-hero{
-  box-shadow:inset 0 -1px rgba(217,170,74,.18),0 14px 54px rgba(0,0,0,.28);
-}
-.haswolf-hero__emblem{
-  background:radial-gradient(circle at 34% 28%,rgba(255,220,130,.10),rgba(5,6,6,.86) 58%)!important;
-  border:1px solid rgba(236,190,85,.42)!important;
-  box-shadow:inset 0 1px rgba(255,255,255,.05),0 26px 70px rgba(0,0,0,.42),0 0 55px rgba(217,170,74,.13)!important;
-}
-.haswolf-hero-quick-links button,
-.haswolf-hero-quick-links a{
-  box-shadow:inset 0 1px rgba(255,255,255,.11),0 10px 30px rgba(0,0,0,.28)!important;
-}
+/* Hero emblem becomes actual glass */
+.haswolf-hero__emblem{background:radial-gradient(circle at 30% 20%,rgba(255,222,145,.18),rgba(13,14,13,.72) 52%,rgba(3,4,4,.88))!important;border:1px solid rgba(255,209,105,.55)!important;box-shadow:inset 0 1px rgba(255,255,255,.14),inset 0 -20px 45px rgba(0,0,0,.25),0 28px 80px rgba(0,0,0,.48),0 0 55px rgba(230,184,79,.18)!important;backdrop-filter:blur(18px)!important;-webkit-backdrop-filter:blur(18px)!important;}
 
-/* ---------- GAMES PANEL ---------- */
-.haswolf-games-primary{
-  width:min(calc(100% - 2rem),1500px)!important;
-  margin:14px auto 0!important;
-  padding:18px!important;
-  border:1px solid rgba(104,170,255,.20)!important;
-  border-radius:18px!important;
-  background:
-    radial-gradient(circle at 0% 0%,rgba(62,133,215,.09),transparent 34%),
-    linear-gradient(145deg,rgba(12,18,25,.76),rgba(5,8,11,.68))!important;
-  -webkit-backdrop-filter:blur(22px) saturate(1.28)!important;
-  backdrop-filter:blur(22px) saturate(1.28)!important;
-  box-shadow:inset 0 1px rgba(255,255,255,.045),0 22px 65px rgba(0,0,0,.36)!important;
-}
-.haswolf-games-primary__heading{margin-bottom:12px!important;}
-.haswolf-games-primary__card{
-  border:1px solid rgba(229,183,79,.26)!important;
-  border-radius:14px!important;
-  background:linear-gradient(105deg,rgba(74,48,9,.46),rgba(12,12,11,.62) 38%,rgba(7,9,10,.74))!important;
-  box-shadow:inset 0 1px rgba(255,255,255,.045),0 14px 36px rgba(0,0,0,.30)!important;
-  -webkit-backdrop-filter:blur(16px)!important;
-  backdrop-filter:blur(16px)!important;
-}
-.haswolf-games-primary__logo{
-  box-shadow:inset 0 1px rgba(255,255,255,.15),0 8px 25px rgba(217,170,74,.18)!important;
-}
-.haswolf-games-primary__status{
-  box-shadow:0 0 20px rgba(44,218,116,.10),inset 0 1px rgba(255,255,255,.05)!important;
-}
+/* Games — obvious floating glass panel */
+.haswolf-games-primary{width:min(calc(100% - 2rem),1500px)!important;margin:16px auto!important;padding:20px!important;border-radius:22px!important;border:1px solid rgba(103,174,255,.34)!important;background:radial-gradient(circle at 5% 0%,rgba(62,146,255,.18),transparent 35%),linear-gradient(135deg,rgba(18,29,40,.68),rgba(5,9,12,.55))!important;box-shadow:inset 0 1px rgba(255,255,255,.10),0 26px 70px rgba(0,0,0,.42),0 0 35px rgba(53,134,226,.07)!important;backdrop-filter:blur(26px) saturate(1.45)!important;-webkit-backdrop-filter:blur(26px) saturate(1.45)!important;}
+.haswolf-games-primary__card{border:1px solid rgba(238,190,82,.38)!important;border-radius:16px!important;background:linear-gradient(110deg,rgba(126,81,12,.40),rgba(26,24,18,.42) 38%,rgba(7,10,11,.52))!important;box-shadow:inset 0 1px rgba(255,255,255,.10),0 16px 38px rgba(0,0,0,.34)!important;backdrop-filter:blur(20px)!important;-webkit-backdrop-filter:blur(20px)!important;}
 
-/* ---------- SERVER SELECTION SURFACE ---------- */
-.haswolf-server-grid{perspective:1100px;}
-.haswolf-server-grid>div{
-  position:relative;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 12% 0%,rgba(255,255,255,.055),transparent 35%),
-    linear-gradient(145deg,rgba(10,14,16,.80),rgba(4,7,8,.68))!important;
-  border-width:1px!important;
-  border-color:color-mix(in srgb,currentColor 44%,transparent)!important;
-  -webkit-backdrop-filter:blur(20px) saturate(1.22)!important;
-  backdrop-filter:blur(20px) saturate(1.22)!important;
-  box-shadow:inset 0 1px rgba(255,255,255,.045),0 20px 54px rgba(0,0,0,.32)!important;
-  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease!important;
-}
-.haswolf-server-grid>div:before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(120deg,rgba(255,255,255,.055),transparent 30%,transparent 72%,rgba(217,170,74,.035));
-}
-.haswolf-server-grid>div:hover{
-  transform:translateY(-5px) scale(1.012)!important;
-  box-shadow:inset 0 1px rgba(255,255,255,.075),0 28px 72px rgba(0,0,0,.46),0 0 32px rgba(217,170,74,.05)!important;
-}
-.haswolf-server-actions button{
-  border-radius:11px!important;
-  box-shadow:inset 0 1px rgba(255,255,255,.12),0 8px 24px rgba(0,0,0,.24)!important;
-}
-.haswolf-buy-button{background:linear-gradient(180deg,#138444,#08662f)!important;}
-.haswolf-sell-button{background:linear-gradient(180deg,#c07a10,#8a5105)!important;}
+/* Server wrapper */
+main>section.mx-auto>div.rounded-xl{position:relative;overflow:hidden;background:radial-gradient(circle at 50% -30%,rgba(230,184,79,.14),transparent 42%),linear-gradient(145deg,rgba(17,19,18,.62),rgba(5,8,9,.48))!important;border:1px solid rgba(230,184,79,.30)!important;box-shadow:inset 0 1px rgba(255,255,255,.08),0 26px 70px rgba(0,0,0,.38)!important;backdrop-filter:blur(26px) saturate(1.35)!important;-webkit-backdrop-filter:blur(26px) saturate(1.35)!important;}
 
-/* ---------- GENERIC STOREFRONT PANELS ---------- */
-main section:not(.haswolf-hero):not(.haswolf-games-primary)>div[class*="rounded-xl"],
-.haswolf-product-card,
-[class*="haswolf-market"]{
-  -webkit-backdrop-filter:blur(18px) saturate(1.22);
-  backdrop-filter:blur(18px) saturate(1.22);
-}
-.haswolf-product-card{
-  background:
-    radial-gradient(circle at 8% 0%,rgba(255,255,255,.045),transparent 30%),
-    linear-gradient(145deg,rgba(11,15,16,.82),rgba(4,7,8,.72))!important;
-  border-color:rgba(217,170,74,.20)!important;
-  box-shadow:inset 0 1px rgba(255,255,255,.04),0 18px 48px rgba(0,0,0,.28)!important;
-}
-.haswolf-product-card:hover{
-  transform:translateY(-3px)!important;
-  border-color:rgba(238,190,88,.44)!important;
-  box-shadow:inset 0 1px rgba(255,255,255,.06),0 26px 68px rgba(0,0,0,.42),0 0 28px rgba(217,170,74,.05)!important;
-}
+/* Server cards — strong glass + individual color halo */
+.haswolf-server-grid>div{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(255,255,255,.095),rgba(9,13,14,.48) 38%,rgba(3,6,7,.66))!important;border-width:1px!important;box-shadow:inset 0 1px rgba(255,255,255,.13),inset 0 0 40px rgba(255,255,255,.018),0 22px 55px rgba(0,0,0,.40)!important;backdrop-filter:blur(24px) saturate(1.5)!important;-webkit-backdrop-filter:blur(24px) saturate(1.5)!important;transition:.24s ease!important;}
+.haswolf-server-grid>div:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.13),transparent 24%,transparent 70%,rgba(255,200,90,.055));}
+.haswolf-server-grid>div:after{content:"";position:absolute;left:10%;right:10%;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);opacity:.55;pointer-events:none;}
+.haswolf-server-grid>div:hover{transform:translateY(-6px) scale(1.012)!important;background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(10,14,15,.55) 40%,rgba(3,6,7,.7))!important;box-shadow:inset 0 1px rgba(255,255,255,.16),0 30px 75px rgba(0,0,0,.52),0 0 28px rgba(230,184,79,.09)!important;}
+.haswolf-server-actions button{border-radius:12px!important;border:1px solid rgba(255,255,255,.10)!important;box-shadow:inset 0 1px rgba(255,255,255,.18),0 10px 25px rgba(0,0,0,.28)!important;}
+.haswolf-buy-button{background:linear-gradient(180deg,rgba(21,164,83,.96),rgba(6,102,48,.96))!important}.haswolf-sell-button{background:linear-gradient(180deg,rgba(222,145,18,.98),rgba(142,80,3,.98))!important}
 
-/* ---------- YANG EXCHANGE TERMINAL ---------- */
-.haswolf-yang-terminal__tab{
-  background:linear-gradient(180deg,rgba(10,17,23,.82),rgba(5,10,14,.92))!important;
-  border-color:rgba(228,179,66,.52)!important;
-  -webkit-backdrop-filter:blur(24px) saturate(1.35)!important;
-  backdrop-filter:blur(24px) saturate(1.35)!important;
-  box-shadow:-16px 20px 52px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.06)!important;
-}
-.haswolf-yang-terminal__panel{
-  background:
-    radial-gradient(circle at 15% 0%,rgba(217,170,74,.08),transparent 26%),
-    linear-gradient(155deg,rgba(10,17,22,.92),rgba(4,9,13,.86))!important;
-  border-color:rgba(232,189,103,.34)!important;
-  -webkit-backdrop-filter:blur(30px) saturate(1.35)!important;
-  backdrop-filter:blur(30px) saturate(1.35)!important;
-  box-shadow:inset 0 1px rgba(255,255,255,.07),0 32px 100px rgba(0,0,0,.66),0 0 42px rgba(217,170,74,.06)!important;
-}
-.haswolf-yang-terminal__grid{
-  border-color:rgba(168,194,214,.18)!important;
-  background:rgba(4,10,14,.52)!important;
-}
-.haswolf-yang-terminal__row:hover{background:rgba(255,255,255,.028);}
-.haswolf-yang-terminal__current{
-  background:linear-gradient(135deg,rgba(245,158,11,.34),rgba(126,72,3,.12))!important;
-  box-shadow:inset 0 0 26px rgba(245,158,11,.07)!important;
-}
-.haswolf-yang-terminal__disclaimer{
-  background:linear-gradient(135deg,rgba(245,158,11,.16),rgba(8,15,20,.74))!important;
-  -webkit-backdrop-filter:blur(12px)!important;
-  backdrop-filter:blur(12px)!important;
-}
+/* Product cards */
+.haswolf-product-card{background:radial-gradient(circle at 10% 0%,rgba(255,255,255,.11),transparent 32%),linear-gradient(145deg,rgba(15,20,21,.68),rgba(4,8,9,.56))!important;border:1px solid rgba(230,184,79,.27)!important;box-shadow:inset 0 1px rgba(255,255,255,.10),0 22px 55px rgba(0,0,0,.36)!important;backdrop-filter:blur(24px) saturate(1.4)!important;-webkit-backdrop-filter:blur(24px) saturate(1.4)!important;}
+.haswolf-product-card:hover{transform:translateY(-4px)!important;border-color:rgba(255,210,108,.55)!important;box-shadow:inset 0 1px rgba(255,255,255,.13),0 30px 75px rgba(0,0,0,.5),0 0 30px rgba(230,184,79,.09)!important;}
 
-/* ---------- BOTTOM NAV ---------- */
-.haswolf-bottom-nav{
-  background:
-    radial-gradient(circle at 50% 0%,rgba(217,170,74,.10),transparent 42%),
-    linear-gradient(180deg,rgba(24,22,17,.68),rgba(5,8,10,.72))!important;
-  border:1px solid rgba(238,190,91,.36)!important;
-  -webkit-backdrop-filter:blur(30px) saturate(1.55)!important;
-  backdrop-filter:blur(30px) saturate(1.55)!important;
-  box-shadow:inset 0 1px rgba(255,255,255,.09),0 26px 84px rgba(0,0,0,.72),0 0 32px rgba(217,170,74,.06)!important;
-}
-.haswolf-bottom-nav a,.haswolf-bottom-nav button{
-  border:1px solid transparent;
-  transition:all .2s ease!important;
-}
-.haswolf-bottom-nav a:hover,.haswolf-bottom-nav button:hover,.haswolf-bottom-nav .is-active{
-  background:linear-gradient(180deg,rgba(217,170,74,.26),rgba(217,170,74,.06))!important;
-  border-color:rgba(232,189,103,.16)!important;
-  color:#f3cc77!important;
-  box-shadow:inset 0 1px rgba(255,229,170,.11),0 0 24px rgba(217,170,74,.10)!important;
-}
+/* Yang exchange — premium trading terminal */
+.haswolf-yang-terminal__tab{background:linear-gradient(145deg,rgba(15,25,31,.70),rgba(4,10,13,.72))!important;border:1px solid rgba(235,187,76,.55)!important;box-shadow:inset 0 1px rgba(255,255,255,.12),-18px 22px 60px rgba(0,0,0,.55),0 0 28px rgba(230,184,79,.08)!important;backdrop-filter:blur(28px) saturate(1.5)!important;-webkit-backdrop-filter:blur(28px) saturate(1.5)!important;}
+.haswolf-yang-terminal__panel{background:radial-gradient(circle at 10% 0%,rgba(230,184,79,.15),transparent 30%),linear-gradient(150deg,rgba(15,24,29,.76),rgba(3,9,12,.68))!important;border:1px solid rgba(238,194,94,.42)!important;box-shadow:inset 0 1px rgba(255,255,255,.13),0 35px 100px rgba(0,0,0,.67),0 0 48px rgba(230,184,79,.09)!important;backdrop-filter:blur(32px) saturate(1.5)!important;-webkit-backdrop-filter:blur(32px) saturate(1.5)!important;}
+.haswolf-yang-terminal__grid{background:rgba(4,11,15,.46)!important;border-color:rgba(179,208,227,.24)!important;box-shadow:inset 0 1px rgba(255,255,255,.04)!important}.haswolf-yang-terminal__current{background:linear-gradient(135deg,rgba(245,158,11,.48),rgba(104,60,4,.18))!important;box-shadow:inset 0 0 30px rgba(245,158,11,.10)!important}.haswolf-yang-terminal__disclaimer{background:linear-gradient(135deg,rgba(245,158,11,.22),rgba(8,15,20,.55))!important;border-color:rgba(245,183,54,.40)!important;}
 
-/* ---------- LIVE ACTIVITY ---------- */
-.haswolf-live-orb__trigger{
-  background:linear-gradient(145deg,rgba(8,26,16,.72),rgba(3,11,8,.84))!important;
-  border-color:rgba(67,227,123,.48)!important;
-  -webkit-backdrop-filter:blur(26px) saturate(1.4)!important;
-  backdrop-filter:blur(26px) saturate(1.4)!important;
-  box-shadow:inset 0 1px rgba(255,255,255,.07),0 20px 60px rgba(0,0,0,.58),0 0 28px rgba(58,215,110,.11)!important;
-}
-.haswolf-live-orb__panel{
-  background:linear-gradient(145deg,rgba(8,22,14,.88),rgba(3,10,7,.90))!important;
-  border-color:rgba(67,211,116,.38)!important;
-  -webkit-backdrop-filter:blur(28px) saturate(1.35)!important;
-  backdrop-filter:blur(28px) saturate(1.35)!important;
-  box-shadow:inset 0 1px rgba(255,255,255,.055),0 30px 86px rgba(0,0,0,.68)!important;
-}
+/* Floating bottom dock — Mac-like smoked glass */
+.haswolf-bottom-nav{background:radial-gradient(circle at 50% 0%,rgba(255,206,100,.18),transparent 45%),linear-gradient(180deg,rgba(44,38,25,.58),rgba(5,9,10,.62))!important;border:1px solid rgba(244,199,100,.45)!important;box-shadow:inset 0 1px rgba(255,255,255,.15),0 28px 90px rgba(0,0,0,.72),0 0 35px rgba(230,184,79,.10)!important;backdrop-filter:blur(32px) saturate(1.65)!important;-webkit-backdrop-filter:blur(32px) saturate(1.65)!important;}
+.haswolf-bottom-nav a,.haswolf-bottom-nav button{transition:.2s ease!important}.haswolf-bottom-nav a:hover,.haswolf-bottom-nav button:hover,.haswolf-bottom-nav .is-active{transform:translateY(-2px);background:linear-gradient(180deg,rgba(230,184,79,.35),rgba(230,184,79,.10))!important;box-shadow:inset 0 1px rgba(255,240,190,.18),0 0 28px rgba(230,184,79,.14)!important;color:#ffd878!important;}
 
-/* WhatsApp stays saturated by design. */
+/* Live activity */
+.haswolf-live-orb__trigger,.haswolf-live-orb__panel{background:radial-gradient(circle at 30% 0%,rgba(48,220,112,.15),transparent 38%),linear-gradient(145deg,rgba(8,28,17,.66),rgba(3,10,8,.68))!important;border-color:rgba(73,232,132,.48)!important;box-shadow:inset 0 1px rgba(255,255,255,.12),0 24px 65px rgba(0,0,0,.58),0 0 28px rgba(49,220,110,.10)!important;backdrop-filter:blur(28px) saturate(1.5)!important;-webkit-backdrop-filter:blur(28px) saturate(1.5)!important;}
 
-@media(max-width:900px){
-  .haswolf-header{-webkit-backdrop-filter:blur(20px) saturate(1.28)!important;backdrop-filter:blur(20px) saturate(1.28)!important;}
-  .haswolf-games-primary{width:calc(100% - 1rem)!important;padding:12px!important;border-radius:15px!important;}
-  .haswolf-server-grid>div{-webkit-backdrop-filter:blur(14px) saturate(1.15)!important;backdrop-filter:blur(14px) saturate(1.15)!important;}
-  .haswolf-bottom-nav{-webkit-backdrop-filter:blur(22px) saturate(1.4)!important;backdrop-filter:blur(22px) saturate(1.4)!important;}
-}
-
-@media(prefers-reduced-transparency:reduce){
-  .haswolf-header,.haswolf-header-social,.haswolf-main-nav a,.haswolf-main-nav button,.haswolf-games-primary,.haswolf-games-primary__card,.haswolf-server-grid>div,.haswolf-product-card,.haswolf-yang-terminal__tab,.haswolf-yang-terminal__panel,.haswolf-bottom-nav,.haswolf-live-orb__trigger,.haswolf-live-orb__panel{
-    -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
-  }
-}
+@media(max-width:900px){.haswolf-games-primary{width:calc(100% - 1rem)!important;padding:13px!important}.haswolf-server-grid>div{backdrop-filter:blur(18px) saturate(1.35)!important;-webkit-backdrop-filter:blur(18px) saturate(1.35)!important}.haswolf-bottom-nav{backdrop-filter:blur(25px) saturate(1.5)!important;-webkit-backdrop-filter:blur(25px) saturate(1.5)!important}}
