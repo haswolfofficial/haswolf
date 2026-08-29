@@ -1,7 +1,7 @@
 "use client";
 import { usePathname } from "next/navigation";
 const links=[
-["/admin","Genel Bakış","⌂"],["/admin/urunler","Ürünler ve Görseller","▦"],
+["/admin","Genel Bakış","⌂"],["/admin/yang-fiyatlari","Yang Birim Fiyatları","◉"],["/admin/urunler","Ürünler ve Görseller","▦"],
 ["/admin/kullanicilar","Kullanıcı Yönetimi","👥"],["/admin/yetkililer","Yönetici Üyelikleri","♛"],["/admin/premium","Premium Üyelikler","★"],
 ["/admin/loncalar","Lonca Yönetimi","🛡"],["/admin/sohbet","Sohbet Yönetimi","💬"],
 ["/admin/moderasyon","AI Moderasyon","✦"],["/admin/guvenlik","Güvenlik Merkezi","🔒"],
