@@ -1,46 +1,33 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { supabase } from "../lib/supabase";
+import { useEffect, useState } from "react";
 
-type Presence = { userId?: string | null; anonymous?: boolean; device?: string };
+const MIN_ACTIVITY = 50;
+const MAX_ACTIVITY = 900;
+const UPDATE_INTERVAL = 5000;
 
-const PRESENCE_CHANNEL = "haswolf-site-visitors";
+const clamp = (value: number) => Math.min(MAX_ACTIVITY, Math.max(MIN_ACTIVITY, value));
 
 export default function AdminLiveVisitors({ enabled = true }: { enabled?: boolean }) {
-  const [items, setItems] = useState<Presence[]>([]);
   const [open, setOpen] = useState(false);
+  const [activity, setActivity] = useState(0);
 
   useEffect(() => {
     if (!enabled) return;
 
-    const channel = supabase.channel(`${PRESENCE_CHANNEL}-counter`, {
-      config: { presence: { key: `counter-${crypto.randomUUID()}` } },
-    });
+    // Eğlence/demo amaçlı hareketli site aktivitesi göstergesi.
+    setActivity(Math.floor(Math.random() * 201) + 250);
 
-    const sync = () => {
-      const state = channel.presenceState<Presence>();
-      setItems(Object.values(state).flat());
-    };
-
-    channel
-      .on("presence", { event: "sync" }, sync)
-      .on("presence", { event: "join" }, sync)
-      .on("presence", { event: "leave" }, sync)
-      .subscribe(async (status) => {
-        if (status === "SUBSCRIBED") sync();
+    const timer = window.setInterval(() => {
+      setActivity((current) => {
+        const base = current || 350;
+        const step = Math.floor(Math.random() * 41) - 20;
+        return clamp(base + step);
       });
+    }, UPDATE_INTERVAL);
 
-    return () => {
-      void supabase.removeChannel(channel);
-    };
+    return () => window.clearInterval(timer);
   }, [enabled]);
-
-  const stats = useMemo(() => ({
-    total: items.length,
-    guests: items.filter((item) => item.anonymous).length,
-    mobile: items.filter((item) => item.device === "mobile").length,
-  }), [items]);
 
   if (!enabled) return null;
 
@@ -51,16 +38,19 @@ export default function AdminLiveVisitors({ enabled = true }: { enabled?: boolea
         className="haswolf-live-orb__trigger"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
-        aria-label={`${stats.total} kullanıcı çevrimiçi`}
+        aria-label={`${activity} site aktivitesi`}
       >
         <span className="haswolf-live-dot" />
-        <b>{stats.total}</b>
+        <b>{activity || 50}</b>
       </button>
       {open && (
         <div className="haswolf-live-orb__panel">
-          <header><small>CANLI DURUM</small><strong>{stats.total} kişi çevrimiçi</strong></header>
-          <p><span>Misafir</span><b>{stats.guests}</b></p>
-          <p><span>Mobil</span><b>{stats.mobile}</b></p>
+          <header>
+            <small>CANLI DURUM</small>
+            <strong>{activity || 50} site aktivitesi</strong>
+          </header>
+          <p><span>Durum</span><b>Aktif</b></p>
+          <p><span>Gösterge</span><b>Demo</b></p>
         </div>
       )}
     </aside>
