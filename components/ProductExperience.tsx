@@ -65,7 +65,7 @@ export default function ProductExperience({ product, compact = false }: { produc
   const [compared, setCompared] = useState(false);
   const [views, setViews] = useState(product.view_count ?? 0);
   const [favoriteCount, setFavoriteCount] = useState(product.favorite_count ?? 0);
-  const [yangAmount, setYangAmount] = useState("100");
+  const [yangAmount, setYangAmount] = useState("1");
 
   const yangReferenceAmount = useMemo(() => (product.category === "yang" ? getYangReferenceAmount(product.name) : 0), [product.category, product.name]);
   const isYangReference = product.category === "yang" && yangReferenceAmount >= 1000;
