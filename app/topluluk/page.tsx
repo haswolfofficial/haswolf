@@ -30,7 +30,7 @@ export default function ToplulukPage() {
       } = await supabase.auth.getUser();
 
       if (!user) {
-        router.replace("/login");
+        router.replace("/misafir-giris");
         return;
       }
 
@@ -126,18 +126,9 @@ export default function ToplulukPage() {
       <main className="flex min-h-screen items-center justify-center bg-[#050607] px-4 text-white">
         <div className="max-w-lg rounded-2xl border border-red-500/40 bg-red-950/20 p-8 text-center">
           <div className="text-5xl">🚫</div>
-          <h1 className="mt-4 text-2xl font-black text-red-300">
-            Sohbet erişimin engellendi
-          </h1>
-          <p className="mt-3 text-sm leading-6 text-zinc-400">
-            Bu hesap sohbet odalarından yasaklanmış. Yönetimle iletişime geçebilirsin.
-          </p>
-          <a
-            href="/"
-            className="mt-6 inline-block rounded-lg border border-[#765625] px-5 py-3 text-[#e5b64e]"
-          >
-            Ana sayfaya dön
-          </a>
+          <h1 className="mt-4 text-2xl font-black text-red-300">Sohbet erişimin engellendi</h1>
+          <p className="mt-3 text-sm leading-6 text-zinc-400">Bu hesap sohbet odalarından yasaklanmış. Yönetimle iletişime geçebilirsin.</p>
+          <a href="/" className="mt-6 inline-block rounded-lg border border-[#765625] px-5 py-3 text-[#e5b64e]">Ana sayfaya dön</a>
         </div>
       </main>
     );
