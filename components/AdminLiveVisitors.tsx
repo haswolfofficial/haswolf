@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../lib/supabase";
 
-type Presence = { userId?: string | null; anonymous?: boolean; device?: string };
+type Presence = { userId?: string | null; anonymous?: boolean; device?: string; visitorId?: string };
 
 const PRESENCE_CHANNEL = "haswolf-site-visitors";
 
@@ -14,21 +14,21 @@ export default function AdminLiveVisitors({ enabled = true }: { enabled?: boolea
   useEffect(() => {
     if (!enabled) return;
 
-    const channel = supabase.channel(`${PRESENCE_CHANNEL}-counter`, {
-      config: { presence: { key: `counter-${crypto.randomUUID()}` } },
-    });
+    const channel = supabase.channel(PRESENCE_CHANNEL);
 
     const sync = () => {
       const state = channel.presenceState<Presence>();
-      setItems(Object.values(state).flat());
+      const flattened = Object.values(state).flat();
+      const deduped = Array.from(new Map(flattened.map((item, index) => [item.visitorId || `${item.userId || "anon"}-${index}`, item])).values());
+      setItems(deduped);
     };
 
     channel
       .on("presence", { event: "sync" }, sync)
       .on("presence", { event: "join" }, sync)
       .on("presence", { event: "leave" }, sync)
-      .subscribe(async (status) => {
-        if (status === "SUBSCRIBED") sync();
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") window.setTimeout(sync, 250);
       });
 
     return () => {
@@ -38,7 +38,7 @@ export default function AdminLiveVisitors({ enabled = true }: { enabled?: boolea
 
   const stats = useMemo(() => ({
     total: items.length,
-    guests: items.filter((item) => item.anonymous).length,
+    guests: items.filter((item) => item.anonymous !== false).length,
     mobile: items.filter((item) => item.device === "mobile").length,
   }), [items]);
 
