@@ -28,12 +28,12 @@ const DC_PACKAGES = [2700, 2400, 2125, 1850, 1575, 1300, 1000, 750, 500, 250, 20
 
 function formatDcPackage(pack: number) {
   const bonusPackages: Record<number, string> = {
-    1300: "1.250 + 50 HEDİYE",
-    1575: "1.500 + 75 HEDİYE",
-    1850: "1.750 + 100 HEDİYE",
-    2125: "2.000 + 125 HEDİYE",
-    2400: "2.250 + 150 HEDİYE",
-    2700: "2.500 + 200 HEDİYE",
+    1300: "1.250 + 50 HEDİYE = 1.300",
+    1575: "1.500 + 75 HEDİYE = 1.575",
+    1850: "1.750 + 100 HEDİYE = 1.850",
+    2125: "2.000 + 125 HEDİYE = 2.125",
+    2400: "2.250 + 150 HEDİYE = 2.400",
+    2700: "2.500 + 200 HEDİYE = 2.700",
   };
   return bonusPackages[pack] ?? pack.toLocaleString("tr-TR");
 }
@@ -89,9 +89,12 @@ function findDcPackagePlan(target: number) {
   for (let total = 1; total <= amount; total++) {
     let best: number[] | null = null;
     for (const pack of DC_PACKAGES) {
-      if (pack > total || !dp[total - pack]) continue;
-      const candidate = [...(dp[total - pack] as number[]), pack].sort((a, b) => b - a);
-      if (!best || candidate.length < best.length || (candidate.length === best.length && candidate.join(",") > best.join(","))) best = candidate;
+      const paidAmount = getDcPaidAmount(pack);
+      if (paidAmount > total || !dp[total - paidAmount]) continue;
+      const candidate = [...(dp[total - paidAmount] as number[]), pack].sort((a, b) => getDcPaidAmount(b) - getDcPaidAmount(a));
+      const candidateGift = candidate.reduce((sum, item) => sum + (item - getDcPaidAmount(item)), 0);
+      const bestGift = best ? best.reduce((sum, item) => sum + (item - getDcPaidAmount(item)), 0) : -1;
+      if (!best || candidate.length < best.length || (candidate.length === best.length && candidateGift > bestGift)) best = candidate;
     }
     dp[total] = best;
   }
@@ -144,7 +147,8 @@ export default function ProductExperience({ product, compact = false }: { produc
   const numericDcAmount = Math.max(0, Math.min(MAX_DC, Math.floor(rawDcAmount)));
   const dcPlan = useMemo(() => findDcPackagePlan(numericDcAmount), [numericDcAmount]);
   const dcPaidAmount = useMemo(() => dcPlan ? dcPlan.reduce((total, pack) => total + getDcPaidAmount(pack), 0) : 0, [dcPlan]);
-  const dcGiftAmount = dcPlan ? Math.max(0, numericDcAmount - dcPaidAmount) : 0;
+  const dcDeliveredAmount = useMemo(() => dcPlan ? dcPlan.reduce((total, pack) => total + pack, 0) : 0, [dcPlan]);
+  const dcGiftAmount = dcPlan ? Math.max(0, dcDeliveredAmount - dcPaidAmount) : 0;
   const dcTotalM = dcUnitPriceM * dcPaidAmount;
   const dcNearest = useMemo(() => (!dcPlan && numericDcAmount >= 100 ? nearestDcOptions(numericDcAmount) : { lower: null, upper: null }), [dcPlan, numericDcAmount]);
 
@@ -206,8 +210,8 @@ export default function ProductExperience({ product, compact = false }: { produc
   function buyFlexibleDc() {
     if (!isDcReference || !dcPlan || numericDcAmount < 100 || rawDcAmount > MAX_DC) return;
     const planText = dcPlan.map(formatDcPackage).join(" + ");
-    const giftText = dcGiftAmount > 0 ? ` Ücretlendirme ${dcPaidAmount.toLocaleString("tr-TR")} DC üzerinden yapılır; ${dcGiftAmount.toLocaleString("tr-TR")} DC hediyedir.` : "";
-    const message = encodeURIComponent(`Merhaba Haswolf, ${product.server} sunucusundan toplam ${numericDcAmount.toLocaleString("tr-TR")} Dragon Coin (DC) almak istiyorum. Paket planı: ${planText} Dragon Coin (DC).${giftText} Hesaplanan toplam ${formatTl(dcTotalM)} M.`);
+    const giftText = dcGiftAmount > 0 ? ` ${dcPaidAmount.toLocaleString("tr-TR")} DC satın alımına ${dcGiftAmount.toLocaleString("tr-TR")} DC bizden hediye; toplam ${dcDeliveredAmount.toLocaleString("tr-TR")} DC teslim edilir.` : ` Toplam ${dcDeliveredAmount.toLocaleString("tr-TR")} DC teslim edilir.`;
+    const message = encodeURIComponent(`Merhaba Haswolf, ${product.server} sunucusundan ${dcPaidAmount.toLocaleString("tr-TR")} Dragon Coin (DC) satın almak istiyorum. Paket planı: ${planText}.${giftText} Hesaplanan toplam ${formatTl(dcTotalM)} M.`);
     window.open(`https://wa.me/905010942080?text=${message}`, "_blank", "noopener,noreferrer");
   }
 
@@ -237,13 +241,13 @@ export default function ProductExperience({ product, compact = false }: { produc
     return (
       <div className="haswolf-dc-flexible-calculator">
         <div className="haswolf-dc-flexible-calculator__heading"><div><strong>İstediğin Dragon Coin (DC) miktarını yaz</strong><span>100 Dragon Coin (DC) = {formatTl(product.price)} M</span></div><b>{product.server}</b></div>
-        <label><span>Dragon Coin (DC) miktarı</span><div><input type="number" min="100" max={MAX_DC} step="1" inputMode="numeric" value={dcAmount} onChange={(event) => setDcAmount(event.target.value)} onBlur={() => { if (rawDcAmount > MAX_DC) setDcAmount(String(MAX_DC)); }} placeholder="Örn. 400" /><em>DC</em></div></label>
+        <label><span>Satın almak istediğin Dragon Coin (DC) miktarı</span><div><input type="number" min="100" max={MAX_DC} step="1" inputMode="numeric" value={dcAmount} onChange={(event) => setDcAmount(event.target.value)} onBlur={() => { if (rawDcAmount > MAX_DC) setDcAmount(String(MAX_DC)); }} placeholder="Örn. 2500" /><em>DC</em></div></label>
         {invalidHigh && <div className="haswolf-dc-warning">En fazla {MAX_DC.toLocaleString("tr-TR")} Dragon Coin (DC) hesaplanabilir.</div>}
-        {dcPlan ? <div className="haswolf-dc-plan"><span>Oyun paketlerine bölünüşü</span><strong>{planText} Dragon Coin (DC)</strong></div> : numericDcAmount >= 100 ? <div className="haswolf-dc-warning">Bu miktar mevcut oyun paketleriyle tam oluşturulamıyor.{dcNearest.lower || dcNearest.upper ? <> En yakın seçenekler: {dcNearest.lower ? <button type="button" onClick={() => setDcAmount(String(dcNearest.lower))}>{dcNearest.lower} Dragon Coin (DC)</button> : null}{dcNearest.upper ? <button type="button" onClick={() => setDcAmount(String(dcNearest.upper))}>{dcNearest.upper} Dragon Coin (DC)</button> : null}</> : null}</div> : null}
-        {dcPlan && dcGiftAmount > 0 ? <div className="haswolf-dc-gift"><span>Ücretlendirilen miktar</span><strong>{dcPaidAmount.toLocaleString("tr-TR")} DC</strong><em>+ {dcGiftAmount.toLocaleString("tr-TR")} DC HEDİYE</em></div> : null}
+        {dcPlan ? <div className="haswolf-dc-plan"><span>Paket ve hediye planı</span><strong>{planText} DC</strong></div> : numericDcAmount >= 100 ? <div className="haswolf-dc-warning">Bu satın alım miktarı mevcut oyun paketleriyle tam oluşturulamıyor.{dcNearest.lower || dcNearest.upper ? <> En yakın seçenekler: {dcNearest.lower ? <button type="button" onClick={() => setDcAmount(String(dcNearest.lower))}>{dcNearest.lower} DC</button> : null}{dcNearest.upper ? <button type="button" onClick={() => setDcAmount(String(dcNearest.upper))}>{dcNearest.upper} DC</button> : null}</> : null}</div> : null}
+        {dcPlan ? <div className="haswolf-dc-gift"><span>Satın alınan</span><strong>{dcPaidAmount.toLocaleString("tr-TR")} DC</strong>{dcGiftAmount > 0 ? <em>+ {dcGiftAmount.toLocaleString("tr-TR")} DC BİZDEN HEDİYE · TOPLAM {dcDeliveredAmount.toLocaleString("tr-TR")} DC TESLİM</em> : <em>TOPLAM {dcDeliveredAmount.toLocaleString("tr-TR")} DC TESLİM</em>}</div> : null}
         <div className="haswolf-dc-flexible-calculator__total"><span>Hesaplanan toplam</span><strong>{dcPlan ? `${formatTl(dcTotalM)} M` : "—"}</strong></div>
-        <p>Kullanılabilen oyun paketleri: {DC_PACKAGES.slice().sort((a,b)=>a-b).map(formatDcPackage).join(" · ")} Dragon Coin (DC). HEDİYE yazan Dragon Coin'ler fiyata dahil edilmez; yalnızca ücretli miktar üzerinden M hesabı yapılır.</p>
-        <button type="button" onClick={buyFlexibleDc} disabled={!dcPlan || numericDcAmount < 100 || invalidHigh}>WhatsApp ile {dcPlan ? `${numericDcAmount.toLocaleString("tr-TR")} Dragon Coin (DC)` : "Dragon Coin (DC)"} Satın Al</button>
+        <p>Promosyonlu paketler: 1.250 + 50 HEDİYE = 1.300 · 1.500 + 75 HEDİYE = 1.575 · 1.750 + 100 HEDİYE = 1.850 · 2.000 + 125 HEDİYE = 2.125 · 2.250 + 150 HEDİYE = 2.400 · 2.500 + 200 HEDİYE = 2.700 DC. Hediye DC'ler fiyata dahil edilmez.</p>
+        <button type="button" onClick={buyFlexibleDc} disabled={!dcPlan || numericDcAmount < 100 || invalidHigh}>WhatsApp ile {dcPlan ? `${dcPaidAmount.toLocaleString("tr-TR")} DC${dcGiftAmount > 0 ? ` + ${dcGiftAmount.toLocaleString("tr-TR")} HEDİYE` : ""}` : "Dragon Coin (DC)"} Satın Al</button>
         <style jsx global>{`
           .haswolf-dc-card:has(.haswolf-dc-flexible-calculator) .haswolf-yang-card__title-row,.haswolf-dc-card:has(.haswolf-dc-flexible-calculator) .haswolf-yang-card__description{display:none!important}.haswolf-dc-card:has(.haswolf-dc-flexible-calculator) .haswolf-yang-card__meta button{display:none!important}.haswolf-dc-card:has(.haswolf-dc-flexible-calculator) .haswolf-dc-card__title-row,.haswolf-dc-card:has(.haswolf-dc-flexible-calculator) .haswolf-dc-card__description,.haswolf-dc-card:has(.haswolf-dc-flexible-calculator)>.haswolf-dc-card__content>.haswolf-dc-card__meta{display:none!important}.haswolf-dc-card:has(.haswolf-dc-flexible-calculator) .haswolf-dc-card__media{min-height:92px}.haswolf-dc-flexible-calculator{margin-top:8px;display:grid;gap:12px}.haswolf-dc-flexible-calculator__heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.haswolf-dc-flexible-calculator__heading strong{display:block;font-size:16px;color:#70b7ff}.haswolf-dc-flexible-calculator__heading span{display:block;margin-top:3px;font-size:12px;color:#a1a1aa}.haswolf-dc-flexible-calculator__heading b{font-size:11px;color:var(--server-color,#70b7ff)}.haswolf-dc-flexible-calculator label>span{display:block;margin-bottom:6px;font-size:12px;color:#d4d4d8}.haswolf-dc-flexible-calculator label>div{display:flex;align-items:center;overflow:hidden;border:1px solid rgba(75,145,255,.5);border-radius:10px;background:#05080b}.haswolf-dc-flexible-calculator input{min-width:0;flex:1;border:0;outline:0;background:transparent;padding:12px 14px;color:white;font-size:18px;font-weight:800}.haswolf-dc-flexible-calculator label em{min-width:62px;padding:0 12px;text-align:center;color:#70b7ff;font-style:normal;font-weight:900}.haswolf-dc-plan{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid rgba(75,145,255,.25);border-radius:10px;background:rgba(35,90,160,.10);padding:10px 12px}.haswolf-dc-plan span{font-size:11px;color:#9ca3af}.haswolf-dc-plan strong{font-size:13px;color:#9ed0ff;text-align:right}.haswolf-dc-gift{display:grid;grid-template-columns:1fr auto;gap:3px 10px;border:1px solid rgba(34,197,94,.32);border-radius:10px;background:rgba(20,83,45,.14);padding:9px 12px}.haswolf-dc-gift span{font-size:11px;color:#9ca3af}.haswolf-dc-gift strong{font-size:13px;color:#dbeafe}.haswolf-dc-gift em{grid-column:1/-1;color:#4ade80;font-style:normal;font-size:12px;font-weight:900}.haswolf-dc-warning{border:1px solid rgba(245,158,11,.38);border-radius:8px;background:rgba(120,72,5,.16);padding:9px 10px;color:#f7cf7a;font-size:11px;font-weight:700}.haswolf-dc-warning button{margin-left:7px;border:1px solid rgba(112,183,255,.4);border-radius:7px;background:rgba(24,78,136,.25);padding:4px 7px;color:#b9dcff;font-weight:800}.haswolf-dc-flexible-calculator__total{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);padding:11px 13px}.haswolf-dc-flexible-calculator__total span{color:#a1a1aa;font-size:12px}.haswolf-dc-flexible-calculator__total strong{color:#8cc8ff;font-size:17px;text-align:right}.haswolf-dc-flexible-calculator p{margin:0;color:#71717a;font-size:10px;line-height:1.55}.haswolf-dc-flexible-calculator>button{width:100%;border:1px solid rgba(96,165,250,.48);border-radius:10px;background:linear-gradient(#2563a8,#153e68);padding:12px 14px;color:white;font-size:13px;font-weight:800}.haswolf-dc-flexible-calculator>button:disabled{opacity:.45;cursor:not-allowed}
         `}</style>
