@@ -6,6 +6,7 @@ import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import AutoTranslate from "@/components/AutoTranslate";
 import SitePresence from "@/components/SitePresence";
 import AnnouncementBroadcast from "@/components/AnnouncementBroadcast";
+import YangMarketIndex from "@/components/YangMarketIndex";
 import { PersistentVoiceProvider } from "@/components/PersistentVoiceProvider";
 import VoiceMediaSession from "@/components/VoiceMediaSession";
 
@@ -101,6 +102,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <SitePresence />
         <AnnouncementBroadcast />
         {children}
+        <YangMarketIndex />
         <CampaignRenderer />
         <FloatingWhatsApp />
         </PersistentVoiceProvider>
@@ -108,4 +110,3 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     </html>
   );
 }
-
