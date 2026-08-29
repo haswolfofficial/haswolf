@@ -23,6 +23,8 @@ type ProductLite = {
 const FAVORITES_KEY = "haswolf_favorites_v1";
 const COMPARE_KEY = "haswolf_compare_v1";
 const MAX_YANG_M = 20000;
+const MAX_DC = 20000;
+const DC_PACKAGES = [2700, 2400, 2125, 1850, 1575, 1300, 1000, 750, 500, 250, 200, 100] as const;
 
 function getGuestKey() {
   let key = localStorage.getItem("haswolf_guest_key");
@@ -47,6 +49,42 @@ function getYangReferenceAmount(name: string) {
   return 0;
 }
 
+function getDcReferenceAmount(name: string) {
+  const match = name.match(/(\d[\d.,]*)\s*dc\b/i);
+  if (!match) return 0;
+  const normalized = match[1].replace(/\./g, "").replace(",", ".");
+  const value = Number(normalized);
+  return Number.isFinite(value) && value > 0 ? Math.floor(value) : 0;
+}
+
+function findDcPackagePlan(target: number) {
+  const amount = Math.max(0, Math.min(MAX_DC, Math.floor(target)));
+  if (amount < 100) return null;
+  const dp: Array<number[] | null> = Array(amount + 1).fill(null);
+  dp[0] = [];
+  for (let total = 1; total <= amount; total++) {
+    let best: number[] | null = null;
+    for (const pack of DC_PACKAGES) {
+      if (pack > total || !dp[total - pack]) continue;
+      const candidate = [...(dp[total - pack] as number[]), pack].sort((a, b) => b - a);
+      if (!best || candidate.length < best.length || (candidate.length === best.length && candidate.join(",") > best.join(","))) best = candidate;
+    }
+    dp[total] = best;
+  }
+  return dp[amount];
+}
+
+function nearestDcOptions(target: number) {
+  const amount = Math.max(100, Math.min(MAX_DC, Math.floor(target)));
+  let lower: number | null = null;
+  let upper: number | null = null;
+  for (let delta = 1; delta <= 500 && (lower === null || upper === null); delta++) {
+    if (lower === null && amount - delta >= 100 && findDcPackagePlan(amount - delta)) lower = amount - delta;
+    if (upper === null && amount + delta <= MAX_DC && findDcPackagePlan(amount + delta)) upper = amount + delta;
+  }
+  return { lower, upper };
+}
+
 function formatTl(value: number) {
   return new Intl.NumberFormat("tr-TR", { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(value);
 }
@@ -66,6 +104,7 @@ export default function ProductExperience({ product, compact = false }: { produc
   const [views, setViews] = useState(product.view_count ?? 0);
   const [favoriteCount, setFavoriteCount] = useState(product.favorite_count ?? 0);
   const [yangAmount, setYangAmount] = useState("1");
+  const [dcAmount, setDcAmount] = useState("100");
 
   const yangReferenceAmount = useMemo(() => (product.category === "yang" ? getYangReferenceAmount(product.name) : 0), [product.category, product.name]);
   const isYangReference = product.category === "yang" && yangReferenceAmount >= 1000;
@@ -73,6 +112,15 @@ export default function ProductExperience({ product, compact = false }: { produc
   const rawYangAmount = Number(yangAmount) || 0;
   const numericYangAmount = Math.max(0, Math.min(MAX_YANG_M, Math.floor(rawYangAmount)));
   const yangTotal = yangUnitPrice * numericYangAmount;
+
+  const dcReferenceAmount = useMemo(() => (product.category === "dc" ? getDcReferenceAmount(product.name) : 0), [product.category, product.name]);
+  const isDcReference = product.category === "dc" && dcReferenceAmount === 100;
+  const dcUnitPriceM = isDcReference ? product.price / dcReferenceAmount : 0;
+  const rawDcAmount = Number(dcAmount) || 0;
+  const numericDcAmount = Math.max(0, Math.min(MAX_DC, Math.floor(rawDcAmount)));
+  const dcPlan = useMemo(() => findDcPackagePlan(numericDcAmount), [numericDcAmount]);
+  const dcTotalM = dcUnitPriceM * numericDcAmount;
+  const dcNearest = useMemo(() => (!dcPlan && numericDcAmount >= 100 ? nearestDcOptions(numericDcAmount) : { lower: null, upper: null }), [dcPlan, numericDcAmount]);
 
   useEffect(() => {
     const favorites = JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]") as number[];
@@ -129,7 +177,15 @@ export default function ProductExperience({ product, compact = false }: { produc
     window.open(`https://wa.me/905010942080?text=${message}`, "_blank", "noopener,noreferrer");
   }
 
+  function buyFlexibleDc() {
+    if (!isDcReference || !dcPlan || numericDcAmount < 100 || rawDcAmount > MAX_DC) return;
+    const planText = dcPlan.join(" + ");
+    const message = encodeURIComponent(`Merhaba Haswolf, ${product.server} sunucusundan ${numericDcAmount.toLocaleString("tr-TR")} DC almak istiyorum. Paket planı: ${planText} DC. Hesaplanan toplam ${formatTl(dcTotalM)} M.`);
+    window.open(`https://wa.me/905010942080?text=${message}`, "_blank", "noopener,noreferrer");
+  }
+
   if (product.category === "yang" && !isYangReference) return <><span className="haswolf-yang-suppress" aria-hidden="true" /><style jsx global>{`.haswolf-yang-card:has(.haswolf-yang-suppress){display:none!important;}`}</style></>;
+  if (product.category === "dc" && !isDcReference) return <><span className="haswolf-dc-suppress" aria-hidden="true" /><style jsx global>{`.haswolf-dc-card:has(.haswolf-dc-suppress){display:none!important;}`}</style></>;
 
   if (isYangReference) {
     const invalidHigh = rawYangAmount > MAX_YANG_M;
@@ -143,6 +199,25 @@ export default function ProductExperience({ product, compact = false }: { produc
         <button type="button" onClick={buyFlexibleYang} disabled={numericYangAmount < 1 || invalidHigh}>WhatsApp ile {numericYangAmount >= 1 ? formatYangAmount(numericYangAmount) : "Yang"} Satın Al</button>
         <style jsx global>{`
           .haswolf-yang-card:has(.haswolf-yang-flexible-calculator) .haswolf-yang-card__title-row,.haswolf-yang-card:has(.haswolf-yang-flexible-calculator) .haswolf-yang-card__description,.haswolf-yang-card:has(.haswolf-yang-flexible-calculator)>.haswolf-yang-card__content>.haswolf-yang-card__meta{display:none!important}.haswolf-yang-card:has(.haswolf-yang-flexible-calculator) .haswolf-yang-card__media{min-height:92px}.haswolf-yang-flexible-calculator{margin-top:8px;display:grid;gap:12px}.haswolf-yang-flexible-calculator__heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.haswolf-yang-flexible-calculator__heading strong{display:block;font-size:16px;color:#f2ca68}.haswolf-yang-flexible-calculator__heading span{display:block;margin-top:3px;font-size:12px;color:#a1a1aa}.haswolf-yang-flexible-calculator__heading b{font-size:11px;color:var(--server-color,#d9aa4a)}.haswolf-yang-flexible-calculator label>span{display:block;margin-bottom:6px;font-size:12px;color:#d4d4d8}.haswolf-yang-flexible-calculator label>div{display:flex;align-items:center;overflow:hidden;border:1px solid rgba(217,170,74,.45);border-radius:10px;background:#050606}.haswolf-yang-flexible-calculator input{min-width:0;flex:1;border:0;outline:0;background:transparent;padding:12px 14px;color:white;font-size:18px;font-weight:800}.haswolf-yang-flexible-calculator label em{min-width:62px;padding:0 12px;text-align:center;color:#e7b74f;font-style:normal;font-weight:900}.haswolf-yang-limit-warning{border:1px solid rgba(239,68,68,.45);border-radius:8px;background:rgba(127,29,29,.18);padding:8px 10px;color:#fca5a5;font-size:11px;font-weight:700}.haswolf-yang-flexible-calculator__total{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);padding:11px 13px}.haswolf-yang-flexible-calculator__total span{color:#a1a1aa;font-size:12px}.haswolf-yang-flexible-calculator__total strong{color:#f3c95f;font-size:17px;overflow-wrap:anywhere;text-align:right}.haswolf-yang-flexible-calculator p{margin:0;color:#71717a;font-size:11px}.haswolf-yang-flexible-calculator>button{width:100%;border:1px solid rgba(74,222,128,.5);border-radius:10px;background:linear-gradient(#15803d,#14532d);padding:12px 14px;color:white;font-size:13px;font-weight:800;overflow-wrap:anywhere}.haswolf-yang-flexible-calculator>button:disabled{opacity:.45;cursor:not-allowed}
+        `}</style>
+      </div>
+    );
+  }
+
+  if (isDcReference) {
+    const invalidHigh = rawDcAmount > MAX_DC;
+    const planText = dcPlan?.join(" + ") ?? "";
+    return (
+      <div className="haswolf-dc-flexible-calculator">
+        <div className="haswolf-dc-flexible-calculator__heading"><div><strong>İstediğin DC miktarını yaz</strong><span>100 DC = {formatTl(product.price)} M</span></div><b>{product.server}</b></div>
+        <label><span>DC miktarı</span><div><input type="number" min="100" max={MAX_DC} step="1" inputMode="numeric" value={dcAmount} onChange={(event) => setDcAmount(event.target.value)} onBlur={() => { if (rawDcAmount > MAX_DC) setDcAmount(String(MAX_DC)); }} placeholder="Örn. 400" /><em>DC</em></div></label>
+        {invalidHigh && <div className="haswolf-dc-warning">En fazla {MAX_DC.toLocaleString("tr-TR")} DC hesaplanabilir.</div>}
+        {dcPlan ? <div className="haswolf-dc-plan"><span>Oyun paketlerine bölünüşü</span><strong>{planText} DC</strong></div> : numericDcAmount >= 100 ? <div className="haswolf-dc-warning">Bu miktar mevcut oyun paketleriyle tam oluşturulamıyor.{dcNearest.lower || dcNearest.upper ? <> En yakın seçenekler: {dcNearest.lower ? <button type="button" onClick={() => setDcAmount(String(dcNearest.lower))}>{dcNearest.lower} DC</button> : null}{dcNearest.upper ? <button type="button" onClick={() => setDcAmount(String(dcNearest.upper))}>{dcNearest.upper} DC</button> : null}</> : null}</div> : null}
+        <div className="haswolf-dc-flexible-calculator__total"><span>Hesaplanan toplam</span><strong>{dcPlan ? `${formatTl(dcTotalM)} M` : "—"}</strong></div>
+        <p>Kullanılabilen oyun paketleri: {DC_PACKAGES.slice().sort((a,b)=>a-b).join(" · ")} DC. Sistem yazdığın toplamı otomatik olarak bu paketlere böler.</p>
+        <button type="button" onClick={buyFlexibleDc} disabled={!dcPlan || numericDcAmount < 100 || invalidHigh}>WhatsApp ile {dcPlan ? `${numericDcAmount.toLocaleString("tr-TR")} DC` : "DC"} Satın Al</button>
+        <style jsx global>{`
+          .haswolf-dc-card:has(.haswolf-dc-flexible-calculator) .haswolf-dc-card__title-row,.haswolf-dc-card:has(.haswolf-dc-flexible-calculator) .haswolf-dc-card__description,.haswolf-dc-card:has(.haswolf-dc-flexible-calculator)>.haswolf-dc-card__content>.haswolf-dc-card__meta{display:none!important}.haswolf-dc-card:has(.haswolf-dc-flexible-calculator) .haswolf-dc-card__media{min-height:92px}.haswolf-dc-flexible-calculator{margin-top:8px;display:grid;gap:12px}.haswolf-dc-flexible-calculator__heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.haswolf-dc-flexible-calculator__heading strong{display:block;font-size:16px;color:#70b7ff}.haswolf-dc-flexible-calculator__heading span{display:block;margin-top:3px;font-size:12px;color:#a1a1aa}.haswolf-dc-flexible-calculator__heading b{font-size:11px;color:var(--server-color,#70b7ff)}.haswolf-dc-flexible-calculator label>span{display:block;margin-bottom:6px;font-size:12px;color:#d4d4d8}.haswolf-dc-flexible-calculator label>div{display:flex;align-items:center;overflow:hidden;border:1px solid rgba(75,145,255,.5);border-radius:10px;background:#05080b}.haswolf-dc-flexible-calculator input{min-width:0;flex:1;border:0;outline:0;background:transparent;padding:12px 14px;color:white;font-size:18px;font-weight:800}.haswolf-dc-flexible-calculator label em{min-width:62px;padding:0 12px;text-align:center;color:#70b7ff;font-style:normal;font-weight:900}.haswolf-dc-plan{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid rgba(75,145,255,.25);border-radius:10px;background:rgba(35,90,160,.10);padding:10px 12px}.haswolf-dc-plan span{font-size:11px;color:#9ca3af}.haswolf-dc-plan strong{font-size:13px;color:#9ed0ff;text-align:right}.haswolf-dc-warning{border:1px solid rgba(245,158,11,.38);border-radius:8px;background:rgba(120,72,5,.16);padding:9px 10px;color:#f7cf7a;font-size:11px;font-weight:700}.haswolf-dc-warning button{margin-left:7px;border:1px solid rgba(112,183,255,.4);border-radius:7px;background:rgba(24,78,136,.25);padding:4px 7px;color:#b9dcff;font-weight:800}.haswolf-dc-flexible-calculator__total{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);padding:11px 13px}.haswolf-dc-flexible-calculator__total span{color:#a1a1aa;font-size:12px}.haswolf-dc-flexible-calculator__total strong{color:#8cc8ff;font-size:17px;text-align:right}.haswolf-dc-flexible-calculator p{margin:0;color:#71717a;font-size:10px;line-height:1.55}.haswolf-dc-flexible-calculator>button{width:100%;border:1px solid rgba(96,165,250,.48);border-radius:10px;background:linear-gradient(#2563a8,#153e68);padding:12px 14px;color:white;font-size:13px;font-weight:800}.haswolf-dc-flexible-calculator>button:disabled{opacity:.45;cursor:not-allowed}
         `}</style>
       </div>
     );
