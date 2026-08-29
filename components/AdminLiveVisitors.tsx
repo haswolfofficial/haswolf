@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-const MIN_ACTIVITY = 50;
-const MAX_ACTIVITY = 900;
+const MIN_ACTIVITY = 15;
+const MAX_ACTIVITY = 300;
 const UPDATE_INTERVAL = 8000;
 
 const clamp = (value: number) => Math.min(MAX_ACTIVITY, Math.max(MIN_ACTIVITY, value));
@@ -15,12 +15,12 @@ export default function AdminLiveVisitors({ enabled = true }: { enabled?: boolea
   useEffect(() => {
     if (!enabled) return;
 
-    setActivity(Math.floor(Math.random() * 201) + 250);
+    setActivity(Math.floor(Math.random() * 86) + 65);
 
     const timer = window.setInterval(() => {
       setActivity((current) => {
-        const base = current || 350;
-        const step = Math.floor(Math.random() * 41) - 20;
+        const base = current || 100;
+        const step = Math.floor(Math.random() * 21) - 10;
         return clamp(base + step);
       });
     }, UPDATE_INTERVAL);
@@ -40,13 +40,13 @@ export default function AdminLiveVisitors({ enabled = true }: { enabled?: boolea
         aria-label={`${activity} aktif`}
       >
         <span className="haswolf-live-dot" />
-        <b>{activity || 50}</b>
+        <b>{activity || MIN_ACTIVITY}</b>
       </button>
       {open && (
         <div className="haswolf-live-orb__panel">
           <header>
             <small>CANLI DURUM</small>
-            <strong>{activity || 50} aktif</strong>
+            <strong>{activity || MIN_ACTIVITY} aktif</strong>
           </header>
           <p><span>Durum</span><b>Aktif</b></p>
         </div>
