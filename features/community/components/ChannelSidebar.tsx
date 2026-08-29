@@ -13,6 +13,7 @@ type Props = {
   onSelectRoom: (room: ChatRoom) => void;
   canManageRooms?: boolean;
   onManageRooms?: () => void;
+  unreadCounts?: Record<string, number>;
 };
 
 const SERVER_KEYS = [
@@ -21,7 +22,7 @@ const SERVER_KEYS = [
   { key: "teos", label: "Teos" },
 ] as const;
 
-export default function ChannelSidebar({ rooms, selectedRoom, onSelectRoom, canManageRooms, onManageRooms }: Props) {
+export default function ChannelSidebar({ rooms, selectedRoom, onSelectRoom, canManageRooms, onManageRooms, unreadCounts = {} }: Props) {
   const active = rooms.filter((room) => (room as RoomExtra).is_active !== false) as RoomExtra[];
   const isVoice = (room: RoomExtra) => room.kind === "voice" || room.slug.startsWith("voice-") || room.slug.startsWith("voice");
   const isAnnouncement = (room: RoomExtra) => room.category === "announcement" || room.slug === "news";
@@ -35,14 +36,18 @@ export default function ChannelSidebar({ rooms, selectedRoom, onSelectRoom, canM
 
   function roomButton(room: RoomExtra, voice = false, nested = false) {
     const selected = selectedRoom.slug === room.slug;
+    const unread = unreadCounts[room.slug] || 0;
     return (
       <button
         key={room.id}
         onClick={() => onSelectRoom(room)}
-        className={`group flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-sm transition ${nested ? "pl-6" : ""} ${selected ? "bg-[#d9aa4a]/15 text-[#f1c76c]" : "text-zinc-400 hover:bg-zinc-900 hover:text-white"}`}
+        className={`group flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left text-sm transition ${nested ? "pl-6" : ""} ${selected ? "bg-[#d9aa4a]/15 text-[#f1c76c]" : unread > 0 ? "bg-white/[.025] text-white" : "text-zinc-400 hover:bg-zinc-900 hover:text-white"}`}
       >
         <span className="text-[13px]">{room.icon || (voice ? "🔊" : "💬")}</span>
-        <span className="flex-1 truncate text-[13px] font-medium">{room.name}</span>
+        <span className={`flex-1 truncate text-[13px] ${unread > 0 && !selected ? "font-bold" : "font-medium"}`}>{room.name}</span>
+        {!voice && unread > 0 && !selected && (
+          <span className="min-w-5 rounded-full bg-[#d9aa4a] px-1.5 py-0.5 text-center text-[10px] font-black text-black">{unread > 99 ? "99+" : unread}</span>
+        )}
         {voice && <i className={`h-2 w-2 rounded-full ${selected ? "bg-green-400" : "bg-zinc-700"}`} />}
       </button>
     );
@@ -64,10 +69,7 @@ export default function ChannelSidebar({ rooms, selectedRoom, onSelectRoom, canM
       <div className="h-[calc(100vh-70px)] space-y-2.5 overflow-y-auto p-2.5">
         {announcement.length > 0 && <section>{sectionTitle("Duyurular")}<div className="space-y-1">{announcement.map((room) => roomButton(room))}</div></section>}
 
-        <section>
-          {sectionTitle("Genel")}
-          <div className="space-y-1">{general.map((room) => roomButton(room))}</div>
-        </section>
+        <section>{sectionTitle("Genel")}<div className="space-y-1">{general.map((room) => roomButton(room))}</div></section>
 
         <section>
           {sectionTitle("Sunucular")}
