@@ -34,7 +34,17 @@ export default function AuthButton() {
           .select("nickname,premium_tier,premium_until")
           .eq("id", sessionUser.id)
           .maybeSingle();
-        if (mounted) { setNickname(profile?.nickname || ""); setPremium(Boolean(profile?.premium_tier && profile.premium_tier !== "normal" && (!profile.premium_until || new Date(profile.premium_until) > new Date()))); }
+
+        if (mounted) {
+          setNickname(profile?.nickname || "");
+          setPremium(
+            Boolean(
+              profile?.premium_tier &&
+                profile.premium_tier !== "normal" &&
+                (!profile.premium_until || new Date(profile.premium_until) > new Date()),
+            ),
+          );
+        }
       }
 
       if (mounted) setLoading(false);
@@ -60,29 +70,20 @@ export default function AuthButton() {
     router.refresh();
   }
 
-  if (loading) return <span className="text-xs text-zinc-500">Kontrol ediliyor...</span>;
-
-  if (!user) {
-    return (
-      <button
-        type="button"
-        onClick={() => router.push("/login")}
-        className="rounded-lg border border-[#b8862c] px-4 py-2.5 text-sm font-semibold text-[#e8bd67] transition hover:bg-[#d7a947] hover:text-black"
-      >
-        Giriş Yap
-      </button>
-    );
-  }
+  // Vitrinde genel giriş düğmesi gösterilmez. Yönetici girişi yalnızca /admin-login üzerinden yapılır.
+  if (loading || !user) return null;
 
   const label = nickname || (user.is_anonymous ? "Misafir" : user.email || "Hesap");
 
   return (
     <div className={premium ? "haswolf-auth-user is-premium" : "haswolf-auth-user"}>
       <button type="button" onClick={() => router.push("/hesabim")} className="haswolf-auth-action">
-        <span>{premium ? "🔥" : "👤"}</span><span>{premium ? "Premium Hesabım" : "Hesabım"}</span>
+        <span>{premium ? "🔥" : "👤"}</span>
+        <span>{premium ? "Premium Hesabım" : "Hesabım"}</span>
       </button>
       <button type="button" onClick={logout} className="haswolf-auth-action haswolf-auth-action--logout">
-        <span>↪</span><span>Çıkış Yap</span>
+        <span>↪</span>
+        <span>Çıkış Yap</span>
       </button>
       <span className="haswolf-auth-email" title={label}>{label}</span>
     </div>
