@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const DRAGON_COIN_LABEL = "Dragon Coin (DC)";
 
-function normalizeDragonCoinLabels(root: ParentNode = document) {
+function normalizeDragonCoinLabels(root: Node = document) {
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   const nodes: Text[] = [];
   let current = walker.nextNode();
@@ -21,7 +21,6 @@ function normalizeDragonCoinLabels(root: ParentNode = document) {
     if (["SCRIPT", "STYLE", "NOSCRIPT"].includes(parent.tagName)) continue;
     if (!/\bDC\b/i.test(value)) continue;
     if (value.includes(DRAGON_COIN_LABEL)) continue;
-
     node.nodeValue = value.replace(/\bDC\b/g, DRAGON_COIN_LABEL);
   }
 }
@@ -30,7 +29,7 @@ export default function SitePolish() {
   const cursorRef = useRef<HTMLDivElement | null>(null);
   const frameRef = useRef<number | null>(null);
   const positionRef = useRef({ x: -100, y: -100 });
-  const [pressed, setPressed] = useState(false);
+  const pressedRef = useRef(false);
 
   useEffect(() => {
     normalizeDragonCoinLabels();
@@ -45,7 +44,7 @@ export default function SitePolish() {
               text.nodeValue = value.replace(/\bDC\b/g, DRAGON_COIN_LABEL);
             }
           } else if (node.nodeType === Node.ELEMENT_NODE) {
-            normalizeDragonCoinLabels(node as Element);
+            normalizeDragonCoinLabels(node);
           }
         }
       }
@@ -66,12 +65,16 @@ export default function SitePolish() {
       const cursor = cursorRef.current;
       if (!cursor) return;
       const { x, y } = positionRef.current;
-      cursor.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(-10deg) scale(${pressed ? 0.86 : 1})`;
+      cursor.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(-10deg) scale(${pressedRef.current ? 0.86 : 1})`;
+    };
+
+    const requestPaint = () => {
+      if (frameRef.current === null) frameRef.current = requestAnimationFrame(paint);
     };
 
     const move = (event: PointerEvent) => {
       positionRef.current = { x: event.clientX - 4, y: event.clientY - 2 };
-      if (frameRef.current === null) frameRef.current = requestAnimationFrame(paint);
+      requestPaint();
       if (cursorRef.current) cursorRef.current.dataset.visible = "true";
     };
 
@@ -79,8 +82,15 @@ export default function SitePolish() {
       if (cursorRef.current) cursorRef.current.dataset.visible = "false";
     };
 
-    const down = () => setPressed(true);
-    const up = () => setPressed(false);
+    const down = () => {
+      pressedRef.current = true;
+      requestPaint();
+    };
+
+    const up = () => {
+      pressedRef.current = false;
+      requestPaint();
+    };
 
     window.addEventListener("pointermove", move, { passive: true });
     window.addEventListener("pointerdown", down, { passive: true });
@@ -95,7 +105,7 @@ export default function SitePolish() {
       document.documentElement.removeEventListener("mouseleave", leave);
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
     };
-  }, [pressed]);
+  }, []);
 
   return (
     <>
@@ -129,18 +139,12 @@ export default function SitePolish() {
 
           .haswolf-neon-cursor[data-visible="true"] { opacity: 1; }
           .haswolf-neon-cursor svg { display: block; width: 100%; height: 100%; overflow: visible; }
-
-          html.haswolf-neon-cursor-enabled a:hover ~ .haswolf-neon-cursor,
-          html.haswolf-neon-cursor-enabled button:hover ~ .haswolf-neon-cursor {
-            filter: drop-shadow(0 0 5px rgba(243,179,255,1)) drop-shadow(0 0 14px rgba(147,70,255,.9)) drop-shadow(0 0 28px rgba(124,60,255,.55));
-          }
         }
 
         @media (pointer: coarse), (prefers-reduced-motion: reduce) {
           .haswolf-neon-cursor { display: none !important; }
         }
 
-        /* DC cards already have their dedicated blue purchase action. Hide the old duplicate green button only. */
         .haswolf-yang-card:has(.haswolf-dc-flexible-calculator) .haswolf-yang-card__meta button {
           display: none !important;
         }
