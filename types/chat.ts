@@ -8,8 +8,16 @@ export type ChatRoom = {
 export type ChatMessage = {
   id: string;
   roomSlug: string;
+  userId?: string;
   nickname: string;
   message: string;
   createdAt: string;
+  createdAtIso?: string;
   isMine?: boolean;
+  replyToId?: string | null;
+  replyTo?: {
+    id: string;
+    nickname: string;
+    message: string;
+  } | null;
 };
