@@ -1,108 +1,239 @@
-/* HASWOLF Premium Dark Glass — restrained glassmorphism layer */
+/* HASWOLF — Full Premium Dark Glassmorphism */
 :root{
-  --hw-glass:rgba(8,11,12,.72);
-  --hw-glass-strong:rgba(7,10,11,.88);
-  --hw-glass-border:rgba(232,189,103,.22);
-  --hw-glass-highlight:rgba(255,255,255,.065);
+  --hw-glass-0:rgba(5,8,10,.58);
+  --hw-glass-1:rgba(8,12,15,.72);
+  --hw-glass-2:rgba(10,15,18,.86);
+  --hw-glass-border:rgba(235,190,88,.28);
+  --hw-glass-border-strong:rgba(241,196,93,.52);
+  --hw-highlight:rgba(255,255,255,.075);
   --hw-gold:#d9aa4a;
-  --hw-gold-bright:#f0c76b;
-  --hw-shadow:0 24px 70px rgba(0,0,0,.48);
+  --hw-gold-2:#f2c969;
+  --hw-shadow:0 22px 70px rgba(0,0,0,.48);
 }
 
-/* Header/navigation: one coherent premium glass language */
+/* ---------- HEADER / TOP BAR ---------- */
 .haswolf-header{
-  background:linear-gradient(180deg,rgba(4,5,5,.92),rgba(5,7,7,.78))!important;
-  -webkit-backdrop-filter:blur(22px) saturate(1.25);
-  backdrop-filter:blur(22px) saturate(1.25);
-  border-bottom:1px solid rgba(217,170,74,.18)!important;
-  box-shadow:0 16px 55px rgba(0,0,0,.38)!important;
+  background:linear-gradient(180deg,rgba(2,4,5,.82),rgba(5,7,8,.68))!important;
+  border-bottom:1px solid rgba(217,170,74,.24)!important;
+  box-shadow:0 18px 70px rgba(0,0,0,.5),inset 0 -1px rgba(255,255,255,.025)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(1.45)!important;
+  backdrop-filter:blur(28px) saturate(1.45)!important;
 }
-.haswolf-topbar__actions,.haswolf-social-strip{
-  border-radius:16px;
+.haswolf-topbar{position:relative;}
+.haswolf-topbar:after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(217,170,74,.34),transparent);
 }
-.haswolf-header-social,.haswolf-main-nav a,.haswolf-main-nav button,.haswolf-download-button,.haswolf-menu-button{
-  background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.018))!important;
-  border-color:rgba(232,189,103,.22)!important;
-  box-shadow:inset 0 1px 0 var(--hw-glass-highlight),0 8px 24px rgba(0,0,0,.16);
-  -webkit-backdrop-filter:blur(14px) saturate(1.2);
-  backdrop-filter:blur(14px) saturate(1.2);
+.haswolf-social-strip{
+  padding:.22rem;
+  border:1px solid rgba(217,170,74,.12);
+  border-radius:1rem;
+  background:rgba(255,255,255,.018);
+  box-shadow:inset 0 1px rgba(255,255,255,.025);
+}
+.haswolf-header-social,
+.haswolf-main-nav a,
+.haswolf-main-nav button,
+.haswolf-download-button,
+.haswolf-menu-button{
+  border:1px solid rgba(232,189,103,.24)!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.085),rgba(255,255,255,.018))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 9px 24px rgba(0,0,0,.2)!important;
+  -webkit-backdrop-filter:blur(16px) saturate(1.3)!important;
+  backdrop-filter:blur(16px) saturate(1.3)!important;
   transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background .2s ease!important;
 }
-.haswolf-header-social:hover,.haswolf-main-nav a:hover,.haswolf-main-nav button:hover,.haswolf-download-button:hover,.haswolf-menu-button:hover{
-  transform:translateY(-1px);
-  border-color:rgba(240,199,107,.62)!important;
-  background:linear-gradient(145deg,rgba(217,170,74,.16),rgba(255,255,255,.025))!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.09),0 12px 34px rgba(0,0,0,.28),0 0 24px rgba(217,170,74,.07);
-  color:#f3cc77!important;
+.haswolf-header-social:hover,
+.haswolf-main-nav a:hover,
+.haswolf-main-nav button:hover,
+.haswolf-download-button:hover,
+.haswolf-menu-button:hover{
+  transform:translateY(-2px)!important;
+  color:#f8d77f!important;
+  border-color:rgba(242,201,105,.72)!important;
+  background:linear-gradient(145deg,rgba(217,170,74,.20),rgba(255,255,255,.035))!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.10),0 14px 34px rgba(0,0,0,.32),0 0 26px rgba(217,170,74,.10)!important;
+}
+.haswolf-main-nav{
+  padding:.72rem .3rem!important;
+  border-top:0!important;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.018),transparent);
 }
 
-/* Keep the hero itself bold and matte; glass belongs to UI, not the brand artwork. */
-.haswolf-hero{box-shadow:inset 0 -1px 0 rgba(217,170,74,.14);}
+/* ---------- HERO: KEEP BRAND MATTE, ADD DEPTH ONLY ---------- */
+.haswolf-hero{
+  box-shadow:inset 0 -1px rgba(217,170,74,.18),0 14px 54px rgba(0,0,0,.28);
+}
+.haswolf-hero__emblem{
+  background:radial-gradient(circle at 34% 28%,rgba(255,220,130,.10),rgba(5,6,6,.86) 58%)!important;
+  border:1px solid rgba(236,190,85,.42)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.05),0 26px 70px rgba(0,0,0,.42),0 0 55px rgba(217,170,74,.13)!important;
+}
+.haswolf-hero-quick-links button,
+.haswolf-hero-quick-links a{
+  box-shadow:inset 0 1px rgba(255,255,255,.11),0 10px 30px rgba(0,0,0,.28)!important;
+}
 
-/* Large storefront panels and product/server cards */
-main section:not(.haswolf-hero),
-.haswolf-product-card{
-  border-color:rgba(217,170,74,.19)!important;
+/* ---------- GAMES PANEL ---------- */
+.haswolf-games-primary{
+  width:min(calc(100% - 2rem),1500px)!important;
+  margin:14px auto 0!important;
+  padding:18px!important;
+  border:1px solid rgba(104,170,255,.20)!important;
+  border-radius:18px!important;
+  background:
+    radial-gradient(circle at 0% 0%,rgba(62,133,215,.09),transparent 34%),
+    linear-gradient(145deg,rgba(12,18,25,.76),rgba(5,8,11,.68))!important;
+  -webkit-backdrop-filter:blur(22px) saturate(1.28)!important;
+  backdrop-filter:blur(22px) saturate(1.28)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.045),0 22px 65px rgba(0,0,0,.36)!important;
+}
+.haswolf-games-primary__heading{margin-bottom:12px!important;}
+.haswolf-games-primary__card{
+  border:1px solid rgba(229,183,79,.26)!important;
+  border-radius:14px!important;
+  background:linear-gradient(105deg,rgba(74,48,9,.46),rgba(12,12,11,.62) 38%,rgba(7,9,10,.74))!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.045),0 14px 36px rgba(0,0,0,.30)!important;
+  -webkit-backdrop-filter:blur(16px)!important;
+  backdrop-filter:blur(16px)!important;
+}
+.haswolf-games-primary__logo{
+  box-shadow:inset 0 1px rgba(255,255,255,.15),0 8px 25px rgba(217,170,74,.18)!important;
+}
+.haswolf-games-primary__status{
+  box-shadow:0 0 20px rgba(44,218,116,.10),inset 0 1px rgba(255,255,255,.05)!important;
+}
+
+/* ---------- SERVER SELECTION SURFACE ---------- */
+.haswolf-server-grid{perspective:1100px;}
+.haswolf-server-grid>div{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(255,255,255,.055),transparent 35%),
+    linear-gradient(145deg,rgba(10,14,16,.80),rgba(4,7,8,.68))!important;
+  border-width:1px!important;
+  border-color:color-mix(in srgb,currentColor 44%,transparent)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(1.22)!important;
+  backdrop-filter:blur(20px) saturate(1.22)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.045),0 20px 54px rgba(0,0,0,.32)!important;
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease!important;
+}
+.haswolf-server-grid>div:before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,255,255,.055),transparent 30%,transparent 72%,rgba(217,170,74,.035));
+}
+.haswolf-server-grid>div:hover{
+  transform:translateY(-5px) scale(1.012)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.075),0 28px 72px rgba(0,0,0,.46),0 0 32px rgba(217,170,74,.05)!important;
+}
+.haswolf-server-actions button{
+  border-radius:11px!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.12),0 8px 24px rgba(0,0,0,.24)!important;
+}
+.haswolf-buy-button{background:linear-gradient(180deg,#138444,#08662f)!important;}
+.haswolf-sell-button{background:linear-gradient(180deg,#c07a10,#8a5105)!important;}
+
+/* ---------- GENERIC STOREFRONT PANELS ---------- */
+main section:not(.haswolf-hero):not(.haswolf-games-primary)>div[class*="rounded-xl"],
+.haswolf-product-card,
+[class*="haswolf-market"]{
+  -webkit-backdrop-filter:blur(18px) saturate(1.22);
+  backdrop-filter:blur(18px) saturate(1.22);
 }
 .haswolf-product-card{
-  background:linear-gradient(145deg,rgba(11,14,14,.84),rgba(4,6,6,.72))!important;
-  -webkit-backdrop-filter:blur(16px) saturate(1.16);
-  backdrop-filter:blur(16px) saturate(1.16);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 18px 48px rgba(0,0,0,.28)!important;
+  background:
+    radial-gradient(circle at 8% 0%,rgba(255,255,255,.045),transparent 30%),
+    linear-gradient(145deg,rgba(11,15,16,.82),rgba(4,7,8,.72))!important;
+  border-color:rgba(217,170,74,.20)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.04),0 18px 48px rgba(0,0,0,.28)!important;
 }
 .haswolf-product-card:hover{
-  transform:translateY(-2px);
-  border-color:rgba(232,189,103,.38)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 24px 64px rgba(0,0,0,.4),0 0 0 1px rgba(217,170,74,.05)!important;
+  transform:translateY(-3px)!important;
+  border-color:rgba(238,190,88,.44)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.06),0 26px 68px rgba(0,0,0,.42),0 0 28px rgba(217,170,74,.05)!important;
 }
 
-/* Market flyout: strongest glass surface on the page */
-.haswolf-market-index,.haswolf-yang-market,.yang-market-index,
-[class*="market-index"]{
-  background:linear-gradient(155deg,rgba(14,18,20,.92),rgba(5,9,11,.86))!important;
-  -webkit-backdrop-filter:blur(26px) saturate(1.28)!important;
-  backdrop-filter:blur(26px) saturate(1.28)!important;
-  border-color:rgba(232,189,103,.30)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 28px 90px rgba(0,0,0,.58),0 0 35px rgba(217,170,74,.05)!important;
+/* ---------- YANG EXCHANGE TERMINAL ---------- */
+.haswolf-yang-terminal__tab{
+  background:linear-gradient(180deg,rgba(10,17,23,.82),rgba(5,10,14,.92))!important;
+  border-color:rgba(228,179,66,.52)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(1.35)!important;
+  backdrop-filter:blur(24px) saturate(1.35)!important;
+  box-shadow:-16px 20px 52px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.06)!important;
+}
+.haswolf-yang-terminal__panel{
+  background:
+    radial-gradient(circle at 15% 0%,rgba(217,170,74,.08),transparent 26%),
+    linear-gradient(155deg,rgba(10,17,22,.92),rgba(4,9,13,.86))!important;
+  border-color:rgba(232,189,103,.34)!important;
+  -webkit-backdrop-filter:blur(30px) saturate(1.35)!important;
+  backdrop-filter:blur(30px) saturate(1.35)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.07),0 32px 100px rgba(0,0,0,.66),0 0 42px rgba(217,170,74,.06)!important;
+}
+.haswolf-yang-terminal__grid{
+  border-color:rgba(168,194,214,.18)!important;
+  background:rgba(4,10,14,.52)!important;
+}
+.haswolf-yang-terminal__row:hover{background:rgba(255,255,255,.028);}
+.haswolf-yang-terminal__current{
+  background:linear-gradient(135deg,rgba(245,158,11,.34),rgba(126,72,3,.12))!important;
+  box-shadow:inset 0 0 26px rgba(245,158,11,.07)!important;
+}
+.haswolf-yang-terminal__disclaimer{
+  background:linear-gradient(135deg,rgba(245,158,11,.16),rgba(8,15,20,.74))!important;
+  -webkit-backdrop-filter:blur(12px)!important;
+  backdrop-filter:blur(12px)!important;
 }
 
-/* Bottom navigation: floating smoked glass */
+/* ---------- BOTTOM NAV ---------- */
 .haswolf-bottom-nav{
-  background:linear-gradient(180deg,rgba(27,25,19,.68),rgba(5,8,9,.78))!important;
-  -webkit-backdrop-filter:blur(26px) saturate(1.45)!important;
-  backdrop-filter:blur(26px) saturate(1.45)!important;
-  border:1px solid rgba(238,190,91,.30)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.075),0 22px 75px rgba(0,0,0,.66)!important;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(217,170,74,.10),transparent 42%),
+    linear-gradient(180deg,rgba(24,22,17,.68),rgba(5,8,10,.72))!important;
+  border:1px solid rgba(238,190,91,.36)!important;
+  -webkit-backdrop-filter:blur(30px) saturate(1.55)!important;
+  backdrop-filter:blur(30px) saturate(1.55)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.09),0 26px 84px rgba(0,0,0,.72),0 0 32px rgba(217,170,74,.06)!important;
 }
-.haswolf-bottom-nav a,.haswolf-bottom-nav button{transition:background .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease!important;}
-.haswolf-bottom-nav .is-active{
-  background:linear-gradient(180deg,rgba(217,170,74,.25),rgba(217,170,74,.07))!important;
-  box-shadow:inset 0 1px 0 rgba(255,225,160,.12),0 0 28px rgba(217,170,74,.08)!important;
+.haswolf-bottom-nav a,.haswolf-bottom-nav button{
+  border:1px solid transparent;
+  transition:all .2s ease!important;
+}
+.haswolf-bottom-nav a:hover,.haswolf-bottom-nav button:hover,.haswolf-bottom-nav .is-active{
+  background:linear-gradient(180deg,rgba(217,170,74,.26),rgba(217,170,74,.06))!important;
+  border-color:rgba(232,189,103,.16)!important;
+  color:#f3cc77!important;
+  box-shadow:inset 0 1px rgba(255,229,170,.11),0 0 24px rgba(217,170,74,.10)!important;
 }
 
-/* Live activity: compact glass capsule; green remains a status accent only. */
+/* ---------- LIVE ACTIVITY ---------- */
 .haswolf-live-orb__trigger{
-  background:linear-gradient(145deg,rgba(8,20,14,.78),rgba(4,9,8,.9))!important;
-  border-color:rgba(73,221,123,.36)!important;
-  -webkit-backdrop-filter:blur(22px) saturate(1.25)!important;
-  backdrop-filter:blur(22px) saturate(1.25)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 18px 55px rgba(0,0,0,.52),0 0 22px rgba(58,215,110,.09)!important;
+  background:linear-gradient(145deg,rgba(8,26,16,.72),rgba(3,11,8,.84))!important;
+  border-color:rgba(67,227,123,.48)!important;
+  -webkit-backdrop-filter:blur(26px) saturate(1.4)!important;
+  backdrop-filter:blur(26px) saturate(1.4)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.07),0 20px 60px rgba(0,0,0,.58),0 0 28px rgba(58,215,110,.11)!important;
 }
 .haswolf-live-orb__panel{
-  background:linear-gradient(155deg,rgba(7,18,12,.9),rgba(4,9,8,.92))!important;
-  -webkit-backdrop-filter:blur(24px) saturate(1.3)!important;
-  backdrop-filter:blur(24px) saturate(1.3)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 28px 80px rgba(0,0,0,.62)!important;
+  background:linear-gradient(145deg,rgba(8,22,14,.88),rgba(3,10,7,.90))!important;
+  border-color:rgba(67,211,116,.38)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(1.35)!important;
+  backdrop-filter:blur(28px) saturate(1.35)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.055),0 30px 86px rgba(0,0,0,.68)!important;
 }
 
-/* WhatsApp intentionally stays saturated: it is the primary conversion CTA. */
+/* WhatsApp stays saturated by design. */
 
-@media (max-width:900px){
-  .haswolf-header{-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);}
-  .haswolf-main-nav a,.haswolf-main-nav button{box-shadow:inset 0 1px 0 rgba(255,255,255,.04);}
-  .haswolf-bottom-nav{-webkit-backdrop-filter:blur(20px) saturate(1.35)!important;backdrop-filter:blur(20px) saturate(1.35)!important;}
+@media(max-width:900px){
+  .haswolf-header{-webkit-backdrop-filter:blur(20px) saturate(1.28)!important;backdrop-filter:blur(20px) saturate(1.28)!important;}
+  .haswolf-games-primary{width:calc(100% - 1rem)!important;padding:12px!important;border-radius:15px!important;}
+  .haswolf-server-grid>div{-webkit-backdrop-filter:blur(14px) saturate(1.15)!important;backdrop-filter:blur(14px) saturate(1.15)!important;}
+  .haswolf-bottom-nav{-webkit-backdrop-filter:blur(22px) saturate(1.4)!important;backdrop-filter:blur(22px) saturate(1.4)!important;}
 }
 
-@media (prefers-reduced-transparency:reduce){
-  .haswolf-header,.haswolf-header-social,.haswolf-main-nav a,.haswolf-main-nav button,.haswolf-product-card,.haswolf-bottom-nav,.haswolf-live-orb__trigger,.haswolf-live-orb__panel{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:#090b0b!important;}
+@media(prefers-reduced-transparency:reduce){
+  .haswolf-header,.haswolf-header-social,.haswolf-main-nav a,.haswolf-main-nav button,.haswolf-games-primary,.haswolf-games-primary__card,.haswolf-server-grid>div,.haswolf-product-card,.haswolf-yang-terminal__tab,.haswolf-yang-terminal__panel,.haswolf-bottom-nav,.haswolf-live-orb__trigger,.haswolf-live-orb__panel{
+    -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  }
 }
