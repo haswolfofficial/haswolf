@@ -48,10 +48,12 @@ export default function NotificationCenter({ deals }: { deals: Deal[] }) {
   const [mounted, setMounted] = useState(false);
   const [seen, setSeen] = useState<string[]>([]);
   const [now, setNow] = useState(Date.now());
+  const [socialTarget, setSocialTarget] = useState<Element | null>(null);
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
+    setSocialTarget(document.querySelector(".haswolf-social-strip"));
     try {
       const value = JSON.parse(localStorage.getItem(KEY) || "[]");
       if (Array.isArray(value)) setSeen(value.map(String));
@@ -115,15 +117,20 @@ export default function NotificationCenter({ deals }: { deals: Deal[] }) {
 
   return (
     <div ref={root} className="haswolf-notification-root">
-      <a
-        href={COMMUNITY_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="haswolf-community-join"
-        aria-label="HASWOLF WhatsApp topluluğuna katıl"
-      >
-        <span>☘</span><b>WhatsApp Topluluğumuza Katıl</b>
-      </a>
+      {mounted && socialTarget && createPortal(
+        <a
+          href={COMMUNITY_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="haswolf-community-join"
+          aria-label="HASWOLF WhatsApp topluluğuna katıl"
+        >
+          <span className="haswolf-community-join__icon">☎</span>
+          <span className="haswolf-community-join__copy"><strong>WhatsApp</strong><small>Topluluğumuza Katıl</small></span>
+        </a>,
+        socialTarget,
+      )}
+
       <button type="button" className="haswolf-notification-trigger" onClick={() => setOpen((value) => !value)} aria-expanded={open}>
         <span aria-hidden="true">🔔</span>
         <span>Bildirimler</span>
@@ -191,7 +198,7 @@ export default function NotificationCenter({ deals }: { deals: Deal[] }) {
         </div>, document.body)}
 
       <style jsx global>{`
-        .haswolf-community-join{display:inline-flex;align-items:center;gap:7px;min-height:44px;padding:0 12px;border:1px solid rgba(37,211,102,.38);border-radius:11px;background:linear-gradient(145deg,rgba(21,120,60,.20),rgba(7,16,11,.74));color:#bfffd3;text-decoration:none;font-size:11px;white-space:nowrap}.haswolf-community-join span{color:#25d366}.haswolf-community-join:hover{border-color:#25d366;background:rgba(37,211,102,.13)}
+        .haswolf-community-join{display:inline-grid;grid-template-columns:34px auto;align-items:center;gap:8px;min-height:48px;padding:7px 11px;border:1px solid rgba(37,211,102,.34);border-radius:12px;background:linear-gradient(145deg,rgba(22,92,48,.24),rgba(8,13,10,.84));color:#eafff0;text-decoration:none;box-shadow:inset 0 1px rgba(255,255,255,.06),0 8px 22px rgba(0,0,0,.22);white-space:nowrap}.haswolf-community-join__icon{display:grid;place-items:center;width:32px;height:32px;border-radius:9px;background:linear-gradient(145deg,#2ee76f,#159847);color:#06150a;font-size:15px;font-weight:900;box-shadow:0 0 14px rgba(37,211,102,.18)}.haswolf-community-join__copy{display:flex;flex-direction:column;line-height:1.05}.haswolf-community-join__copy strong{font-size:12px;color:#fff}.haswolf-community-join__copy small{margin-top:3px;font-size:9px;color:#91dca9}.haswolf-community-join:hover{transform:translateY(-1px);border-color:rgba(37,211,102,.7);background:linear-gradient(145deg,rgba(30,129,65,.32),rgba(8,16,11,.88))}
         .haswolf-notification-community-card{margin:12px 14px;display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:10px;padding:12px;border:1px solid rgba(37,211,102,.28);border-radius:13px;background:linear-gradient(135deg,rgba(37,211,102,.12),rgba(5,13,9,.55));color:#fff;text-decoration:none}.haswolf-notification-community-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:#25d366;color:#07150b;font-weight:900}.haswolf-notification-community-card small{display:block;margin-top:3px;color:#96a19a;font-size:11px}.haswolf-notification-community-card i{color:#59e98e;font-style:normal;font-size:12px;font-weight:800}
         .haswolf-announcement-item{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:14px;border-bottom:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.015)}.haswolf-announcement-item.is-unread{background:linear-gradient(90deg,rgba(217,170,74,.10),transparent)}.haswolf-announcement-item img{width:84px;height:68px;object-fit:cover;border-radius:9px;border:1px solid rgba(217,170,74,.25)}.haswolf-announcement-item strong{display:block;margin-top:3px;color:#fff;font-size:14px}.haswolf-announcement-item p{margin:6px 0 0;color:#aeb4b5;font-size:12px;line-height:1.55}.haswolf-announcement-kicker{color:#e4b753;font-size:9px;font-weight:900;letter-spacing:.11em}.haswolf-announcement-item footer{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:9px}.haswolf-announcement-item time{color:#697174;font-size:10px}.haswolf-announcement-item footer button{border:1px solid rgba(217,170,74,.30);border-radius:7px;background:rgba(217,170,74,.08);color:#ecc666;padding:6px 9px;font-size:10px;font-weight:800}
         @media(max-width:900px){.haswolf-community-join{display:none}.haswolf-announcement-item{grid-template-columns:1fr}.haswolf-announcement-item img{width:100%;height:120px}}
