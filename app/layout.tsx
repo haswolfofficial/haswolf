@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./voice-mobile-v3.css";
+import "./premium-glass.css";
 import CampaignRenderer from "../components/CampaignRenderer";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import AutoTranslate from "@/components/AutoTranslate";
