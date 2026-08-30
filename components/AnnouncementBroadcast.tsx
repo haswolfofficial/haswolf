@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/lib/supabase";
@@ -55,7 +55,7 @@ async function playAnnouncementSound() {
       oscillator.stop(start + 0.34 + index * 0.12);
     });
   } catch {
-    // TarayÄ±cÄ± otomatik sesi engellerse duyuru kartÄ± yine gÃ¶sterilir.
+    // Tarayıcı otomatik sesi engellerse duyuru kartı yine gösterilir.
   }
 }
 
@@ -69,7 +69,10 @@ export default function AnnouncementBroadcast() {
     const stored = localStorage.getItem(SOUND_KEY);
     setSoundEnabled(stored !== "off");
 
-    const unlockAudio = () => { const context = announcementAudioContext; if (context?.state === "suspended") void context.resume(); };
+    const unlockAudio = () => {
+      const context = announcementAudioContext;
+      if (context?.state === "suspended") void context.resume();
+    };
     window.addEventListener("pointerdown", unlockAudio, { once: true });
     window.addEventListener("keydown", unlockAudio, { once: true });
     return () => {
@@ -173,16 +176,16 @@ export default function AnnouncementBroadcast() {
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-[11px] font-black uppercase tracking-[.3em] text-[#d9aa4a]">HASWOLF TOPLULUK</p>
-              <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">ğŸ“¢ Yeni Duyuru</h2>
+              <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">📢 Yeni Duyuru</h2>
             </div>
             <button
               type="button"
               onClick={closeAnnouncement}
               disabled={countdown > 0}
               className="flex h-11 min-w-11 items-center justify-center rounded-xl border border-white/10 bg-white/[.04] px-3 text-sm font-bold text-zinc-300 transition hover:border-[#d9aa4a]/60 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
-              aria-label={countdown > 0 ? `Duyuru ${countdown} saniye sonra kapatÄ±labilir` : "Duyuruyu kapat"}
+              aria-label={countdown > 0 ? `Duyuru ${countdown} saniye sonra kapatılabilir` : "Duyuruyu kapat"}
             >
-              {countdown > 0 ? countdown : "âœ•"}
+              {countdown > 0 ? countdown : "✕"}
             </button>
           </div>
 
@@ -199,16 +202,15 @@ export default function AnnouncementBroadcast() {
               onClick={toggleSound}
               className="rounded-xl border border-white/10 bg-white/[.04] px-4 py-2 text-sm font-semibold text-zinc-300 transition hover:border-[#d9aa4a]/50 hover:text-white"
             >
-              {soundEnabled ? "ğŸ”” Duyuru sesi aÃ§Ä±k" : "ğŸ”• Duyuru sesi kapalÄ±"}
+              {soundEnabled ? "🔔 Duyuru sesi açık" : "🔕 Duyuru sesi kapalı"}
             </button>
           </div>
 
           <p className="mt-3 text-center text-[11px] text-zinc-600">
-            KapatÄ±lan bu duyuru aynÄ± cihazda tekrar aÃ§Ä±lmaz.
+            Kapatılan bu duyuru aynı cihazda tekrar açılmaz.
           </p>
         </div>
       </div>
     </div>
   );
 }
-
