@@ -413,7 +413,7 @@ export default function Home() {
           </div>
 
           <nav aria-label="Ana navigasyon" className="haswolf-main-nav">
-            <a href="#top"><span aria-hidden="true">⌂</span><span>Ana Sayfa</span></a>
+            <a href="#top"><span aria-hidden="true">⌂</span><span>Ana Sayfa</span></a>\n            <a href="/mezat"><span aria-hidden="true">🏛️</span><span>Mezat</span></a>
             <button type="button" onClick={() => goToMarket("yang")}><YangIcon /><span>Yang</span></button>
             <button type="button" onClick={() => goToMarket("dc")}><span aria-hidden="true">💎</span><span>DC</span></button>
             <button type="button" onClick={() => goToMarket("item")}><span aria-hidden="true">⚔</span><span>Item</span></button>
