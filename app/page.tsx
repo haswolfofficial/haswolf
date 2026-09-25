@@ -413,7 +413,7 @@ export default function Home() {
           </div>
 
           <nav aria-label="Ana navigasyon" className="haswolf-main-nav">
-            <a href="#top"><span aria-hidden="true">⌂</span><span>Ana Sayfa</span></a>
+            <a href="#top"><span aria-hidden="true">⌂</span><span>Ana Sayfa</span></a>\n            <a href="/mezat"><span aria-hidden="true">🏛️</span><span>Mezat</span></a>
             <button type="button" onClick={() => goToMarket("yang")}><YangIcon /><span>Yang</span></button>
             <button type="button" onClick={() => goToMarket("dc")}><span aria-hidden="true">💎</span><span>DC</span></button>
             <button type="button" onClick={() => goToMarket("item")}><span aria-hidden="true">⚔</span><span>Item</span></button>
@@ -433,7 +433,7 @@ export default function Home() {
           <div className="haswolf-mobile-drawer lg:hidden">
             <div className="haswolf-container py-3">
               <nav className="haswolf-mobile-drawer__links" aria-label="Mobil menü">
-                <a href="#top"><span>⌂</span><span>Ana Sayfa</span></a>
+                <a href="#top"><span>⌂</span><span>Ana Sayfa</span></a>\n                <a href="/mezat"><span>🏛️</span><span>Mezat</span></a>
                 <button type="button" onClick={() => goToMarket("yang")}><span>◉</span><span>Yang</span></button>
                 <button type="button" onClick={() => goToMarket("dc")}><span>💎</span><span>DC</span></button>
                 <button type="button" onClick={() => goToMarket("item")}><span>⚔</span><span>Item</span></button>
